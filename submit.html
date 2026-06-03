@@ -1,0 +1,641 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --blue:#1A73E8;--blue-light:#EAF2FF;--blue-dark:#1557B0;
+    --green:#00B87A;--green-light:#E6FAF4;--green-dark:#00915F;
+    --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;
+    --gray-400:#94A3B8;--gray-600:#64748B;--gray-800:#1E293B;
+    --white:#FFFFFF;--radius:12px;--radius-sm:8px;--radius-lg:16px;
+  }
+  body,html{direction:rtl;font-family:'Cairo',sans-serif;background:var(--gray-50);color:var(--gray-800)}
+
+  .page{min-height:100vh;padding:0 0 4rem}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#0F2C5E 0%,#1A73E8 50%,#0D9B6B 100%);padding:3.5rem 2rem 5rem;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:6px 16px;font-size:13px;color:#fff;margin-bottom:1.5rem;backdrop-filter:blur(10px)}
+  .hero-badge::before{content:'✦';color:#FFD700}
+  .hero h1{font-size:3rem;font-weight:800;color:#fff;margin-bottom:1rem;text-shadow:0 2px 20px rgba(0,0,0,0.2)}
+  .hero p{font-size:1.1rem;color:rgba(255,255,255,0.85);max-width:500px;margin:0 auto 2rem;line-height:1.8}
+  .hero-stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+  .hero-stat{text-align:center;color:rgba(255,255,255,0.9)}
+  .hero-stat strong{display:block;font-size:1.5rem;font-weight:700;color:#fff}
+  .hero-stat span{font-size:12px;opacity:.8}
+
+  /* FORM CONTAINER */
+  .form-container{max-width:700px;margin:-2.5rem auto 0;padding:0 1rem;position:relative;z-index:10}
+
+  /* PROGRESS */
+  .progress-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+  .progress-steps{display:flex;align-items:center;gap:0;margin-bottom:1rem}
+  .step-item{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer}
+  .step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--gray-200);background:var(--white);color:var(--gray-400);transition:all .3s;position:relative;z-index:1}
+  .step-dot.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(26,115,232,0.15)}
+  .step-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+  .step-label{font-size:11px;color:var(--gray-400);margin-top:6px;text-align:center;font-weight:500}
+  .step-label.active{color:var(--blue)}
+  .step-label.done{color:var(--green)}
+  .step-line{flex:1;height:2px;background:var(--gray-200);margin:0 4px;margin-bottom:20px;transition:background .3s}
+  .step-line.done{background:var(--green)}
+  .progress-bar-track{height:4px;background:var(--gray-100);border-radius:100px;overflow:hidden}
+  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+  /* FORM CARD */
+  .form-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:2rem;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.06);animation:slideIn .4s ease}
+  @keyframes slideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .form-title{font-size:1.25rem;font-weight:700;color:var(--gray-800);margin-bottom:.25rem}
+  .form-subtitle{font-size:13px;color:var(--gray-600);margin-bottom:1.5rem}
+  .divider{height:1px;background:var(--gray-100);margin:1.25rem 0}
+
+  /* FIELDS */
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+  .field-row.single{grid-template-columns:1fr}
+  .field-group{display:flex;flex-direction:column;gap:6px}
+  .field-label{font-size:13px;font-weight:600;color:var(--gray-800)}
+  .field-label span{color:#E53935}
+  .field-input{width:100%;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;font-family:'Cairo',sans-serif;color:var(--gray-800);background:var(--white);outline:none;transition:border .2s,box-shadow .2s;direction:rtl}
+  .field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.12)}
+  .field-input.error{border-color:#E53935;box-shadow:0 0 0 3px rgba(229,57,53,0.12)}
+  .field-input::placeholder{color:var(--gray-400)}
+  select.field-input{cursor:pointer}
+  textarea.field-input{resize:vertical;min-height:100px}
+  .error-msg{font-size:12px;color:#E53935;display:none}
+  .error-msg.show{display:block}
+  .checkbox-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);cursor:pointer}
+  .checkbox-row input{width:18px;height:18px;cursor:pointer;accent-color:var(--blue)}
+  .checkbox-row label{font-size:14px;color:var(--gray-800);cursor:pointer}
+
+  /* UPLOAD */
+  .upload-zone{border:2px dashed var(--gray-200);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--gray-50)}
+  .upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-light)}
+  .upload-zone i{font-size:2.5rem;color:var(--gray-400);display:block;margin-bottom:.75rem}
+  .upload-zone .uz-title{font-size:15px;font-weight:600;color:var(--gray-800);margin-bottom:4px}
+  .upload-zone .uz-sub{font-size:12px;color:var(--gray-400)}
+  .upload-zone input{display:none}
+  .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:1rem}
+  .preview-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--gray-200)}
+  .avatar-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--blue);display:block;margin:1rem auto 0}
+
+  /* REVIEW CARD */
+  .review-card{background:var(--blue-light);border:1.5px solid rgba(26,115,232,0.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem}
+  .review-header{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+  .review-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid var(--blue);background:var(--gray-200)}
+  .review-avatar-placeholder{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
+  .review-name{font-size:1rem;font-weight:700;color:var(--gray-800)}
+  .review-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,184,122,0.12);color:var(--green-dark);font-size:12px;font-weight:600;padding:3px 10px;border-radius:100px;margin-top:4px}
+  .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .review-item{background:var(--white);border-radius:var(--radius-sm);padding:10px 12px}
+  .review-item-label{font-size:11px;color:var(--gray-400);font-weight:500}
+  .review-item-value{font-size:14px;font-weight:600;color:var(--gray-800);margin-top:2px}
+
+  /* BUTTONS */
+  .btn-row{display:flex;gap:12px;margin-top:1.5rem;justify-content:space-between}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+  .btn-primary{background:var(--blue);color:#fff;flex:1;justify-content:center}
+  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,115,232,0.3)}
+  .btn-success{background:var(--green);color:#fff;flex:1;justify-content:center}
+  .btn-success:hover{background:var(--green-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,184,122,0.3)}
+  .btn-outline{background:var(--white);color:var(--gray-600);border:1.5px solid var(--gray-200);padding:12px 20px}
+  .btn-outline:hover{background:var(--gray-100)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .btn-loading{position:relative;pointer-events:none}
+  .btn-loading::after{content:'';width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* SUCCESS */
+  .success-page{display:none;text-align:center;padding:3rem 2rem;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);box-shadow:0 4px 24px rgba(0,0,0,0.06);animation:slideIn .4s ease}
+  .success-icon{width:80px;height:80px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem}
+  .success-title{font-size:1.5rem;font-weight:800;color:var(--gray-800);margin-bottom:.75rem}
+  .success-text{font-size:15px;color:var(--gray-600);line-height:1.8;margin-bottom:2rem;max-width:380px;margin-left:auto;margin-right:auto}
+  .status-pill{display:inline-flex;align-items:center;gap:6px;background:#FFF8E1;color:#E65100;font-size:13px;font-weight:600;padding:6px 16px;border-radius:100px;margin-bottom:1.5rem}
+  .status-dot{width:8px;height:8px;background:#FF9800;border-radius:50%;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  @media(max-width:540px){
+    .hero h1{font-size:2rem}
+    .field-row{grid-template-columns:1fr}
+    .review-grid{grid-template-columns:1fr}
+    .hero-stats{gap:1.25rem}
+  }
+</style>
+
+<div class="page">
+  <div class="hero">
+    <div class="hero-badge">منصة خدماتي المغرب</div>
+    <h1>قدم خدمتك 🚀</h1>
+    <p>سجل خدمتك وخلي آلاف الزبناء فالمغرب يلقاوك بسهولة.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>+12,000</strong><span>مهني مسجل</span></div>
+      <div class="hero-stat"><strong>+50,000</strong><span>زبون شهرياً</span></div>
+      <div class="hero-stat"><strong>50+</strong><span>مدينة مغربية</span></div>
+    </div>
+  </div>
+
+  <div class="form-container">
+
+    <!-- PROGRESS -->
+    <div class="progress-card">
+      <div class="progress-steps" id="progressSteps">
+        <div class="step-item" onclick="goToStep(1)">
+          <div class="step-dot active" id="dot1">1</div>
+          <div class="step-label active" id="lbl1">معلوماتك</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-item" onclick="goToStep(2)">
+          <div class="step-dot" id="dot2">2</div>
+          <div class="step-label" id="lbl2">الخدمة</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-item" onclick="goToStep(3)">
+          <div class="step-dot" id="dot3">3</div>
+          <div class="step-label" id="lbl3">الموقع</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+        <div class="step-item" onclick="goToStep(4)">
+          <div class="step-dot" id="dot4">4</div>
+          <div class="step-label" id="lbl4">الصور</div>
+        </div>
+      </div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:25%"></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="form-card" id="step1">
+      <div class="form-title">المعلومات الشخصية</div>
+      <div class="form-subtitle">أدخل معلوماتك الأساسية باش نتعرفو عليك</div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">الاسم الكامل <span>*</span></label>
+          <input class="field-input" id="fullname" placeholder="مثال: محمد الأمين بوشتى" type="text">
+          <span class="error-msg" id="err-fullname">الاسم مطلوب</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">رقم الهاتف <span>*</span></label>
+          <input class="field-input" id="phone" placeholder="06xxxxxxxx" type="tel" maxlength="10">
+          <span class="error-msg" id="err-phone">أدخل رقم هاتف صحيح</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">رقم واتساب <span>*</span></label>
+          <input class="field-input" id="whatsapp" placeholder="06xxxxxxxx" type="tel" maxlength="10">
+          <span class="error-msg" id="err-whatsapp">رقم واتساب مطلوب</span>
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">البريد الإلكتروني</label>
+          <input class="field-input" id="email" placeholder="example@gmail.com" type="email">
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">كلمة السر <span>*</span></label>
+          <input class="field-input" id="password" placeholder="8 أحرف على الأقل" type="password">
+          <span class="error-msg" id="err-password">8 أحرف على الأقل</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">تأكيد كلمة السر <span>*</span></label>
+          <input class="field-input" id="confirm-password" placeholder="أعد كتابة كلمة السر" type="password">
+          <span class="error-msg" id="err-confirm">كلمتا السر غير متطابقتين</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="nextStep(1)">التالي <i class="ti ti-arrow-left"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="form-card" id="step2" style="display:none">
+      <div class="form-title">معلومات الخدمة</div>
+      <div class="form-subtitle">خبرنا شنو كاتقدم وعلاش أنت الأحسن</div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">نوع الخدمة <span>*</span></label>
+          <select class="field-input" id="service-type">
+            <option value="">— اختار نوع الخدمة —</option>
+            <option>بلومبي</option><option>كهربائي</option><option>نجار</option>
+            <option>ميكانيكي</option><option>صباغ</option><option>حداد</option>
+            <option>مصور</option><option>مطور مواقع</option><option>مصمم جرافيك</option>
+            <option>تنظيف المنازل</option><option>نقل الأثاث</option>
+            <option>تكييف وتبريد</option><option>خدمات أخرى</option>
+          </select>
+          <span class="error-msg" id="err-service-type">اختار نوع الخدمة</span>
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">عنوان الخدمة <span>*</span></label>
+          <input class="field-input" id="service-title" placeholder="مثال: بلومبي محترف لإصلاح التسربات" type="text">
+          <span class="error-msg" id="err-service-title">أدخل عنوان الخدمة</span>
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">وصف الخدمة <span>*</span></label>
+          <textarea class="field-input" id="service-desc" placeholder="اشرح خدمتك والخبرة ديالك والخدمات اللي كتقدم..."></textarea>
+          <span class="error-msg" id="err-service-desc">أدخل وصف الخدمة</span>
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">سنوات الخبرة <span>*</span></label>
+          <input class="field-input" id="experience" placeholder="مثال: 5" type="number" min="0" max="50">
+          <span class="error-msg" id="err-experience">أدخل سنوات الخبرة</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="prevStep(2)"><i class="ti ti-arrow-right"></i> السابق</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">التالي <i class="ti ti-arrow-left"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="form-card" id="step3" style="display:none">
+      <div class="form-title">الموقع والثمن</div>
+      <div class="form-subtitle">وين كاتخدم وبشحال</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">المدينة <span>*</span></label>
+          <select class="field-input" id="city">
+            <option value="">— اختار المدينة —</option>
+            <option>الدار البيضاء</option><option>الرباط</option><option>فاس</option>
+            <option>مراكش</option><option>طنجة</option><option>أكادير</option>
+            <option>مكناس</option><option>وجدة</option><option>القنيطرة</option>
+            <option>تطوان</option><option>العيون</option><option>خريبكة</option>
+            <option>الجديدة</option><option>آسفي</option><option>الناظور</option>
+            <option>بني ملال</option>
+          </select>
+          <span class="error-msg" id="err-city">اختار المدينة</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">الحي أو المنطقة</label>
+          <input class="field-input" id="district" placeholder="مثال: حي الرياض" type="text">
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field-group">
+          <label class="field-label">الثمن الابتدائي <span>*</span></label>
+          <input class="field-input" id="price" placeholder="مثال: 80 درهم" type="text">
+          <span class="error-msg" id="err-price">أدخل الثمن</span>
+        </div>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="outside-city">
+        <label for="outside-city">🚗 كنخدم خارج المدينة</label>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="prevStep(3)"><i class="ti ti-arrow-right"></i> السابق</button>
+        <button class="btn btn-primary" onclick="nextStep(3)">التالي <i class="ti ti-arrow-left"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="form-card" id="step4" style="display:none">
+      <div class="form-title">الصور والتحقق</div>
+      <div class="form-subtitle">ضيف صورتك وأعمالك السابقة</div>
+
+      <div class="field-group" style="margin-bottom:1rem">
+        <label class="field-label">صورة شخصية <span>*</span></label>
+        <div class="upload-zone" id="avatarZone" onclick="document.getElementById('avatarInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'avatar')">
+          <i class="ti ti-user-circle" aria-hidden="true"></i>
+          <div class="uz-title">اختار صورتك الشخصية</div>
+          <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" onchange="handleFile(this,'avatar')">
+        <span class="error-msg" id="err-avatar">الصورة الشخصية مطلوبة</span>
+      </div>
+
+      <div class="field-group" style="margin-bottom:1rem">
+        <label class="field-label">صور الأعمال السابقة</label>
+        <div class="upload-zone" id="workZone" onclick="document.getElementById('workInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'work')">
+          <i class="ti ti-photo" aria-hidden="true"></i>
+          <div class="uz-title">ضيف صور أعمالك (10 صور كحد أقصى)</div>
+          <div class="uz-sub">اسحب وأفلت أو اضغط للاختيار</div>
+        </div>
+        <input type="file" id="workInput" accept="image/*" multiple onchange="handleFile(this,'work')">
+        <div class="preview-grid" id="workPreviews"></div>
+      </div>
+
+      <div class="field-group" style="margin-bottom:1.5rem">
+        <label class="field-label">البطاقة الوطنية <span style="color:var(--gray-400);font-weight:400">(اختياري)</span></label>
+        <div class="upload-zone" id="idZone" onclick="document.getElementById('idInput').click()">
+          <i class="ti ti-id" aria-hidden="true"></i>
+          <div class="uz-title">ارفع نسخة من البطاقة الوطنية</div>
+          <div class="uz-sub">للتحقق من الحساب وزيادة الثقة</div>
+        </div>
+        <input type="file" id="idInput" accept="image/*,application/pdf" onchange="handleFile(this,'id')">
+      </div>
+
+      <!-- REVIEW -->
+      <div class="review-card" id="reviewCard" style="display:none">
+        <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:.75rem">📋 مراجعة المعلومات</div>
+        <div class="review-header">
+          <div class="review-avatar-placeholder" id="reviewAvatarCircle">م</div>
+          <div>
+            <div class="review-name" id="reviewName">—</div>
+            <div class="review-badge" id="reviewBadge">✓ كل شي مزيان</div>
+          </div>
+        </div>
+        <div class="review-grid">
+          <div class="review-item"><div class="review-item-label">نوع الخدمة</div><div class="review-item-value" id="reviewService">—</div></div>
+          <div class="review-item"><div class="review-item-label">المدينة</div><div class="review-item-value" id="reviewCity">—</div></div>
+          <div class="review-item"><div class="review-item-label">الثمن</div><div class="review-item-value" id="reviewPrice">—</div></div>
+          <div class="review-item"><div class="review-item-label">سنوات الخبرة</div><div class="review-item-value" id="reviewExp">—</div></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="prevStep(4)"><i class="ti ti-arrow-right"></i> السابق</button>
+        <button class="btn btn-success" id="submitBtn" onclick="submitForm()">
+          <i class="ti ti-rocket" aria-hidden="true"></i> نشر الخدمة
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-page" id="successPage">
+      <div class="success-icon">✅</div>
+      <div class="success-title">تم إرسال طلبك بنجاح!</div>
+      <div class="status-pill"><div class="status-dot"></div>قيد المراجعة</div>
+      <p class="success-text">سيتم مراجعة خدمتك من طرف الإدارة قبل نشرها على المنصة. غادي تصلك رسالة على واتساب حين يتم القبول.</p>
+      <button class="btn btn-primary" onclick="resetForm()" style="margin:0 auto;display:inline-flex">
+        <i class="ti ti-home" aria-hidden="true"></i> العودة للرئيسية
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://kacutivlrarulhbrzsil.supabase.co";
+const SUPABASE_ANON_KEY = "eyJ..."; // ← anon key ديالك من Supabase dashboard
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+const data = {};
+
+
+
+
+
+
+
+
+
+
+function updateProgress(step) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot' + i);
+    const lbl = document.getElementById('lbl' + i);
+    dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    dot.innerHTML = i < step ? '✓' : i;
+    lbl.className = 'step-label' + (i < step ? ' done' : i === step ? ' active' : '');
+    if (i < 4) document.getElementById('line' + i).className = 'step-line' + (i < step ? ' done' : '');
+  }
+  document.getElementById('progressFill').style.width = (step / totalSteps * 100) + '%';
+}
+
+function showStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('step' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+  }
+  updateProgress(n);
+  currentStep = n;
+  if (n === 4) updateReview();
+}
+
+function goToStep(n) {
+  if (n < currentStep) showStep(n);
+}
+
+function validateStep1() {
+  let ok = true;
+  const fn = document.getElementById('fullname').value.trim();
+  const ph = document.getElementById('phone').value.trim();
+  const wa = document.getElementById('whatsapp').value.trim();
+  const pw = document.getElementById('password').value;
+  const cp = document.getElementById('confirm-password').value;
+  const moroccoReg = /^(06|07)\d{8}$/;
+  showErr('fullname', !fn);
+  showErr('phone', !moroccoReg.test(ph));
+  showErr('whatsapp', !moroccoReg.test(wa));
+  showErr('password', pw.length < 8);
+  showErr('confirm', pw !== cp || cp.length === 0);
+  if (!fn || !moroccoReg.test(ph) || !moroccoReg.test(wa) || pw.length < 8 || pw !== cp) ok = false;
+  return ok;
+}
+
+function validateStep2() {
+  const st = document.getElementById('service-type').value;
+  const tt = document.getElementById('service-title').value.trim();
+  const ds = document.getElementById('service-desc').value.trim();
+  const ex = document.getElementById('experience').value;
+  showErr('service-type', !st);
+  showErr('service-title', !tt);
+  showErr('service-desc', !ds);
+  showErr('experience', !ex);
+  return st && tt && ds && ex;
+}
+
+function validateStep3() {
+  const ci = document.getElementById('city').value;
+  const pr = document.getElementById('price').value.trim();
+  showErr('city', !ci);
+  showErr('price', !pr);
+  return ci && pr;
+}
+
+function validateStep4() {
+  const hasAvatar = document.getElementById('avatarInput').files.length > 0;
+  showErr('avatar', !hasAvatar);
+  return hasAvatar;
+}
+
+function showErr(id, show) {
+  const el = document.getElementById('err-' + id);
+  const input = document.getElementById(id);
+  if (el) el.className = 'error-msg' + (show ? ' show' : '');
+  if (input) input.className = input.className.replace(' error','') + (show ? ' error' : '');
+}
+
+function nextStep(s) {
+  const valid = s === 1 ? validateStep1() : s === 2 ? validateStep2() : s === 3 ? validateStep3() : true;
+  if (valid) showStep(s + 1);
+}
+
+function prevStep(s) { showStep(s - 1); }
+
+function handleFile(input, type) {
+  const files = input.files;
+  if (!files.length) return;
+  if (type === 'avatar') {
+    const url = URL.createObjectURL(files[0]);
+    const zone = document.getElementById('avatarZone');
+    zone.innerHTML = '<img class="avatar-preview" src="' + url + '" alt="صورة شخصية"><div class="uz-sub" style="margin-top:8px">تم الاختيار ✓</div>';
+    showErr('avatar', false);
+    updateReview();
+  } else if (type === 'work') {
+    const grid = document.getElementById('workPreviews');
+    grid.innerHTML = '';
+    const max = Math.min(files.length, 10);
+    for (let i = 0; i < max; i++) {
+      const img = document.createElement('img');
+      img.className = 'preview-img';
+      img.src = URL.createObjectURL(files[i]);
+      grid.appendChild(img);
+    }
+  } else if (type === 'id') {
+    const zone = document.getElementById('idZone');
+    zone.innerHTML = '<i class="ti ti-circle-check" style="font-size:2rem;color:var(--green)"></i><div class="uz-title">تم رفع البطاقة ✓</div>';
+  }
+}
+
+function handleDrop(e, type) {
+  e.preventDefault();
+  document.getElementById(type === 'avatar' ? 'avatarZone' : 'workZone').classList.remove('drag');
+  const dt = e.dataTransfer;
+  const fakeInput = {files: dt.files};
+  handleFile(fakeInput, type);
+}
+
+function updateReview() {
+  const rc = document.getElementById('reviewCard');
+  const name = document.getElementById('fullname').value;
+  const svc = document.getElementById('service-type').value;
+  const city = document.getElementById('city').value;
+  const price = document.getElementById('price').value;
+  const exp = document.getElementById('experience').value;
+  if (name || svc || city) {
+    rc.style.display = 'block';
+    document.getElementById('reviewName').textContent = name || '—';
+    document.getElementById('reviewService').textContent = svc || '—';
+    document.getElementById('reviewCity').textContent = city || '—';
+    document.getElementById('reviewPrice').textContent = price ? price + ' درهم' : '—';
+    document.getElementById('reviewExp').textContent = exp ? exp + ' سنوات' : '—';
+    if (name) document.getElementById('reviewAvatarCircle').textContent = name[0];
+  }
+}
+
+
+async function submitForm() {
+  if (!validateStep4()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.className = 'btn btn-success btn-loading';
+  btn.innerHTML = 'جاري الإرسال...';
+  btn.disabled = true;
+
+  try {
+    // 1. رفع الصورة الشخصية
+    let avatar_url = null;
+    const avatarFile = document.getElementById('avatarInput').files[0];
+    if (avatarFile) {
+      const avatarName = `avatars/avatar-${Date.now()}.jpg`;
+      const { error: avatarErr } = await supabase.storage
+        .from('provider-files')
+        .upload(avatarName, avatarFile);
+      if (!avatarErr) {
+        const { data: avatarData } = supabase.storage
+          .from('provider-files')
+          .getPublicUrl(avatarName);
+        avatar_url = avatarData.publicUrl;
+      }
+    }
+
+    // 2. رفع صور الأعمال
+    let work_images = [];
+    const workFiles = document.getElementById('workInput').files;
+    for (let i = 0; i < Math.min(workFiles.length, 10); i++) {
+      const fileName = `works/work-${Date.now()}-${i}.jpg`;
+      const { error: workErr } = await supabase.storage
+        .from('provider-files')
+        .upload(fileName, workFiles[i]);
+      if (!workErr) {
+        const { data: workData } = supabase.storage
+          .from('provider-files')
+          .getPublicUrl(fileName);
+        work_images.push(workData.publicUrl);
+      }
+    }
+
+    // 3. رفع البطاقة الوطنية
+    let id_card_url = null;
+    const idFile = document.getElementById('idInput').files[0];
+    if (idFile) {
+      const idName = `id-cards/id-${Date.now()}.jpg`;
+      const { error: idErr } = await supabase.storage
+        .from('provider-files')
+        .upload(idName, idFile);
+      if (!idErr) {
+        const { data: idData } = supabase.storage
+          .from('provider-files')
+          .getPublicUrl(idName);
+        id_card_url = idData.publicUrl;
+      }
+    }
+
+    // 4. إدراج البيانات فالداطابيز ← هاد الجزء كان ناقص!
+    const { error: insertErr } = await supabase
+      .from('providers')
+      .insert([{
+        name: document.getElementById('fullname').value,
+        phone: document.getElementById('phone').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        email: document.getElementById('email').value,
+        service_category: document.getElementById('service-type').value,
+        service_title: document.getElementById('service-title').value,
+        service_description: document.getElementById('service-desc').value,
+        experience_years: parseInt(document.getElementById('experience').value),
+        city: document.getElementById('city').value,
+        district: document.getElementById('district').value,
+        price: document.getElementById('price').value,
+        profile_image: avatar_url,
+        service_images: work_images,
+        national_id_image: id_card_url,
+        rating: 0,
+        reviews_count: 0,
+        status: 'pending'
+      }]);
+
+    if (insertErr) throw insertErr;
+
+    // 5. صفحة النجاح
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step' + i);
+      if (el) el.style.display = 'none';
+    }
+    document.querySelector('.progress-card').style.display = 'none';
+    document.getElementById('successPage').style.display = 'block';
+
+  } catch (err) {
+    console.error('خطأ:', err);
+    alert('وقع خطأ أثناء الإرسال. حاول مرة أخرى.');
+    btn.className = 'btn btn-success';
+    btn.innerHTML = '<i class="ti ti-rocket"></i> نشر الخدمة';
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  document.getElementById('successPage').style.display = 'none';
+  document.getElementById('progressSteps').closest('.progress-card').style.display = 'block';
+  showStep(1);
+}
+
+showStep(1);
+</script>

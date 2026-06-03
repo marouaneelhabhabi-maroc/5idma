@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <h1>لوحة الإدارة</h1>
+
+<div id="providers-list"></div>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://kacutivlrarulhbrzsil.supabase.co";
+const SUPABASE_KEY = "sb_publishable_knJWpDzuNAy_UrdiEWd3AA_D6McKtgn";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+
+
+<script>
+
+loadProviders();
+
+async function loadProviders() {
+
+  const { data, error } = await supabase
+    .from('providers')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  console.log(data);
+
+}
+
+console.log("connected");
+</script>

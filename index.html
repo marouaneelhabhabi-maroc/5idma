@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="خدماتي - المنصة الأولى فالمغرب لإيجاد أحسن المهنيين والحرفيين">
+<meta name="keywords" content="خدمات المغرب, بلومبي, كهربائي, نجار, مهنيين, حرفيين">
+<title>خدماتي | لقّى أي خدمة فالمغرب بسهولة</title>
+ 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+ 
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --blue: #1A73E8;
+    --blue-dark: #1557B0;
+    --blue-light: #EAF2FF;
+    --blue-mid: #4A90D9;
+    --green: #00B87A;
+    --green-dark: #008F5F;
+    --green-light: #E6F9F3;
+    --text: #1A1D23;
+    --text-muted: #6B7280;
+    --text-light: #9CA3AF;
+    --border: #E5E9F0;
+    --bg: #FFFFFF;
+    --bg-soft: #F8FAFD;
+    --shadow-sm: 0 2px 8px rgba(26,115,232,0.08);
+    --shadow-md: 0 8px 32px rgba(26,115,232,0.12);
+    --shadow-lg: 0 20px 60px rgba(26,115,232,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+ 
+  /* ───── NAVBAR ───── */
+  nav {
+    position: fixed; top: 0; right: 0; left: 0; z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    height: 70px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: var(--shadow-sm); }
+ 
+  .nav-logo {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+ 
+  .nav-links { display: flex; align-items: center; gap: 20px; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none;
+    font-size: 15px; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--blue); }
+ 
+  .nav-cta {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff !important;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: 500 !important;
+    box-shadow: 0 4px 16px rgba(26,115,232,0.3);
+    transition: transform .2s, box-shadow .2s !important;
+  }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(26,115,232,0.4) !important; color: #fff !important; }
+ 
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .nav-hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
+ 
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 100vh;
+    padding: 130px 5% 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    background: linear-gradient(150deg, #FFFFFF 0%, #F0F6FF 40%, #E8F8F3 100%);
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(26,115,232,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+ 
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -150px; right: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,184,122,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+ 
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 24px;
+    border: 1px solid rgba(26,115,232,0.2);
+    animation: fadeDown .6s ease both;
+  }
+  .hero-badge .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+ 
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: 20px;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+ 
+  .hero p {
+    font-size: 18px; color: var(--text-muted);
+    line-height: 1.8; margin-bottom: 36px;
+    max-width: 520px;
+    animation: fadeDown .6s .2s ease both;
+  }
+ 
+  /* Search Bar */
+  .search-box {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 12px;
+    display: flex; gap: 8px; align-items: center;
+    margin-bottom: 20px;
+    border: 1.5px solid rgba(26,115,232,0.15);
+    animation: fadeDown .6s .3s ease both;
+  }
+ 
+  .search-field {
+    flex: 1; display: flex; align-items: center; gap: 10px;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+  }
+  .search-field svg { color: var(--text-muted); flex-shrink: 0; }
+  .search-field input, .search-field select {
+    border: none; background: transparent;
+    font-family: inherit; font-size: 15px;
+    color: var(--text); outline: none; width: 100%;
+    direction: rtl;
+  }
+  .search-field select option { direction: rtl; }
+ 
+  .search-divider { width: 1px; height: 40px; background: var(--border); flex-shrink: 0; }
+ 
+  .search-btn {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+    border: none; cursor: pointer;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(26,115,232,0.35);
+  }
+  .search-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,115,232,0.45); }
+ 
+  .search-examples {
+    font-size: 13px; color: var(--text-muted);
+    animation: fadeDown .6s .4s ease both;
+  }
+  .search-examples span { font-weight: 600; color: var(--blue); }
+  .example-pill {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 4px 3px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .example-pill:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+ 
+  .hero-ctas {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 24px;
+    animation: fadeDown .6s .5s ease both;
+  }
+ 
+  .btn-primary {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: #fff; border: none; cursor: pointer;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,184,122,0.35);
+    transition: all .2s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,184,122,0.45); }
+ 
+  .btn-secondary {
+    background: #fff;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+    cursor: pointer;
+    padding: 13px 28px;
+    border-radius: 50px;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s;
+  }
+  .btn-secondary:hover { background: var(--blue-light); transform: translateY(-2px); }
+ 
+  /* Hero illustration */
+  .hero-visual {
+    display: flex; align-items: center; justify-content: center;
+    position: relative; animation: fadeLeft .8s .2s ease both;
+    
+  }
+ 
+  .hero-illustration {
+    width: 100%; max-width: 520px;
+    background: linear-gradient(135deg, #fff 0%, var(--blue-light) 100%);
+    border-radius: var(--radius-xl);
+    padding: 40px 30px;
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid rgba(26,115,232,0.12);
+    position: relative;
+    margin-top: 40px;
+  }
+ 
+  .pro-cards-grid { 
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+ 
+  .mini-pro-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: transform .3s;
+    animation: floatUp 3s ease-in-out infinite;
+  }
+  .mini-pro-card:nth-child(2) { animation-delay: .5s; }
+  .mini-pro-card:nth-child(3) { animation-delay: 1s; }
+  .mini-pro-card:nth-child(4) { animation-delay: 1.5s; }
+ 
+  .mini-pro-card .pro-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin: 0 auto 10px;
+  }
+  .mini-pro-card .pro-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .mini-pro-card .pro-role { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .mini-pro-card .pro-stars { font-size: 12px; color: #F59E0B; font-weight: 600; }
+ 
+  .hero-stats {
+    display: flex; justify-content: space-around;
+    margin-top: 24px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat strong { display: block; font-size: 22px; font-weight: 900; color: var(--blue); }
+  .hero-stat span { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+ 
+  .floating-badge {
+    position: absolute;
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border);
+    animation: floatAround 4s ease-in-out infinite;
+  }
+  .floating-badge.top-right { top: -20px; left: -30px; animation-delay: .5s; }
+  .floating-badge.bottom-left { bottom: -15px; right: -20px; animation-delay: 1.5s; }
+  .floating-badge .badge-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .floating-badge .badge-dot.green { background: var(--green); }
+  .floating-badge .badge-dot.blue { background: var(--blue); }
+ 
+  /* ───── SECTION SHARED ───── */
+  section { padding: 90px 5%; }
+ 
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 6px 16px; border-radius: 50px;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+ 
+  .section-title {
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 900; color: var(--text);
+    margin-bottom: 12px; line-height: 1.25;
+  }
+  .section-title span { color: var(--blue); }
+ 
+  .section-sub {
+    font-size: 17px; color: var(--text-muted);
+    max-width: 560px; line-height: 1.8;
+    margin-bottom: 56px;
+  }
+ 
+  /* ───── SERVICES ───── */
+  .services-section { background: var(--bg-soft); }
+ 
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+ 
+
+  .service-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    transition: all .3s cubic-bezier(.25, .46, .45, .94);
+    text-decoration: none; color: inherit;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--blue-light), var(--green-light));
+    opacity: 0; transition: opacity .3s;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--blue);
+  }
+  .service-card:hover::before { opacity: 1; }
+ 
+  .service-icon {
+    width: 60px; height: 60px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 14px;
+    position: relative; z-index: 1;
+    transition: transform .3s;
+  }
+  .service-card:hover .service-icon { transform: scale(1.1) rotate(-5deg); }
+ 
+  .service-name {
+    font-size: 15px; font-weight: 700; color: var(--text);
+    position: relative; z-index: 1;
+    margin-bottom: 4px;
+  }
+  .service-count {
+    font-size: 12px; color: var(--text-muted);
+    position: relative; z-index: 1;
+  }
+ 
+  /* ───── PROFESSIONALS ───── */
+  .pros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+ 
+  .pro-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: all .3s;
+    position: relative; overflow: hidden;
+  }
+  .pro-card::after {
+    content: '';
+    position: absolute; top: 0; right: 0; left: 0; height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transform: scaleX(0); transform-origin: right;
+    transition: transform .3s;
+  }
+  .pro-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: transparent; }
+  .pro-card:hover::after { transform: scaleX(1); }
+ 
+  .pro-card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+ 
+  .pro-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%; object-fit: cover;
+    background: linear-gradient(135deg, var(--blue-light), var(--green-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 800; color: var(--blue-dark);
+    flex-shrink: 0;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(26,115,232,0.2);
+  }
+ 
+  .pro-card-info { flex: 1; min-width: 0; }
+  .pro-card-name { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .pro-card-city {
+    font-size: 13px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 4px;
+  }
+ 
+  .pro-card-badge {
+    position: absolute; top: 20px; left: 20px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 50px;
+    border: 1px solid rgba(0,184,122,0.2);
+  }
+ 
+  .pro-card-stats {
+    display: flex; gap: 12px; margin-bottom: 16px;
+    background: var(--bg-soft);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .pro-stat { text-align: center; flex: 1; }
+  .pro-stat strong { display: block; font-size: 15px; font-weight: 800; color: var(--text); }
+  .pro-stat span { font-size: 11px; color: var(--text-muted); }
+ 
+  .pro-card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .pro-price { font-size: 13px; color: var(--text-muted); }
+  .pro-price strong { color: var(--blue); font-size: 17px; font-weight: 800; }
+ 
+  .btn-view {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff; border: none; cursor: pointer;
+    padding: 10px 20px; border-radius: 50px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: all .2s;
+    box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+  }
+  .btn-view:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,115,232,0.4); }
+ 
+  /* ───── HOW IT WORKS ───── */
+  .how-section { background: var(--bg); }
+ 
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .steps-container::before {
+    content: '';
+    position: absolute;
+    top: 36px; right: 12.5%; left: 12.5%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    z-index: 0;
+  }
+ 
+  .step-item {
+    text-align: center; padding: 0 16px;
+    position: relative; z-index: 1;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .5s, transform .5s;
+  }
+  .step-item.visible { opacity: 1; transform: translateY(0); }
+  .step-item:nth-child(2) { transition-delay: .1s; }
+  .step-item:nth-child(3) { transition-delay: .2s; }
+  .step-item:nth-child(4) { transition-delay: .3s; }
+ 
+  .step-num {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+    font-size: 28px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(26,115,232,0.35);
+    border: 4px solid #fff;
+    position: relative; z-index: 2;
+  }
+ 
+  .step-icon-wrap {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 20px;
+    border: 4px solid #fff;
+    position: relative; z-index: 2;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+ 
+  .step-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+ 
+  /* ───── WHY US ───── */
+  .why-section {
+    background: linear-gradient(135deg, #F0F6FF 0%, #E8F8F3 100%);
+  }
+ 
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+ 
+  .why-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex; gap: 18px; align-items: flex-start;
+    border: 1.5px solid rgba(26,115,232,0.1);
+    box-shadow: var(--shadow-sm);
+    transition: all .3s;
+  }
+  .why-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--blue); }
+ 
+  .why-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+ 
+  .why-text h3 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .why-text p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+ 
+  /* ───── TESTIMONIALS ───── */
+  .testimonials-section { background: var(--bg-soft); }
+ 
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+ 
+  .testimonial-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: all .3s;
+  }
+  .testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+ 
+  .testimonial-quote {
+    font-size: 60px; line-height: 1;
+    color: var(--blue); opacity: .15;
+    position: absolute; top: 16px; left: 20px;
+    font-family: serif;
+  }
+ 
+  .testimonial-text {
+    font-size: 16px; color: var(--text);
+    line-height: 1.8; margin-bottom: 24px;
+    padding-top: 20px; font-weight: 500;
+  }
+ 
+  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .author-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light), var(--green-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: var(--blue-dark);
+    border: 2px solid rgba(26,115,232,0.15);
+  }
+  .author-name { font-size: 15px; font-weight: 800; color: var(--text); }
+  .author-city { font-size: 13px; color: var(--text-muted); }
+  .author-stars { margin-bottom: 2px; }
+  .star { color: #F59E0B; font-size: 14px; }
+ 
+  /* ───── PRO CTA ───── */
+  .pro-cta-section {
+    background: linear-gradient(135deg, #0F3460 0%, #1A73E8 50%, #00B87A 100%);
+    padding: 100px 5%;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .pro-cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+ 
+  .pro-cta-section .section-label {
+    background: rgba(255,255,255,0.2); color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .pro-cta-section h2 {
+    font-size: clamp(28px, 5vw, 52px); font-weight: 900;
+    color: #fff; margin-bottom: 16px; position: relative;
+  }
+  .pro-cta-section p {
+    font-size: 18px; color: rgba(255,255,255,0.85);
+    max-width: 520px; margin: 0 auto 40px; line-height: 1.8;
+    position: relative;
+  }
+ 
+  .btn-cta-white {
+    background: #fff;
+    color: var(--blue-dark);
+    border: none; cursor: pointer;
+    padding: 18px 44px;
+    border-radius: 50px;
+    font-family: inherit; font-size: 18px; font-weight: 800;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    transition: all .3s;
+    position: relative;
+  }
+  .btn-cta-white:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+ .logo-khidma{
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0;
+}
+  .cta-features {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 40px; flex-wrap: wrap;
+    position: relative;
+  }
+  .cta-feat { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.9); font-size: 15px; font-weight: 600; }
+  .cta-feat::before { content: '✓'; color: #98F5D0; font-weight: 900; font-size: 16px; }
+ 
+  /* ───── FOOTER ───── */
+  footer {
+    background: #0F1B2D;
+    color: rgba(255,255,255,0.7);
+    padding: 60px 5% 30px;
+  }
+ 
+
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+ 
+  .footer-brand {}
+  .footer-logo {
+    font-size: 28px; font-weight: 900;
+    background: linear-gradient(135deg, #4A9EF0, #48D9A4);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px; display: block;
+    text-decoration: none;
+  }
+  .footer-desc { font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+  .footer-social { display: flex; gap: 12px; }
+  .social-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; color: rgba(255,255,255,0.7);
+    font-size: 18px; transition: all .2s;
+  }
+  .social-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
+ 
+  .footer-col h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 20px; letter-spacing: .5px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px;
+    transition: color .2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .footer-col ul li a:hover { color: #4A9EF0; }
+ 
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 28px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-bottom-links { display: flex; gap: 24px; }
+  .footer-bottom-links a { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; transition: color .2s; }
+  .footer-bottom-links a:hover { color: rgba(255,255,255,0.7); }
+ 
+  /* ───── ANIMATIONS ───── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes floatAround {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(-4px,-6px); }
+    75% { transform: translate(4px,4px); }
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(26,115,232,0.35); }
+    50% { box-shadow: 0 8px 40px rgba(26,115,232,0.55); }
+  }
+ 
+  /* ───── RESPONSIVE ───── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding: 110px 5% 60px; }
+    .hero-visual { display: none; }
+    .steps-container { grid-template-columns: 1fr 1fr; }
+    .steps-container::before { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .search-box { flex-direction: column; }
+    .search-divider { display: none; }
+    .search-btn { width: 100%; justify-content: center; }
+    .steps-container { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-ctas { justify-content: center; }
+    nav .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+ 
+  .scroll-reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+
+
+
+
+@media (max-width: 768px){
+
+  nav{
+    height:auto;
+    padding:15px;
+  }
+
+  .nav-links{
+    display:none;
+  }
+
+  .logo-khidma{
+    width:60px;
+    height:60px;
+  }
+
+  .nav-hamburger{
+    display:flex;
+  }
+}
+
+</style>
+</head>
+<body>
+ 
+<!-- ━━━━━ NAVBAR ━━━━━ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo" id="ti">خدما<b class="ti">تي</b></a>
+  <img src="logo-khidma.png" class="logo-khidma" alt="logo">
+  <ul class="nav-links">
+    <li><a href="#services">الخدمات</a></li>
+    <li><a href="#how">كيف يخدم</a></li>
+    <li><a href="#pros">المهنيون</a></li>
+    <li><a href="#about">من نحن</a></li>
+    <li><a href="submit.html" class="nav-cta">قدم خدمتك</a></li>
+  </ul>
+  <div class="nav-hamburger" aria-label="القائمة">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+ 
+<!-- ━━━━━ HERO ━━━━━ -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="dot"></div>
+      المنصة الأولى فالمغرب للخدمات
+    </div>
+ 
+    <h1>لقّى أي خدمة<br><span>فالمغرب بسهولة</span></h1>
+ 
+    <p>قارن بين مقدمي الخدمات، شوف التقييمات، وتواصل مباشرة مع أفضل المهنيين فمدينتك.</p>
+ 
+    <div class="search-box">
+      <div class="search-field" style="flex:2">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="فاش كتحتاج مساعدة؟ مثلاً: بلومبي، كهربائي..." id="heroSearch" />
+      </div>
+      <div class="search-divider"></div>
+      <div class="search-field" style="flex:1">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <select aria-label="اختر المدينة">
+          <option value="">اختر المدينة</option>
+          <option>الدار البيضاء</option>
+          <option>الرباط</option>
+          <option>فاس</option>
+          <option>مراكش</option>
+          <option>طنجة</option>
+          <option>أكادير</option>
+          <option>مكناس</option>
+          <option>وجدة</option>
+          <option>سلا</option>
+          <option>تطوان</option>
+        </select>
+      </div>
+      <button class="search-btn" onclick="handleSearch()" aria-label="ابحث">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        ابحث
+      </button>
+    </div>
+ 
+    <div style="margin-bottom: 8px;">
+      <span class="example-pill" onclick="fillSearch('بلومبي')">🔧 بلومبي</span>
+      <span class="example-pill" onclick="fillSearch('كهربائي')">⚡ كهربائي</span>
+      <span class="example-pill" onclick="fillSearch('نجار')">🪚 نجار</span>
+      <span class="example-pill" onclick="fillSearch('ميكانيكي')">🚗 ميكانيكي</span>
+      <span class="example-pill" onclick="fillSearch('مصور')">📷 مصور</span>
+      <span class="example-pill" onclick="fillSearch('مطور مواقع')">💻 مطور مواقع</span>
+    </div>
+ 
+    <div class="hero-ctas">
+      <a href="submit.html" class="btn-primary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+        قدم خدمتك
+      </a>
+      <a href="#services" class="btn-secondary">
+        ابدأ البحث
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </a>
+    </div>
+  </div>
+ 
+  <!-- Hero Visual -->
+  <div class="hero-visual">
+    <div class="floating-badge top-right">
+      <div class="badge-dot green"></div>
+      <span>+1,200 مهني نشيط</span>
+    </div>
+ 
+    <div class="hero-illustration">
+      <div class="pro-cards-grid">
+        <div class="mini-pro-card">
+          <div class="pro-icon" style="background: #EAF2FF;">🔧</div>
+          <div class="pro-name">محمد</div>
+          <div class="pro-role">بلومبي محترف</div>
+          <div class="pro-stars">⭐ 4.9</div>
+        </div>
+        <div class="mini-pro-card">
+          <div class="pro-icon" style="background: #FFF9E6;">⚡</div>
+          <div class="pro-name">أحمد</div>
+          <div class="pro-role">كهربائي</div>
+          <div class="pro-stars">⭐ 4.8</div>
+        </div>
+        <div class="mini-pro-card">
+          <div class="pro-icon" style="background: #F0FFF8;">🪚</div>
+          <div class="pro-name">يوسف</div>
+          <div class="pro-role">نجار</div>
+          <div class="pro-stars">⭐ 4.7</div>
+        </div>
+        <div class="mini-pro-card">
+          <div class="pro-icon" style="background: #FFF0F0;">🚗</div>
+          <div class="pro-name">رشيد</div>
+          <div class="pro-role">ميكانيكي</div>
+          <div class="pro-stars">⭐ 4.9</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>+3,500</strong>
+          <span>مهني مسجل</span>
+        </div>
+        <div class="hero-stat">
+          <strong>+25K</strong>
+          <span>خدمة منجزة</span>
+        </div>
+        <div class="hero-stat">
+          <strong>4.8★</strong>
+          <span>متوسط التقييم</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="floating-badge bottom-left">
+      <div class="badge-dot blue"></div>
+      <span>خدمة موثوقة 100%</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- ━━━━━ SERVICES ━━━━━ -->
+<section class="services-section scroll-reveal" id="services">
+  <div class="section-label">🔍 استكشف</div>
+  <h2 class="section-title">الخدمات <span>الأكثر طلباً</span></h2>
+  <p class="section-sub">ابحث عن أي خدمة من الخدمات اليومية حتى الأشغال التقنية المتخصصة — كل شيء فمكان واحد.</p>
+ 
+  <div class="services-grid">
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#EAF2FF;">🔧</div>
+      <div class="service-name">بلومبي</div>
+      <div class="service-count">+180 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#FFFBE6;">⚡</div>
+      <div class="service-name">كهربائي</div>
+      <div class="service-count">+220 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#F0FFF4;">🪚</div>
+      <div class="service-name">نجار</div>
+      <div class="service-count">+150 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#FFF0F0;">🎨</div>
+      <div class="service-name">صباغ</div>
+      <div class="service-count">+130 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#FFF5E6;">🚗</div>
+      <div class="service-name">ميكانيكي</div>
+      <div class="service-count">+200 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#F5F0FF;">📷</div>
+      <div class="service-name">مصور</div>
+      <div class="service-count">+90 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#E6F9F3;">💻</div>
+      <div class="service-name">مطور مواقع</div>
+      <div class="service-count">+110 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#E6F0FF;">🧹</div>
+      <div class="service-name">تنظيف</div>
+      <div class="service-count">+160 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#FFF0FB;">🏠</div>
+      <div class="service-name">ديكور</div>
+      <div class="service-count">+85 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#F0FFF8;">🌿</div>
+      <div class="service-name">تنسيق حدائق</div>
+      <div class="service-count">+65 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#FFF5E0;">📱</div>
+      <div class="service-name">إصلاح هواتف</div>
+      <div class="service-count">+140 مهني</div>
+    </a>
+    <a href="#" class="service-card">
+      <div class="service-icon" style="background:#EFF6FF;">🎓</div>
+      <div class="service-name">دروس خصوصية</div>
+      <div class="service-count">+300 مهني</div>
+    </a>
+  </div>
+</section>
+ 
+<!-- ━━━━━ PROFESSIONALS ━━━━━ -->
+<section style="background: var(--bg); padding: 90px 5%;" class="scroll-reveal" id="pros">
+  <div class="section-label">⭐ الأفضل تقييماً</div>
+  <h2 class="section-title">مهنيون <span>موثوقون</span></h2>
+  <p class="section-sub">شوف أحسن المهنيين فالمغرب — كل واحد معه تقييمات حقيقية من زبناء ساب عليه.</p>
+ 
+  <div class="pros-grid">
+    <!-- Card 1 -->
+    <div class="pro-card">
+      <div class="pro-card-badge">متاح الآن</div>
+      <div class="pro-card-top">
+        <div class="pro-avatar">م</div>
+        <div class="pro-card-info">
+          <div class="pro-card-name">محمد السباك</div>
+          <div class="pro-card-city">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            فاس
+          </div>
+        </div>
+      </div>
+      <div class="pro-card-stats">
+        <div class="pro-stat">
+          <strong>⭐ 4.9</strong>
+          <span>التقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>120</strong>
+          <span>تقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>8 سنين</strong>
+          <span>خبرة</span>
+        </div>
+      </div>
+      <div class="pro-card-footer">
+        <div class="pro-price">من <strong>80 درهم</strong></div>
+        <a href="#" class="btn-view">عرض الملف ←</a>
+      </div>
+    </div>
+ 
+    <!-- Card 2 -->
+    <div class="pro-card">
+      <div class="pro-card-badge">متاح الآن</div>
+      <div class="pro-card-top">
+        <div class="pro-avatar" style="color: var(--green-dark); background: linear-gradient(135deg, var(--green-light), #C6F7E9);">أ</div>
+        <div class="pro-card-info">
+          <div class="pro-card-name">أحمد الكهربائي</div>
+          <div class="pro-card-city">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            الدار البيضاء
+          </div>
+        </div>
+      </div>
+      <div class="pro-card-stats">
+        <div class="pro-stat">
+          <strong>⭐ 4.8</strong>
+          <span>التقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>95</strong>
+          <span>تقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>5 سنين</strong>
+          <span>خبرة</span>
+        </div>
+      </div>
+      <div class="pro-card-footer">
+        <div class="pro-price">من <strong>100 درهم</strong></div>
+        <a href="#" class="btn-view">عرض الملف ←</a>
+      </div>
+    </div>
+ 
+    <!-- Card 3 -->
+    <div class="pro-card">
+      <div class="pro-card-badge">متاح الآن</div>
+      <div class="pro-card-top">
+        <div class="pro-avatar" style="color: #92400E; background: linear-gradient(135deg, #FFF3C4, #FDE68A);">ي</div>
+        <div class="pro-card-info">
+          <div class="pro-card-name">يوسف النجار</div>
+          <div class="pro-card-city">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            مراكش
+          </div>
+        </div>
+      </div>
+      <div class="pro-card-stats">
+        <div class="pro-stat">
+          <strong>⭐ 4.7</strong>
+          <span>التقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>87</strong>
+          <span>تقييم</span>
+        </div>
+        <div class="pro-stat">
+          <strong>12 سنة</strong>
+          <span>خبرة</span>
+        </div>
+      </div>
+      <div class="pro-card-footer">
+        <div class="pro-price">من <strong>150 درهم</strong></div>
+        <a href="#" class="btn-view">عرض الملف ←</a>
+      </div>
+    </div>
+  </div>
+ 
+  <div style="text-align: center; margin-top: 48px;">
+    <a href="#" class="btn-secondary">شوف جميع المهنيين</a>
+  </div>
+</section>
+ 
+<!-- ━━━━━ HOW IT WORKS ━━━━━ -->
+<section class="how-section scroll-reveal" id="how">
+  <div style="text-align: center; margin-bottom: 60px;">
+    <div class="section-label" style="display: inline-flex;">⚡ سهل وسريع</div>
+    <h2 class="section-title">كيف <span>يخدم</span>؟</h2>
+    <p class="section-sub" style="margin: 0 auto;">أربع خطوات بسيطة وتقدر تلقى أحسن مهني فمدينتك وتتواصل معاه مباشرة.</p>
+  </div>
+ 
+  <div class="steps-container">
+    <div class="step-item">
+      <div class="step-icon-wrap" style="background: linear-gradient(135deg, #EAF2FF, #C3DEFF);">🔍</div>
+      <div class="step-title">ابحث عن الخدمة</div>
+      <div class="step-desc">دخل اسم الخدمة اللي محتاجها وختار مدينتك</div>
+    </div>
+    <div class="step-item">
+      <div class="step-icon-wrap" style="background: linear-gradient(135deg, #E8F8F3, #A8EDD3);">⚖️</div>
+      <div class="step-title">قارن بين المهنيين</div>
+      <div class="step-desc">شوف التقييمات والأسعار واختار اللي يناسبك</div>
+    </div>
+    <div class="step-item">
+      <div class="step-icon-wrap" style="background: linear-gradient(135deg, #F5F0FF, #DDD0FF);">💬</div>
+      <div class="step-title">تواصل مباشرة</div>
+      <div class="step-desc">تواصل مع المهني مباشرة عبر المنصة بلا وساطة</div>
+    </div>
+    <div class="step-item">
+      <div class="step-icon-wrap" style="background: linear-gradient(135deg, #FFFBE6, #FFE88A);">⭐</div>
+      <div class="step-title">قيّم الخدمة</div>
+      <div class="step-desc">بعد خلاص الخدمة، خلي تقييمك باش تساعد الآخرين</div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ━━━━━ WHY US ━━━━━ -->
+<section class="why-section scroll-reveal" id="about">
+  <div class="section-label">💎 مميزاتنا</div>
+  <h2 class="section-title">علاش <span>خدماتي</span>؟</h2>
+  <p class="section-sub">بنينا خدماتي باش نحلو مشكل حقيقي — صعوبة إيجاد مهني موثوق فالمغرب.</p>
+ 
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon" style="background:#EAF2FF;">🇲🇦</div>
+      <div class="why-text">
+        <h3>تغطية وطنية شاملة</h3>
+        <p>مهنيون من جميع مدن المغرب — من الدار البيضاء حتى العيون</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" style="background:#FFF9E6;">⭐</div>
+      <div class="why-text">
+        <h3>تقييمات حقيقية وموثوقة</h3>
+        <p>كل تقييم من زبون حقيقي استخدم الخدمة — بلا تزوير ولا تزوير</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" style="background:#E8F8F3;">💰</div>
+      <div class="why-text">
+        <h3>مقارنة الأسعار</h3>
+        <p>شوف الأسعار وقارن بين عدة مقدمي خدمات قبل ما تختار</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" style="background:#F5F0FF;">💬</div>
+      <div class="why-text">
+        <h3>تواصل مباشر بلا وساطة</h3>
+        <p>تكلم مع المهني مباشرة — ما كاين حتى واسطة ولا عمولة</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" style="background:#FFF0F0;">🚀</div>
+      <div class="why-text">
+        <h3>بحث سريع وسهل</h3>
+        <p>لقى اللي محتاجه ف30 ثانية — بحث ذكي وفلترة متقدمة</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" style="background:#E6F9F3;">🔒</div>
+      <div class="why-text">
+        <h3>أمان وخصوصية</h3>
+        <p>بياناتك محمية والتواصل آمن عبر منصتنا المشفرة</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ━━━━━ TESTIMONIALS ━━━━━ -->
+<section class="testimonials-section scroll-reveal">
+  <div class="section-label">💬 آراء الزبناء</div>
+  <h2 class="section-title">واش قالو <span>زبناؤنا</span>؟</h2>
+  <p class="section-sub">آلاف الناس فالمغرب خدمو مع منصتنا وكانو مرتاحين.</p>
+ 
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">لقيت بلومبي ممتاز فدقائق. كان محترف وواعر وأسعاره معقولة. خدمة ممتازة وما توقعتش إيجاد حل بهاد السرعة!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">س</div>
+        <div>
+          <div class="author-stars"><span class="star">★★★★★</span></div>
+          <div class="author-name">سارة بنعلي</div>
+          <div class="author-city">📍 الرباط</div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">التقييمات ساعدتني نختار أحسن كهربائي. قرأت التقييمات وختار واحد بـ4.9 نجوم. الخدمة كانت ممتازة ومعقولة فالسعر.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: linear-gradient(135deg, var(--green-light), #C6F7E9); color: var(--green-dark);">ح</div>
+        <div>
+          <div class="author-stars"><span class="star">★★★★★</span></div>
+          <div class="author-name">حمزة الإدريسي</div>
+          <div class="author-city">📍 طنجة</div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <p class="testimonial-text">منصة سهلة وسريعة. تواصلت مع نجار فأقل من دقيقة وجدولنا موعد للغد. الشغل جاء فبالي تماماً. نوصي بيها للكل!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: linear-gradient(135deg, #FFF3C4, #FDE68A); color: #92400E;">م</div>
+        <div>
+          <div class="author-stars"><span class="star">★★★★★</span></div>
+          <div class="author-name">مريم الزاهري</div>
+          <div class="author-city">📍 أكادير</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ━━━━━ PRO CTA ━━━━━ -->
+<section class="pro-cta-section scroll-reveal">
+  <div class="section-label">🚀 انضم إلينا</div>
+  <h2>عندك خدمة كتقدمها؟</h2>
+  <p>سجل الآن وخلي الزبناء يلقاوك بسهولة. أكثر من 3,500 مهني خدمو معنا بالفعل!</p>
+ 
+  <a href="submit.html" class="btn-cta-white">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+    قدم خدمتك الآن
+  </a>
+ 
+  <div class="cta-features">
+    <div class="cta-feat">تسجيل مجاني</div>
+    <div class="cta-feat">زبناء حقيقيين</div>
+    <div class="cta-feat">تسيير سهل</div>
+    <div class="cta-feat">دعم متواصل</div>
+  </div>
+</section>
+ 
+<!-- ━━━━━ FOOTER ━━━━━ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="footer-logo">خدماتي</a>
+      <p class="footer-desc">المنصة الأولى فالمغرب للربط بين الزبناء والمهنيين. نسهلو عليك تلقى أحسن خدمة بأحسن سعر فمدينتك.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn" aria-label="فيسبوك">f</a>
+        <a href="#" class="social-btn" aria-label="انستغرام">in</a>
+        <a href="#" class="social-btn" aria-label="واتساب">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+      </div>
+    </div>
+ 
+    <div class="footer-col">
+      <h4>الروابط</h4>
+      <ul>
+        <li><a href="#home">الرئيسية</a></li>
+        <li><a href="#services">الخدمات</a></li>
+        <li><a href="#pros">المهنيون</a></li>
+        <li><a href="#how">كيف يخدم</a></li>
+        <li><a href="#about">من نحن</a></li>
+      </ul>
+    </div>
+ 
+    <div class="footer-col">
+      <h4>المهنيون</h4>
+      <ul>
+        <li><a href="#">سجل خدمتك</a></li>
+        <li><a href="#">كيف تسجل</a></li>
+        <li><a href="#">نصائح للمهنيين</a></li>
+        <li><a href="#">الدعم</a></li>
+      </ul>
+    </div>
+ 
+    <div class="footer-col">
+      <h4>القانوني</h4>
+      <ul>
+        <li><a href="#">سياسة الخصوصية</a></li>
+        <li><a href="#">شروط الاستخدام</a></li>
+        <li><a href="#">اتصل بنا</a></li>
+        <li><a href="#">الشكاوى</a></li>
+      </ul>
+    </div>
+  </div>
+ 
+  <div class="footer-bottom">
+    <p>© 2026 خدماتي — جميع الحقوق محفوظة. صنع بـ❤️ فالمغرب</p>
+    <div class="footer-bottom-links">
+      <a href="#">سياسة الخصوصية</a>
+      <a href="#">الشروط والأحكام</a>
+      <a href="#">اتصل بنا</a>
+    </div>
+  </div>
+</footer>
+ 
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+  });
+ 
+  // Search example fill
+  function fillSearch(term) {
+    document.getElementById('heroSearch').value = term;
+    document.getElementById('heroSearch').focus();
+  }
+ 
+  function handleSearch() {
+    const q = document.getElementById('heroSearch').value;
+    if (q.trim()) {
+      alert('جاري البحث عن: ' + q + ' — ستتوفر النتائج قريباً!');
+    }
+  }
+ 
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.scroll-reveal, .step-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), e.target.classList.contains('step-item') ? 0 : 0);
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+ 
+  // Stagger step items
+  const stepItems = document.querySelectorAll('.step-item');
+  const stepObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      stepItems.forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 150);
+      });
+    }
+  }, { threshold: 0.2 });
+  if (stepItems.length) stepObserver.observe(stepItems[0].closest('.steps-container'));
+ 
+  // Counter animation for hero stats
+  function animateCounter(el, target, suffix = '') {
+    let start = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      el.textContent = (suffix === '★' ? '' : '+') + Math.round(start).toLocaleString('ar') + suffix;
+    }, 40);
+  }
+ 
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
