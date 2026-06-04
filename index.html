@@ -798,6 +798,32 @@
   }
 }
 
+
+
+
+/* Modal overlay */
+.modal-overlay-kh {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.modal-overlay-kh.open { opacity: 1; pointer-events: all; }
+.modal-kh {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%; max-width: 480px;
+  max-height: 88vh; overflow-y: auto;
+  transform: translateY(20px);
+  transition: transform .25s;
+  border: 1px solid var(--border);
+}
+.modal-overlay-kh.open .modal-kh { transform: translateY(0); }
+
+
+ 
 </style>
 </head>
 <body>
@@ -1010,7 +1036,7 @@
 <section style="background: var(--bg); padding: 90px 5%;" class="scroll-reveal" id="pros">
   <div class="section-label">⭐ الأفضل تقييماً</div>
   <h2 class="section-title">مهنيون <span>موثوقون</span></h2>
-  <p class="section-sub">شوف أحسن المهنيين فالمغرب — كل واحد معه تقييمات حقيقية من زبناء ساب عليه.</p>
+  <p class="section-sub">شوف أحسن المهنيين فالمغرب — كل واحد معه تقييمات حقيقية.</p>
 
   <div class="pros-grid" id="prosGrid">
     <!-- loading skeleton -->
