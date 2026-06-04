@@ -1,45 +1,867 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خدماتي | لوحة الإدارة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1A73E8;--blue-dark:#1557B0;--blue-light:#EAF2FF;
+  --green:#00B87A;--green-dark:#008F5F;--green-light:#E6F9F3;
+  --red:#EF4444;--red-light:#FEF2F2;
+  --orange:#F59E0B;--orange-light:#FFFBEB;
+  --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;
+  --gray-400:#94A3B8;--gray-600:#64748B;--gray-700:#475569;--gray-800:#1E293B;--gray-900:#0F172A;
+  --white:#FFFFFF;
+  --sidebar-w:260px;
+}
+html,body{font-family:'Cairo',sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh}
+ 
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:100vh}
+ 
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);position:fixed;top:0;right:0;bottom:0;
+  background:var(--gray-900);
+  display:flex;flex-direction:column;
+  z-index:100;transition:transform .3s;
+}
+.sidebar-logo{
+  padding:1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-logo-text{
+  font-size:1.4rem;font-weight:900;
+  background:linear-gradient(135deg,#60A5FA,#34D399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.sidebar-logo-badge{
+  font-size:10px;background:rgba(239,68,68,0.15);color:#FCA5A5;
+  border:1px solid rgba(239,68,68,0.3);border-radius:100px;
+  padding:2px 8px;font-weight:700;
+}
+.sidebar-nav{flex:1;padding:1rem 0;overflow-y:auto}
+.nav-section-label{
+  font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:.75rem 1.25rem .5rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:.7rem 1.25rem;margin:2px .75rem;
+  border-radius:10px;cursor:pointer;
+  color:rgba(255,255,255,0.55);font-size:14px;font-weight:600;
+  transition:all .2s;text-decoration:none;
+}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,rgba(26,115,232,0.25),rgba(0,184,122,0.15));color:#fff;border:1px solid rgba(26,115,232,0.2)}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-right:auto;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;min-width:20px;text-align:center}
+.sidebar-footer{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,0.07)}
+.admin-info{display:flex;align-items:center;gap:10px}
+.admin-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0}
+.admin-name{font-size:13px;font-weight:700;color:#fff}
+.admin-role{font-size:11px;color:rgba(255,255,255,0.4)}
+ 
+/* ── MAIN ── */
+.main{margin-right:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+ 
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:.875rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-size:1.1rem;font-weight:800;color:var(--gray-800)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--gray-50);border:1px solid var(--gray-200);
+  border-radius:10px;padding:8px 14px;
+}
+.topbar-search input{border:none;background:transparent;font-family:'Cairo',sans-serif;font-size:14px;color:var(--gray-800);outline:none;width:200px}
+.topbar-search input::placeholder{color:var(--gray-400)}
+.notif-btn{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--gray-200);
+  background:var(--white);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;color:var(--gray-600);transition:all .2s;
+}
+.notif-btn:hover{background:var(--gray-50);border-color:var(--blue)}
+.notif-dot{position:absolute;top:6px;left:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #fff}
+.refresh-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--blue);color:#fff;border:none;cursor:pointer;
+  padding:8px 16px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  transition:all .2s;
+}
+.refresh-btn:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.refresh-btn svg{transition:transform .5s}
+.refresh-btn.spinning svg{transform:rotate(360deg)}
+ 
+/* ── CONTENT ── */
+.content{padding:2rem;flex:1}
+ 
+/* ── STATS GRID ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{
+  background:var(--white);border-radius:14px;border:1px solid var(--gray-200);
+  padding:1.25rem;display:flex;align-items:center;gap:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .3s;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stat-info strong{display:block;font-size:1.5rem;font-weight:900;color:var(--gray-800);line-height:1}
+.stat-info span{font-size:13px;color:var(--gray-600);font-weight:500}
+.stat-trend{margin-top:4px;font-size:12px;font-weight:700}
+.stat-trend.up{color:var(--green)}
+.stat-trend.warn{color:var(--orange)}
+ 
+/* ── FILTERS BAR ── */
+.filters-bar{
+  background:var(--white);border-radius:14px;border:1px solid var(--gray-200);
+  padding:1rem 1.25rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.filter-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:100px;border:1.5px solid var(--gray-200);
+  background:var(--white);color:var(--gray-600);font-family:'Cairo',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue)}
+.filter-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.filter-btn.active.green{background:var(--green);border-color:var(--green)}
+.filter-btn.active.red{background:var(--red);border-color:var(--red)}
+.filter-btn.active.orange{background:var(--orange);border-color:var(--orange)}
+.filter-count{background:rgba(255,255,255,0.25);border-radius:100px;padding:1px 7px;font-size:11px}
+.filter-btn:not(.active) .filter-count{background:var(--gray-100);color:var(--gray-600)}
+.filters-bar select{
+  margin-right:auto;border:1.5px solid var(--gray-200);border-radius:10px;
+  padding:7px 12px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;
+  color:var(--gray-700);background:var(--white);cursor:pointer;outline:none;
+}
+ 
+/* ── TABLE ── */
+.table-card{background:var(--white);border-radius:14px;border:1px solid var(--gray-200);box-shadow:0 2px 8px rgba(0,0,0,0.04);overflow:hidden}
+.table-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.table-header h3{font-size:15px;font-weight:800;color:var(--gray-800)}
+.table-count{font-size:13px;color:var(--gray-400);font-weight:500}
+table{width:100%;border-collapse:collapse}
+thead th{
+  background:var(--gray-50);padding:.875rem 1rem;
+  text-align:right;font-size:12px;font-weight:700;
+  color:var(--gray-500,#6B7280);letter-spacing:.5px;
+  border-bottom:1px solid var(--gray-200);white-space:nowrap;
+}
+tbody tr{border-bottom:1px solid var(--gray-100);transition:background .15s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--gray-50)}
+td{padding:.875rem 1rem;font-size:14px;color:var(--gray-800);vertical-align:middle}
+ 
+.pro-cell{display:flex;align-items:center;gap:10px}
+.pro-avatar-sm{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue-light),var(--green-light));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;color:var(--blue-dark);flex-shrink:0;
+  border:2px solid var(--gray-200);overflow:hidden;
+}
+.pro-avatar-sm img{width:100%;height:100%;object-fit:cover}
+.pro-name-td{font-weight:700;color:var(--gray-800)}
+.pro-phone-td{font-size:12px;color:var(--gray-500,#6B7280);direction:ltr;text-align:right}
+ 
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:12px;font-weight:700}
+.badge-pending{background:var(--orange-light);color:#92400E}
+.badge-approved{background:var(--green-light);color:var(--green-dark)}
+.badge-rejected{background:var(--red-light);color:#991B1B}
+.badge-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge-pending .badge-dot{background:#F59E0B}
+.badge-approved .badge-dot{background:var(--green)}
+.badge-rejected .badge-dot{background:var(--red)}
+ 
+.action-btns{display:flex;align-items:center;gap:6px}
+.btn-action{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;
+  transition:all .2s;white-space:nowrap;
+}
+.btn-approve{background:var(--green-light);color:var(--green-dark)}
+.btn-approve:hover{background:var(--green);color:#fff;transform:translateY(-1px)}
+.btn-reject{background:var(--red-light);color:#991B1B}
+.btn-reject:hover{background:var(--red);color:#fff;transform:translateY(-1px)}
+.btn-view-detail{background:var(--blue-light);color:var(--blue-dark)}
+.btn-view-detail:hover{background:var(--blue);color:#fff;transform:translateY(-1px)}
+.btn-delete{background:var(--gray-100);color:var(--gray-600)}
+.btn-delete:hover{background:#FEE2E2;color:var(--red);transform:translateY(-1px)}
+ 
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--gray-400)}
+.empty-state svg{margin:0 auto 1rem;opacity:.3}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--gray-600);margin-bottom:.5rem}
+.empty-state p{font-size:13px}
+ 
+/* ── LOADING ── */
+.skeleton{background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-row td{padding:.875rem 1rem}
+ 
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,0.6);
+  backdrop-filter:blur(4px);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--white);border-radius:20px;
+  width:100%;max-width:640px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 64px rgba(0,0,0,0.2);
+  animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{
+  padding:1.5rem 1.75rem;border-bottom:1px solid var(--gray-100);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.modal-title{font-size:1.1rem;font-weight:800;color:var(--gray-800)}
+.modal-close{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--gray-200);
+  background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--gray-600);font-size:18px;transition:all .2s;
+}
+.modal-close:hover{background:var(--red-light);color:var(--red);border-color:var(--red)}
+.modal-body{padding:1.75rem}
+.modal-pro-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--gray-100)}
+.modal-avatar{
+  width:72px;height:72px;border-radius:50%;
+  border:3px solid var(--blue);overflow:hidden;background:var(--blue-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:800;color:var(--blue-dark);flex-shrink:0;
+}
+.modal-avatar img{width:100%;height:100%;object-fit:cover}
+.modal-pro-name{font-size:1.2rem;font-weight:800;color:var(--gray-800)}
+.modal-pro-service{font-size:13px;color:var(--gray-600);margin-top:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
+.info-item{background:var(--gray-50);border-radius:10px;padding:12px 14px}
+.info-label{font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px}
+.info-value{font-size:14px;font-weight:700;color:var(--gray-800)}
+.modal-desc{background:var(--gray-50);border-radius:10px;padding:14px;margin-bottom:1.25rem}
+.modal-desc-label{font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:8px}
+.modal-desc-text{font-size:14px;color:var(--gray-700);line-height:1.8}
+.modal-images{margin-bottom:1.25rem}
+.modal-images-label{font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:8px}
+.modal-images-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.modal-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);cursor:pointer;transition:transform .2s}
+.modal-img:hover{transform:scale(1.05)}
+.modal-footer{
+  padding:1.25rem 1.75rem;border-top:1px solid var(--gray-100);
+  display:flex;gap:10px;justify-content:flex-end;
+  position:sticky;bottom:0;background:var(--white);
+}
+.btn-modal{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 24px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:all .2s;
+}
+.btn-modal-approve{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(0,184,122,0.3)}
+.btn-modal-approve:hover{background:var(--green-dark);transform:translateY(-2px)}
+.btn-modal-reject{background:var(--red);color:#fff;box-shadow:0 4px 12px rgba(239,68,68,0.3)}
+.btn-modal-reject:hover{background:#DC2626;transform:translateY(-2px)}
+.btn-modal-cancel{background:var(--gray-100);color:var(--gray-600)}
+.btn-modal-cancel:hover{background:var(--gray-200)}
+ 
+/* ── TOAST ── */
+.toast-container{position:fixed;bottom:2rem;left:2rem;z-index:300;display:flex;flex-direction:column;gap:10px}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  background:var(--gray-900);color:#fff;
+  padding:12px 18px;border-radius:12px;
+  font-size:14px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);
+  animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);
+  border-right:4px solid var(--green);min-width:260px;
+}
+.toast.error{border-color:var(--red)}
+.toast.warning{border-color:var(--orange)}
+@keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.toast-icon{font-size:18px;flex-shrink:0}
+ 
+/* ── CONFIRM DIALOG ── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:250;display:none;align-items:center;justify-content:center}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:#fff;border-radius:16px;padding:2rem;max-width:380px;width:90%;box-shadow:0 24px 48px rgba(0,0,0,0.15);text-align:center;animation:slideUp .3s ease}
+.confirm-icon{font-size:3rem;margin-bottom:1rem}
+.confirm-title{font-size:1.1rem;font-weight:800;color:var(--gray-800);margin-bottom:.5rem}
+.confirm-text{font-size:14px;color:var(--gray-600);line-height:1.7;margin-bottom:1.5rem}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+.btn-confirm-yes{background:var(--red);color:#fff;border:none;cursor:pointer;padding:10px 24px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:all .2s}
+.btn-confirm-yes:hover{background:#DC2626}
+.btn-confirm-yes.green{background:var(--green)}
+.btn-confirm-yes.green:hover{background:var(--green-dark)}
+.btn-confirm-no{background:var(--gray-100);color:var(--gray-700);border:none;cursor:pointer;padding:10px 24px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:all .2s}
+.btn-confirm-no:hover{background:var(--gray-200)}
+ 
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-right:0}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .topbar{padding:.875rem 1rem}
+  .content{padding:1rem}
+  .topbar-search{display:none}
+  table{font-size:13px}
+  .info-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}}
+ 
+.mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px}
+@media(max-width:768px){.mobile-toggle{display:flex;align-items:center}}
+ 
+/* ── STATUS TAG in table ── */
+.city-tag{font-size:12px;color:var(--gray-600);display:flex;align-items:center;gap:4px}
+.price-tag{font-weight:700;color:var(--blue);font-size:14px}
+</style>
 </head>
 <body>
-    
-
-    <h1>لوحة الإدارة</h1>
-
-<div id="providers-list"></div>
-</body>
-</html>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ 
+<div class="layout">
+ 
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div>
+      <div class="sidebar-logo-text">خدماتي</div>
+      <div class="sidebar-logo-badge">ADMIN</div>
+    </div>
+  </div>
+ 
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">الرئيسية</div>
+    <a class="nav-item active" onclick="setPage('providers')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      المزودون
+      <span class="nav-badge" id="pendingBadge">0</span>
+    </a>
+ 
+    <div class="nav-section-label" style="margin-top:.5rem">الإحصائيات</div>
+    <a class="nav-item" style="cursor:default;opacity:.5">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      التحليلات
+    </a>
+    <a class="nav-item" style="cursor:default;opacity:.5">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      التقارير
+    </a>
+  </nav>
+ 
+  <div class="sidebar-footer">
+    <div class="admin-info">
+      <div class="admin-avatar">أ</div>
+      <div>
+        <div class="admin-name">المدير</div>
+        <div class="admin-role">admin@khdamati.ma</div>
+      </div>
+    </div>
+  </div>
+</aside>
+ 
+<!-- ── MAIN ── -->
+<div class="main">
+ 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="pageTitle">إدارة المزودين</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="ابحث عن مزود..." id="searchInput" oninput="filterProviders()">
+      </div>
+      <div class="notif-btn" title="الإشعارات">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <button class="refresh-btn" id="refreshBtn" onclick="loadProviders()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        تحديث
+      </button>
+    </div>
+  </div>
+ 
+  <!-- CONTENT -->
+  <div class="content">
+ 
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#EAF2FF">👥</div>
+        <div class="stat-info">
+          <strong id="statTotal">—</strong>
+          <span>إجمالي المزودين</span>
+          <div class="stat-trend up" id="statTotalTrend"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#FFFBEB">⏳</div>
+        <div class="stat-info">
+          <strong id="statPending">—</strong>
+          <span>في انتظار المراجعة</span>
+          <div class="stat-trend warn" id="statPendingTrend"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#E6F9F3">✅</div>
+        <div class="stat-info">
+          <strong id="statApproved">—</strong>
+          <span>تمت الموافقة</span>
+          <div class="stat-trend up" id="statApprovedTrend"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#FEF2F2">❌</div>
+        <div class="stat-info">
+          <strong id="statRejected">—</strong>
+          <span>مرفوض</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- FILTERS -->
+    <div class="filters-bar">
+      <button class="filter-btn active" id="filter-all" onclick="applyFilter('all')">
+        الكل <span class="filter-count" id="fc-all">0</span>
+      </button>
+      <button class="filter-btn" id="filter-pending" onclick="applyFilter('pending')">
+        ⏳ انتظار <span class="filter-count" id="fc-pending">0</span>
+      </button>
+      <button class="filter-btn" id="filter-approved" onclick="applyFilter('approved')">
+        ✅ موافق <span class="filter-count" id="fc-approved">0</span>
+      </button>
+      <button class="filter-btn" id="filter-rejected" onclick="applyFilter('rejected')">
+        ❌ مرفوض <span class="filter-count" id="fc-rejected">0</span>
+      </button>
+      <select id="cityFilter" onchange="filterProviders()">
+        <option value="">كل المدن</option>
+        <option>الدار البيضاء</option><option>الرباط</option><option>فاس</option>
+        <option>مراكش</option><option>طنجة</option><option>أكادير</option>
+        <option>مكناس</option><option>وجدة</option><option>القنيطرة</option>
+        <option>تطوان</option><option>العيون</option><option>خريبكة</option>
+        <option>الجديدة</option><option>آسفي</option><option>الناظور</option><option>بني ملال</option>
+      </select>
+    </div>
+ 
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>قائمة المزودين</h3>
+        <span class="table-count" id="tableCount">0 مزود</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>المزود</th>
+              <th>الخدمة</th>
+              <th>المدينة</th>
+              <th>السعر</th>
+              <th>الخبرة</th>
+              <th>الحالة</th>
+              <th>تاريخ التسجيل</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="providersTableBody">
+            <tr class="skeleton-row"><td colspan="8"><div class="skeleton" style="height:16px;width:80%;margin:4px 0"></div></td></tr>
+            <tr class="skeleton-row"><td colspan="8"><div class="skeleton" style="height:16px;width:60%"></div></td></tr>
+            <tr class="skeleton-row"><td colspan="8"><div class="skeleton" style="height:16px;width:70%"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+ 
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title">تفاصيل المزود</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- dynamic content -->
+    </div>
+    <div class="modal-footer" id="modalFooter">
+      <!-- dynamic buttons -->
+    </div>
+  </div>
+</div>
+ 
+<!-- ── CONFIRM DIALOG ── -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <div class="confirm-title" id="confirmTitle">تأكيد</div>
+    <div class="confirm-text" id="confirmText">هل أنت متأكد؟</div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" id="confirmYesBtn" onclick="confirmAction()">تأكيد</button>
+      <button class="btn-confirm-no" onclick="closeConfirm()">إلغاء</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ── TOASTS ── -->
+<div class="toast-container" id="toastContainer"></div>
+ 
 <script>
-const SUPABASE_URL = "https://kacutivlrarulhbrzsil.supabase.co";
-const SUPABASE_KEY = "sb_publishable_knJWpDzuNAy_UrdiEWd3AA_D6McKtgn";
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-</script>
-
-
-<script>
-
-loadProviders();
-
+// ═══════════════════════════════════════════
+//  CONFIG — غير هاد القيم فقط
+// ═══════════════════════════════════════════
+const SUPABASE_URL  = "https://kacutivlrarulhbrzsil.supabase.co";
+const SUPABASE_ANON = "YOUR_ANON_KEY_HERE"; // ← حط anon key ديالك هنا
+ 
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+const { createClient } = window.supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+ 
+let allProviders = [];
+let currentFilter = 'all';
+let pendingConfirm = null;
+ 
+// ═══════════════════════════════════════════
+//  LOAD DATA
+// ═══════════════════════════════════════════
 async function loadProviders() {
-
-  const { data, error } = await supabase
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+ 
+  const { data, error } = await db
     .from('providers')
     .select('*')
     .order('created_at', { ascending: false });
-
-  console.log(data);
-
+ 
+  btn.classList.remove('spinning');
+ 
+  if (error) {
+    showToast('خطأ في تحميل البيانات: ' + error.message, 'error');
+    return;
+  }
+ 
+  allProviders = data || [];
+  updateStats();
+  filterProviders();
 }
-
-console.log("connected");
+ 
+// ═══════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════
+function updateStats() {
+  const total    = allProviders.length;
+  const pending  = allProviders.filter(p => p.status === 'pending').length;
+  const approved = allProviders.filter(p => p.status === 'approved').length;
+  const rejected = allProviders.filter(p => p.status === 'rejected').length;
+ 
+  document.getElementById('statTotal').textContent    = total;
+  document.getElementById('statPending').textContent  = pending;
+  document.getElementById('statApproved').textContent = approved;
+  document.getElementById('statRejected').textContent = rejected;
+ 
+  document.getElementById('pendingBadge').textContent = pending;
+  document.getElementById('pendingBadge').style.display = pending > 0 ? 'inline-block' : 'none';
+ 
+  // filter counts
+  document.getElementById('fc-all').textContent      = total;
+  document.getElementById('fc-pending').textContent  = pending;
+  document.getElementById('fc-approved').textContent = approved;
+  document.getElementById('fc-rejected').textContent = rejected;
+ 
+  if (pending > 0) document.getElementById('statPendingTrend').textContent = `⚠ ${pending} بحاجة مراجعة`;
+  if (approved > 0) document.getElementById('statApprovedTrend').textContent = `↑ ${approved} نشيط`;
+}
+ 
+// ═══════════════════════════════════════════
+//  FILTER
+// ═══════════════════════════════════════════
+function applyFilter(f) {
+  currentFilter = f;
+  ['all','pending','approved','rejected'].forEach(id => {
+    const btn = document.getElementById('filter-' + id);
+    btn.className = 'filter-btn' + (id === f ? ' active ' + (id === 'pending' ? 'orange' : id === 'approved' ? 'green' : id === 'rejected' ? 'red' : '') : '');
+  });
+  filterProviders();
+}
+ 
+function filterProviders() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const city   = document.getElementById('cityFilter').value;
+ 
+  let filtered = allProviders.filter(p => {
+    const matchStatus = currentFilter === 'all' || p.status === currentFilter;
+    const matchSearch = !search ||
+      (p.name || '').toLowerCase().includes(search) ||
+      (p.service_category || '').toLowerCase().includes(search) ||
+      (p.phone || '').includes(search);
+    const matchCity = !city || p.city === city;
+    return matchStatus && matchSearch && matchCity;
+  });
+ 
+  renderTable(filtered);
+}
+ 
+// ═══════════════════════════════════════════
+//  RENDER TABLE
+// ═══════════════════════════════════════════
+function renderTable(providers) {
+  const tbody = document.getElementById('providersTableBody');
+  document.getElementById('tableCount').textContent = providers.length + ' مزود';
+ 
+  if (providers.length === 0) {
+    tbody.innerHTML = `
+      <tr><td colspan="8">
+        <div class="empty-state">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <h3>لا يوجد مزودون</h3>
+          <p>غيّر الفلتر أو ابحث بكلمة مختلفة</p>
+        </div>
+      </td></tr>`;
+    return;
+  }
+ 
+  tbody.innerHTML = providers.map(p => {
+    const initials = (p.name || '؟')[0];
+    const date = p.created_at ? new Date(p.created_at).toLocaleDateString('ar-MA') : '—';
+    const statusBadge =
+      p.status === 'pending'  ? `<span class="badge badge-pending"><span class="badge-dot"></span>انتظار</span>` :
+      p.status === 'approved' ? `<span class="badge badge-approved"><span class="badge-dot"></span>موافق</span>` :
+                                `<span class="badge badge-rejected"><span class="badge-dot"></span>مرفوض</span>`;
+ 
+    const actionBtns = p.status === 'pending' ? `
+      <button class="btn-action btn-approve" onclick="promptAction('approve','${p.id}','${escHtml(p.name)}')">✓ قبول</button>
+      <button class="btn-action btn-reject"  onclick="promptAction('reject','${p.id}','${escHtml(p.name)}')">✕ رفض</button>` :
+      p.status === 'approved' ? `
+      <button class="btn-action btn-reject" onclick="promptAction('reject','${p.id}','${escHtml(p.name)}')">✕ رفض</button>` :
+      `<button class="btn-action btn-approve" onclick="promptAction('approve','${p.id}','${escHtml(p.name)}')">✓ إعادة قبول</button>`;
+ 
+    const avatarHtml = p.profile_image
+      ? `<img src="${escHtml(p.profile_image)}" alt="${escHtml(p.name)}">`
+      : initials;
+ 
+    return `<tr>
+      <td>
+        <div class="pro-cell">
+          <div class="pro-avatar-sm">${avatarHtml}</div>
+          <div>
+            <div class="pro-name-td">${escHtml(p.name || '—')}</div>
+            <div class="pro-phone-td">${escHtml(p.phone || '')}</div>
+          </div>
+        </div>
+      </td>
+      <td>${escHtml(p.service_category || '—')}</td>
+      <td><span class="city-tag">📍 ${escHtml(p.city || '—')}</span></td>
+      <td><span class="price-tag">${escHtml(p.price || '—')}</span></td>
+      <td>${p.experience_years || '—'} سنة</td>
+      <td>${statusBadge}</td>
+      <td style="font-size:12px;color:var(--gray-500,#6B7280)">${date}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-action btn-view-detail" onclick="openModal('${p.id}')">🔍 عرض</button>
+          ${actionBtns}
+          <button class="btn-action btn-delete" onclick="promptDelete('${p.id}','${escHtml(p.name)}')">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+ 
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function openModal(id) {
+  const p = allProviders.find(x => x.id === id);
+  if (!p) return;
+ 
+  const initials = (p.name || '؟')[0];
+  const avatarHtml = p.profile_image
+    ? `<img src="${escHtml(p.profile_image)}" alt="">`
+    : initials;
+ 
+  const workImgs = Array.isArray(p.service_images) && p.service_images.length
+    ? `<div class="modal-images">
+        <div class="modal-images-label">📸 صور الأعمال</div>
+        <div class="modal-images-grid">
+          ${p.service_images.map(src => `<img class="modal-img" src="${escHtml(src)}" onclick="window.open('${escHtml(src)}','_blank')">`).join('')}
+        </div>
+       </div>` : '';
+ 
+  const idImg = p.national_id_image
+    ? `<div class="modal-images" style="margin-bottom:0">
+        <div class="modal-images-label">🪪 البطاقة الوطنية</div>
+        <img class="modal-img" style="width:160px;aspect-ratio:auto" src="${escHtml(p.national_id_image)}" onclick="window.open('${escHtml(p.national_id_image)}','_blank')">
+       </div>` : '';
+ 
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-pro-header">
+      <div class="modal-avatar">${avatarHtml}</div>
+      <div>
+        <div class="modal-pro-name">${escHtml(p.name || '—')}</div>
+        <div class="modal-pro-service">${escHtml(p.service_category || '')} ${p.service_title ? '— ' + escHtml(p.service_title) : ''}</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">📞 الهاتف</div><div class="info-value" style="direction:ltr">${escHtml(p.phone || '—')}</div></div>
+      <div class="info-item"><div class="info-label">💬 واتساب</div><div class="info-value" style="direction:ltr">${escHtml(p.whatsapp || '—')}</div></div>
+      <div class="info-item"><div class="info-label">📧 الإيميل</div><div class="info-value">${escHtml(p.email || '—')}</div></div>
+      <div class="info-item"><div class="info-label">📍 المدينة</div><div class="info-value">${escHtml(p.city || '—')}${p.district ? ' — ' + escHtml(p.district) : ''}</div></div>
+      <div class="info-item"><div class="info-label">💰 السعر</div><div class="info-value" style="color:var(--blue)">${escHtml(p.price || '—')}</div></div>
+      <div class="info-item"><div class="info-label">🏆 الخبرة</div><div class="info-value">${p.experience_years || '—'} سنة</div></div>
+    </div>
+    ${p.service_description ? `
+    <div class="modal-desc">
+      <div class="modal-desc-label">📝 وصف الخدمة</div>
+      <div class="modal-desc-text">${escHtml(p.service_description)}</div>
+    </div>` : ''}
+    ${workImgs}
+    ${idImg}
+  `;
+ 
+  const footerBtns = p.status === 'pending'
+    ? `<button class="btn-modal btn-modal-approve" onclick="closeModal();promptAction('approve','${p.id}','${escHtml(p.name)}')">✓ قبول</button>
+       <button class="btn-modal btn-modal-reject"  onclick="closeModal();promptAction('reject','${p.id}','${escHtml(p.name)}')">✕ رفض</button>`
+    : p.status === 'approved'
+    ? `<button class="btn-modal btn-modal-reject"  onclick="closeModal();promptAction('reject','${p.id}','${escHtml(p.name)}')">✕ رفض</button>`
+    : `<button class="btn-modal btn-modal-approve" onclick="closeModal();promptAction('approve','${p.id}','${escHtml(p.name)}')">✓ إعادة قبول</button>`;
+ 
+  document.getElementById('modalFooter').innerHTML =
+    footerBtns + `<button class="btn-modal btn-modal-cancel" onclick="closeModal()">إغلاق</button>`;
+ 
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOnBg(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+ 
+// ═══════════════════════════════════════════
+//  CONFIRM & ACTIONS
+// ═══════════════════════════════════════════
+function promptAction(action, id, name) {
+  pendingConfirm = { type: action, id };
+  const isApprove = action === 'approve';
+  document.getElementById('confirmIcon').textContent  = isApprove ? '✅' : '❌';
+  document.getElementById('confirmTitle').textContent = isApprove ? 'تأكيد القبول' : 'تأكيد الرفض';
+  document.getElementById('confirmText').textContent  = isApprove
+    ? `هل تريد قبول خدمة "${name}"؟ سيتم نشرها على المنصة.`
+    : `هل تريد رفض خدمة "${name}"؟`;
+  const yesBtn = document.getElementById('confirmYesBtn');
+  yesBtn.className = 'btn-confirm-yes' + (isApprove ? ' green' : '');
+  yesBtn.textContent = isApprove ? '✓ نعم، قبول' : '✕ نعم، رفض';
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+ 
+function promptDelete(id, name) {
+  pendingConfirm = { type: 'delete', id };
+  document.getElementById('confirmIcon').textContent  = '🗑️';
+  document.getElementById('confirmTitle').textContent = 'حذف المزود';
+  document.getElementById('confirmText').textContent  = `هل تريد حذف "${name}" نهائياً؟ لا يمكن التراجع.`;
+  const yesBtn = document.getElementById('confirmYesBtn');
+  yesBtn.className = 'btn-confirm-yes';
+  yesBtn.textContent = '🗑 نعم، احذف';
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+ 
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  pendingConfirm = null;
+}
+ 
+async function confirmAction() {
+  if (!pendingConfirm) return;
+  closeConfirm();
+  const { type, id } = pendingConfirm;
+ 
+  if (type === 'approve' || type === 'reject') {
+    const newStatus = type === 'approve' ? 'approved' : 'rejected';
+    const { error } = await db.from('providers').update({ status: newStatus }).eq('id', id);
+    if (error) { showToast('خطأ: ' + error.message, 'error'); return; }
+    const p = allProviders.find(x => x.id === id);
+    if (p) p.status = newStatus;
+    showToast(type === 'approve' ? '✅ تم قبول المزود بنجاح' : '❌ تم رفض المزود', type === 'approve' ? 'success' : 'warning');
+ 
+  } else if (type === 'delete') {
+    const { error } = await db.from('providers').delete().eq('id', id);
+    if (error) { showToast('خطأ: ' + error.message, 'error'); return; }
+    allProviders = allProviders.filter(x => x.id !== id);
+    showToast('🗑️ تم الحذف بنجاح', 'success');
+  }
+ 
+  updateStats();
+  filterProviders();
+}
+ 
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg, type = 'success') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'error' ? ' error' : type === 'warning' ? ' warning' : '');
+  t.innerHTML = `<span class="toast-icon">${type === 'error' ? '⚠️' : type === 'warning' ? '⚠' : '✅'}</span>${msg}`;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+ 
+// ═══════════════════════════════════════════
+//  REALTIME SUBSCRIPTION
+// ═══════════════════════════════════════════
+function subscribeRealtime() {
+  db.channel('providers-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'providers' }, payload => {
+      if (payload.eventType === 'INSERT') {
+        allProviders.unshift(payload.new);
+        showToast('🆕 مزود جديد انضم للمنصة!');
+      } else if (payload.eventType === 'UPDATE') {
+        const idx = allProviders.findIndex(p => p.id === payload.new.id);
+        if (idx !== -1) allProviders[idx] = payload.new;
+      } else if (payload.eventType === 'DELETE') {
+        allProviders = allProviders.filter(p => p.id !== payload.old.id);
+      }
+      updateStats();
+      filterProviders();
+    })
+    .subscribe();
+}
+ 
+// ═══════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+ 
+function setPage(p) { /* extensible */ }
+ 
+// ═══════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════
+loadProviders();
+subscribeRealtime();
 </script>
+</body>
+</html>
