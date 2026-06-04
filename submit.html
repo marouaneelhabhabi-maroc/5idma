@@ -550,7 +550,8 @@ async function submitForm() {
         .from('provider-files')
         .upload(avatarName, avatarFile);
       if (!avatarErr) {
-        const { data: avatarData } = supabase.storage
+        // ✅ 
+const { data: avatarData } = supabaseClient.storage
           .from('provider-files')
           .getPublicUrl(avatarName);
         avatar_url = avatarData.publicUrl;
@@ -566,7 +567,7 @@ async function submitForm() {
         .from('provider-files')
         .upload(fileName, workFiles[i]);
       if (!workErr) {
-        const { data: workData } = supabase.storage
+        const { data: workData } = supabaseClient.storage
           .from('provider-files')
           .getPublicUrl(fileName);
         work_images.push(workData.publicUrl);
@@ -582,7 +583,7 @@ async function submitForm() {
         .from('provider-files')
         .upload(idName, idFile);
       if (!idErr) {
-        const { data: idData } = supabase.storage
+        const { data: idData } = supabaseClient.storage
           .from('provider-files')
           .getPublicUrl(idName);
         id_card_url = idData.publicUrl;
