@@ -1371,7 +1371,17 @@
     }).join('');
   }
 
-  loadApprovedProviders();
+loadApprovedProviders();
+
+  _sb.channel('providers-approved')
+    .on('postgres_changes', { 
+      event: 'UPDATE', 
+      schema: 'public', 
+      table: 'providers' 
+    }, payload => {
+      loadApprovedProviders();
+    })
+    .subscribe();
 </script>
 </body>
 </html>
