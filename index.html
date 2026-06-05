@@ -479,6 +479,19 @@
     box-shadow: 0 4px 12px rgba(26,115,232,0.3);
   }
   .btn-view:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,115,232,0.4); }
+
+
+
+.btn-detail {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color: #fff; border: none; cursor: pointer;
+  padding: 10px 18px; border-radius: 50px;
+  font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all .2s; box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+}
+.btn-detail:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,115,232,0.4); }
+ 
  
   /* ───── HOW IT WORKS ───── */
   .how-section { background: var(--bg); }
@@ -1787,14 +1800,82 @@ loadFeatured();
               <span>خبرة</span>
             </div>
           </div>
-          <div class="pro-card-footer">
-            <div class="pro-price">من <strong>${p.price || '—'}</strong></div>
-            <a href="tel:${p.phone}" class="btn-view">تواصل ←</a>
-          </div>
+
+<div class="pro-card-footer">
+  <div class="pro-price">
+    من <strong>${p.price || '—'}</strong>
+  </div>
+
+  <button
+    class="btn-detail"
+    onclick='openProDetailModal(${JSON.stringify(p)})'>
+    عرض التفاصيل ←
+  </button>
+</div>
+
         </div>`;
     }).join('');
   }
 
+
+
+
+
+
+
+function openProDetailModal(p) {
+
+  const avatarEl = document.getElementById('mAvatar');
+
+  avatarEl.innerHTML = p.profile_image
+    ? `<img src="${p.profile_image}" style="width:100%;height:100%;object-fit:cover">`
+    : (p.name || '؟')[0];
+
+  document.getElementById('mName').textContent =
+    p.name || '—';
+
+  document.getElementById('mService').textContent =
+    p.service_category || '—';
+
+  document.getElementById('mCity').textContent =
+    '📍 ' + (p.city || '—');
+
+  document.getElementById('mRating').textContent =
+    '⭐ ' + (p.rating || '—');
+
+  document.getElementById('mPrice').textContent =
+    p.price || '—';
+
+  document.getElementById('mExp').textContent =
+    (p.experience_years || '—') + ' سنوات خبرة';
+
+  const descEl = document.getElementById('mDesc');
+
+  if (p.service_description) {
+    descEl.textContent = p.service_description;
+    descEl.style.display = 'block';
+  } else {
+    descEl.style.display = 'none';
+  }
+
+  const wa = (p.whatsapp || p.phone || '')
+    .replace(/^0/, '212');
+
+  document.getElementById('mWhatsapp').href =
+    `https://wa.me/${wa}`;
+
+  document.getElementById('mPhone').href =
+    `tel:${p.phone || ''}`;
+
+  document.getElementById('proModal')
+    .classList.add('open');
+}
+
+
+
+
+
+  
 loadApprovedProviders();
 
   _sb.channel('providers-approved')
