@@ -49,14 +49,16 @@
  
   /* ───── NAVBAR ───── */
   nav {
-    position: fixed; top: 0; right: 0; left: 0; z-index: 100;
-    background: rgba(255,255,255,0.95);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
     padding: 0 5%;
-    height: 70px;
-    display: flex; align-items: center; justify-content: space-between;
-    transition: box-shadow .3s;
+    transition: box-shadow 0.3s;
   }
 
 
@@ -131,21 +133,23 @@
   border-bottom: none !important;
 }
 
-@media (min-width: 769px) {
-  #liveBadge {
-    width: auto;
-    border: 1px solid var(--border);
+
+#liveBadge {
+    background: var(--bg);
     border-radius: 50px;
     padding: 4px 12px;
-    background: #ff1b1b;
-    margin: 0 auto;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -18px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px auto 12px;
+    width: fit-content;
   }
-  nav { padding-bottom: 4px; }
-}
+
+
+
 
 @media (max-width: 768px) {
   .nav-links { display: none !important; }
@@ -169,24 +173,158 @@
   padding: 6px 0;
 }
 
-  nav.scrolled { box-shadow: var(--shadow-sm); }
+  nav.scrolled {
+    box-shadow: var(--shadow-sm);
+  }
  
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 20px;
+  }
+
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   .nav-logo {
-    font-size: 26px; font-weight: 900;
+    font-size: 26px;
+    font-weight: 900;
     background: linear-gradient(135deg, var(--blue), var(--green));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-decoration: none;
     letter-spacing: -0.5px;
   }
  
-  .nav-links { display: flex; align-items: center; gap: 20px; list-style: none; }
+  .nav-links { 
+    display: flex;
+    align-items: center;
+    gap: 28px; 
+    list-style: none;
+    margin: 0;
+    padding: 0;
+     }
   .nav-links a {
-    color: var(--text-muted); text-decoration: none;
-    font-size: 15px; font-weight: 500;
-    transition: color .2s;
+    color: var(--text-muted);
+     text-decoration: none;
+    font-size: 15px;
+     font-weight: 600;
+    transition: color 0.2s
   }
   .nav-links a:hover { color: var(--blue); }
  
+
+
+    .nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+
+    .btn-login {
+    background: transparent;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-login:hover {
+    background: var(--blue-light);
+    transform: translateY(-2px);
+  }
+
+.btn-signup {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+  }
+
+
+
+    .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    background: var(--bg-soft);
+    padding: 6px 16px 6px 12px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  
+  .user-profile:hover {
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    border-color: var(--blue);
+  }
+
+
+
+  
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .user-info {
+    text-align: right;
+  }
+
+  .user-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .logout-btn {
+    font-size: 11px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .logout-btn:hover {
+    color: #e53e3e;
+  }
+
+  .btn-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 115, 232, 0.4);
+  }
   .nav-cta {
     background: linear-gradient(135deg, var(--blue), var(--blue-dark));
     color: #fff !important;
@@ -198,9 +336,82 @@
   }
   .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(26,115,232,0.4) !important; color: #fff !important; }
  
-  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .nav-hamburger { display: none;
+     flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+     }
+
   .nav-hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
  
+
+
+
+
+  .nav-mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    padding: 12px 0;
+  }
+  .nav-mobile-menu.open {
+    display: flex;
+  }
+
+  .nav-mobile-menu a {
+    padding: 12px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-mobile-menu a:hover {
+    background: var(--bg-soft);
+    color: var(--blue);
+  }
+
+
+    #mobileAuthLinks {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+   .mobile-login,
+  .mobile-signup {
+    text-align: center;
+    padding: 10px;
+    border-radius: 50px;
+    font-weight: 700;
+  }
+
+  .mobile-login {
+    background: transparent;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+  }
+
+
+    .mobile-signup {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+  }
+
+
+
+    .mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--bg-soft);
+    border-radius: 12px;
+  }
+
+
   /* ───── HERO ───── */
   .hero {
     min-height: 100vh;
@@ -786,13 +997,12 @@
     position: relative;
   }
   .btn-cta-white:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
- .logo-khidma{
-    width: 70px;
-    height: 70px;
+  .logo-khidma {
+    width: 50px;
+    height: 50px;
     object-fit: contain;
     border-radius: 12px;
-    margin: 0;
-}
+  }
   .cta-features {
     display: flex; justify-content: center; gap: 32px;
     margin-top: 40px; flex-wrap: wrap;
@@ -894,51 +1104,24 @@ nav {
   transition: box-shadow .3s;
 }
 /* تجميع الشعار والبادج في جهة واحدة عند الشاشات الكبيرة */
-@media (min-width: 769px) {
-  #liveBadge {
-    margin-right: auto; /* يدفع باقي القائمة إلى اليسار */
-    margin-left: 20px;
-    align-self: center;
-  }
-}
-
-/* التنسيق الخاص بالهواتف ليصبح الشعار والبادج فوق بعضهما عمودياً */
-@media (max-width: 768px) {
-  nav {
-    display: grid;
-    grid-template-columns: 1fr auto; /* الشعار والقائمة في سطر والبادج يلتف لأسفل */
-    gap: 8px;
-    padding: 10px 20px;
-  }
-  
-  .nav-logo { grid-column: 1; }
-  .logo-khidma { grid-column: 1; justify-self: start; }
-  .nav-hamburger { grid-column: 2; grid-row: 1 / 3; align-self: center; }
-  
-  #liveBadge {
-    grid-column: 1;
-    justify-self: start;
-    margin-top: -4px;
-    font-size: 11px;
-    padding: 2px 8px;
-  }
-}
 
 
-@keyframes livePulse {
-  0%, 100% { 
-    background: #ff1b1b; 
-    box-shadow: 0 0 0 0 rgba(255,27,27,0.7); 
+
+  @keyframes livePulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 27, 27, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(255, 27, 27, 0);
+    }
   }
-  50% { 
-    background: #ff4444; 
-    box-shadow: 0 0 0 6px rgba(255,27,27,0); 
+  .badge-dot.green {
+    width: 8px;
+    height: 8px;
+    background: #ff1b1b;
+    border-radius: 50%;
+    animation: livePulse 1.5s ease-in-out infinite;
   }
-}
-.badge-dot.green {
-  background: #ff1b1b;
-  animation: livePulse 1.5s ease-in-out infinite;
-}
 
 
 
@@ -988,6 +1171,8 @@ nav {
     .nav-hamburger { display: flex; }
     .footer-bottom { flex-direction: column; align-items: flex-start; }
   }
+
+  
  
   .scroll-reveal {
     opacity: 0; transform: translateY(40px);
@@ -998,26 +1183,29 @@ nav {
 
 
 
-@media (max-width: 768px){
+  @media (max-width: 768px) {
+    .nav-links,
+    .nav-auth {
+      display: none !important;
+    }
 
-  nav{
-    height:auto;
-    padding:15px;
-  }
+    .nav-hamburger {
+      display: flex !important;
+    }
 
-  .nav-links{
-    display:none;
-  }
+    .nav-container {
+      height: 60px;
+    }
 
-  .logo-khidma{
-    width:60px;
-    height:60px;
-  }
+    .logo-khidma {
+      width: 40px;
+      height: 40px;
+    }
 
-  .nav-hamburger{
-    display:flex;
+    .nav-logo {
+      font-size: 22px;
+    }
   }
-}
 
 
 
@@ -1051,32 +1239,45 @@ nav {
  
 <!-- ━━━━━ NAVBAR ━━━━━ -->
 <nav id="navbar">
-  <div class="nav-row-top">
-    <a href="#" class="nav-logo">خدما<b>تي</b></a>
-    <img src="logo-khidma.png" class="logo-khidma" alt="logo">
+  <div class="nav-container">
+    <!-- Logo + Brand -->
+    <div class="nav-brand">
+      <a href="#" class="nav-logo">خدماتي</a>
+      <img src="logo-khidma.png" class="logo-khidma" alt="logo">
+    </div>
+
+    <!-- Desktop Links -->
     <ul class="nav-links">
       <li><a href="#services">الخدمات</a></li>
       <li><a href="#how">كيف يعمل</a></li>
       <li><a href="#pros">المهنيون</a></li>
       <li><a href="#about">من نحن</a></li>
-      <li><a href="submit.html" class="nav-cta">قدم خدمتك</a></li>
     </ul>
-    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="القائمة">
+
+    <!-- Auth Buttons (Desktop) -->
+    <div class="nav-auth" id="navAuth">
+      <!-- سيتم تعبئتها بـ JS -->
+    </div>
+
+    <!-- Mobile Hamburger -->
+    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </div>
   </div>
 
+  <!-- Live Badge (تحت الـ Navbar) -->
   <div id="liveBadge">
     <div class="badge-dot green"></div>
     +300 مهني متصل الآن
   </div>
 
+  <!-- Mobile Menu -->
   <div class="nav-mobile-menu" id="mobileMenu">
     <a href="#services" onclick="toggleMenu()">الخدمات</a>
     <a href="#how" onclick="toggleMenu()">كيف يعمل</a>
     <a href="#pros" onclick="toggleMenu()">المهنيون</a>
     <a href="#about" onclick="toggleMenu()">من نحن</a>
-    <a href="submit.html" class="nav-cta-mobile">قدم خدمتك</a>
+    <div id="mobileAuthLinks"></div>
   </div>
 </nav>
  
@@ -1805,7 +2006,87 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
 
 
+ function updateAuthUI() {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const navAuth = document.getElementById('navAuth');
+    const mobileAuthLinks = document.getElementById('mobileAuthLinks');
 
+    if (loggedInUser) {
+      const user = JSON.parse(loggedInUser);
+      const initial = user.name ? user.name.charAt(0).toUpperCase() : 'م';
+
+      // Desktop UI
+      navAuth.innerHTML = `
+        <div class="user-profile" onclick="toggleLogoutMenu(event)">
+          <div class="user-avatar">${initial}</div>
+          <div class="user-info">
+            <div class="user-name">${user.name}</div>
+            <div class="logout-btn" onclick="logout(event)">تسجيل خروج</div>
+          </div>
+        </div>
+      `;
+
+      // Mobile UI
+      mobileAuthLinks.innerHTML = `
+        <div class="mobile-user-info">
+          <div class="user-avatar" style="width:40px;height:40px">${initial}</div>
+          <div style="flex:1">
+            <div style="font-weight:800;color:var(--text)">${user.name}</div>
+            <div style="font-size:12px;color:var(--text-muted)">${user.email || ''}</div>
+          </div>
+          <div class="logout-btn" onclick="logout(event)" style="color:#e53e3e">خروج</div>
+        </div>
+      `;
+    } else {
+      // Desktop UI
+      navAuth.innerHTML = `
+        <a href="login.html" class="btn-login">تسجيل الدخول</a>
+        <a href="signup.html" class="btn-signup">إنشاء حساب</a>
+      `;
+
+      // Mobile UI
+      mobileAuthLinks.innerHTML = `
+        <a href="login.html" class="mobile-login">تسجيل الدخول</a>
+        <a href="signup.html" class="mobile-signup">إنشاء حساب</a>
+      `;
+    }
+  }
+
+  // تسجيل الخروج
+  function logout(event) {
+    event.stopPropagation();
+    localStorage.removeItem('loggedInUser');
+    updateAuthUI();
+    window.location.href = window.location.pathname; // تحديث الصفحة
+  }
+
+  // قائمة اختيارية لتسجيل الخروج (اختياري)
+  function toggleLogoutMenu(event) {
+    // يمكنك إضافة menu منبثق هنا
+    // حالياً مجرد example
+  }
+
+  // عند تحميل الصفحة
+  document.addEventListener('DOMContentLoaded', () => {
+    updateAuthUI();
+
+    // مثال: لو بدك تحاكي تسجيل دخول تجريبي (للتجربة فقط)
+    // localStorage.setItem('loggedInUser', JSON.stringify({ name: 'أحمد العمراني', email: 'ahmed@example.com' }));
+    // updateAuthUI();
+  });
+
+  // Toggle Mobile Menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (nav) {
+      nav.classList.toggle('scrolled', window.scrollY > 30);
+    }
+  });
 
 
 
