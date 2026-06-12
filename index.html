@@ -137,14 +137,14 @@
 #liveBadge {
     background: var(--bg);
     border-radius: 50px;
-    padding: 4px 12px;
+    padding: 2px 8px;
     border: 1px solid var(--border);
     font-size: 12px;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin: 8px auto 12px;
+    margin: 4px auto 7px;
     width: fit-content;
   }
 
@@ -398,8 +398,8 @@
 
   /* ───── HERO ───── */
   .hero {
-    min-height: 100vh;
-    padding: 100px 3% 4px;
+    min-height: 10vh;
+    padding: 75px 3% 4px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -420,7 +420,7 @@
   .hero::after {
     content: '';
     position: absolute; bottom: -150px; right: -150px;
-    width: 500px; height: 500px;
+    width: 500px; height: 400px;
     background: radial-gradient(circle, rgba(0,184,122,0.07) 0%, transparent 70%);
     pointer-events: none;
   }
@@ -429,12 +429,14 @@
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--blue-light);
     color: var(--blue-dark);
-    padding: 8px 16px;
+    padding: 4px 8px;
+    margin-top: 16px;
     border-radius: 50px;
     font-size: 13px; font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     border: 1px solid rgba(26,115,232,0.2);
     animation: fadeDown .6s ease both;
+    
   }
   .hero-badge .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
  
@@ -442,6 +444,7 @@
     font-size: clamp(32px, 5vw, 56px);
     font-weight: 900;
     line-height: 1.25;
+
     color: var(--text);
     margin-bottom: 20px;
     animation: fadeDown .6s .1s ease both;
@@ -1170,7 +1173,8 @@ nav {
  
   /* ───── RESPONSIVE ───── */
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; padding: 120px 5% 60px; }
+    .hero { grid-template-columns: 1fr;
+            padding: 61px 1% 1px; }
     .hero-visual { display: none; }
     .steps-container { grid-template-columns: 1fr 1fr; }
     .steps-container::before { display: none; }
@@ -1178,6 +1182,7 @@ nav {
   }
   @media (max-width: 600px) {
     .search-box { flex-direction: column; }
+       
     .search-divider { display: none; }
     .search-btn { width: 100%; justify-content: center; }
     .steps-container { grid-template-columns: 1fr; }
@@ -1240,6 +1245,9 @@ nav {
     font-size: 13px;
   }
 }
+
+
+
 
 /* Modal overlay */
 .modal-overlay-kh {
@@ -1334,8 +1342,8 @@ nav {
        </div>
 
       <div class="dot"></div>
-      ✅ المنصة الأولى للخدمات في المغرب
-    </div>
+       المنصة الأولى للخدمات في المغرب
+  ✅  </div>
  
     <h1>أفضل المهنيين<br><span>والحرفيين بين يديكــ ⭐</span></h1>
  
