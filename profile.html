@@ -1439,38 +1439,66 @@
     }
 
     // ─── Load Profile ─────────────────────────────────────────────
-  async function loadProfile() {
+async function loadProfile() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) { /* ... */ return; }
 
-  // 1. جيب من profiles
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
-
-  // 2. جيب من providers (إذا كان حرفي)
-  const { data: provider } = await supabase
-    .from('providers')
-    .select('*')
-    .eq('user_id', session.user.id)
-    .single();
-
-  // 3. دمج البيانات
-  const merged = { ...profile, ...provider };
-  currentProvider = merged;
-
-  renderProfile(merged);
-  if (provider) {
-    await loadReviews(provider.id);
-    await loadGallery(provider.id);
+  if (!session) {
+    loadingState.innerHTML = `
+      <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+      <h3 style="color:var(--text-muted);">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
+      <a href="login.html" class="btn-primary" style="display:inline-flex;margin-top:16px;text-decoration:none;">🔑 تسجيل الدخول</a>
+    `;
+    return;
   }
 
-  loadingState.style.display = 'none';
-  profileContent.style.display = 'block';
-}
+  try {
+    // 1. جيب من profiles
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
 
+    if (profileError) throw profileError;
+
+    // 2. جيب من providers (مش إجباري)
+    const { data: provider } = await supabase
+      .from('providers')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .maybeSingle();  // ← maybeSingle مش single (ما يطيحش error إذا ما كانش)
+
+    // 3. دمج البيانات
+    const merged = { ...profile, ...(provider || {}) };
+    currentProvider = merged;
+
+    renderProfile(merged);
+
+    if (provider) {
+      await loadReviews(provider.id);
+      await loadGallery(provider.id);
+    } else {
+      // مستخدم عادي مش حرفي
+      $('galleryGrid').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🛠️</div>
+          <h3>أنت مسجل كزبون</h3>
+          <p style="color:var(--text-light);font-size:14px;">سجل كحرفي لتظهر في المنصة</p>
+        </div>`;
+      renderReviews([]);
+    }
+
+    loadingState.style.display = 'none';
+    profileContent.style.display = 'block';
+
+  } catch (err) {
+    console.error('loadProfile error:', err);
+    loadingState.innerHTML = `
+      <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+      <h3 style="color:var(--text-muted);">حدث خطأ: ${err.message}</h3>
+    `;
+  }
+}
 
     // ─── Render Profile ──────────────────────────────────────────
 function renderProfile(p) {
