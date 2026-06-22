@@ -260,10 +260,10 @@ h1{
   background: transparent;
   color: var(--blue);
   border: 2px solid var(--blue);
-  padding: 7px 16px;
+  padding: 5px 13px;
   border-radius: 50px;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 11px;
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
@@ -272,7 +272,7 @@ h1{
 }
 
   .btn-login:hover {
-    background: var(--blue-light);
+    background-color: hwb(245 83% 0%);
     transform: translateY(-2px);
   }
 
@@ -457,8 +457,12 @@ h1{
 
 /* ── FAQ ── */
 .faq-section{padding:10px 5%;
+  text-align: center;
   
   background:var(--bg)}
+
+.faq-
+
 .faq-label{display:inline-flex;
   text-align: center;
   align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--green-dark);background:var(--green-light);padding:5px 14px;border-radius:50px;letter-spacing:1px;margin-bottom:12px}
@@ -467,9 +471,12 @@ h1{
 .faq-sub{font-size:15px;color:var(--text-muted);margin-bottom:36px;max-width:500px}
 .faq-grid{display:flex;flex-direction:column;gap:12px;max-width:780px}
 .faq-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s,box-shadow .2s}
-.faq-item.open{border-color:var(--blue);box-shadow:0 4px 20px rgba(26,115,232,0.1)}
+.faq-item.open{border-color:var(--blue);box-shadow:0 4px 20px rgba(61, 117, 192, 0.1)}
 .faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;gap:12px}
 .faq-q-text{font-size:15px;font-weight:700;color:var(--text);flex:1}
+.faq-q:hover{
+  background-color: #b0e5ff;
+}
 .faq-icon{width:28px;height:28px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:16px;font-weight:700;flex-shrink:0;transition:transform .3s,background .2s}
 .faq-item.open .faq-icon{transform:rotate(45deg);background:var(--blue);color:#fff}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
@@ -489,6 +496,10 @@ h1{
   .footer-bottom-links{flex-wrap:wrap;gap:12px}
 }
 
+
+ .footer-brand{
+  text-align: center;
+ }
 
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -1097,6 +1108,8 @@ h1{
     background: #0F1B2D;
     color: rgba(255,255,255,0.7);
     padding: 60px 5% 30px;
+    border-color: #0F3460;
+    
   }
  
 
@@ -1104,10 +1117,14 @@ h1{
   .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 48px; margin-bottom: 48px;
+    gap: 48px; margin-bottom: 4px;
+    
   }
  
-  .footer-brand {}
+ footer{
+  padding-top: 12px;
+ 
+ }
   .footer-logo {
     font-size: 28px; font-weight: 900;
     background: linear-gradient(135deg, #4A9EF0, #48D9A4);
@@ -1116,7 +1133,11 @@ h1{
     text-decoration: none;
   }
   .footer-desc { font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
-  .footer-social { display: flex; gap: 12px; }
+  .footer-social { display: flex; gap: 12px; 
+    text-align: center;
+    margin-right: 38%;
+  }
+
   .social-btn {
     width: 40px; height: 40px;
     border-radius: 10px;
@@ -1788,13 +1809,13 @@ nav {
 <!-- ━━━━━ FAQ ━━━━━ -->
 <section class="faq-section" id="faq">
   <div class="faq-label">❓ الأسئلة الشائعة</div>
-  <h2 class="faq-title">أسئلة <span>كتيجيك فبالك</span>؟</h2>
+  <h2 class="faq-title">أسئلة <span>كاتجيك فبالك</span>؟</h2>
   <p class="faq-sub">جاوبنا على أكثر الأسئلة اللي كتجي فبال الزبناء ديالنا.</p>
 
   <div class="faq-grid" id="faqGrid">
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">
-        <span class="faq-q-text">كيف نلقى مهني فمدينتي؟</span>
+        <span class="faq-q-text">كيفاش نلقى مهني فمدينتي؟</span>
         <div class="faq-icon">+</div>
       </div>
       <div class="faq-a"><div class="faq-a-inner">سهل بزاف! كتختار الخدمة اللي محتاجها، كتختار مدينتك، وكيظهرو ليك مهنيون معتمدون مرتبين حسب التقييم. دغيا كتشوف المعلومات ديالهم وكتتواصل بلا وساطة.</div></div>
@@ -1834,7 +1855,7 @@ nav {
 <section class="pro-cta-section scroll-reveal">
   <div class="section-label">🚀 انضم إلينا</div>
   <h2>عندك خدمة كتقدمها؟</h2>
-  <p>أنشئ حسابك اليوم وابدأ في الوصول إلى عملاء جدد بكل سهولة.!</p>
+  <p>أنشئ حسابك الأن وابدأ في الوصول إلى عملاء جدد بكل سهولة.!</p>
  
   <a href="submit.html" class="btn-cta-white">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
@@ -1844,7 +1865,6 @@ nav {
   <div class="cta-features">
     <div class="cta-feat">تسجيل مجاني</div>
     <div class="cta-feat">زبناء حقيقيين</div>
-    <div class="cta-feat">تسيير سهل</div>
     <div class="cta-feat">دعم متواصل</div>
   </div>
 </section>
