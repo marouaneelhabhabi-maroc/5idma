@@ -83,7 +83,7 @@
     }
 
     .nav-logo {
-      font-size: 26px;
+      font-size: 26 px;
       font-weight: 900;
       background: linear-gradient(135deg, var(--primary), var(--success));
       -webkit-background-clip: text;
@@ -93,8 +93,8 @@
     }
 
     .logo-khidma {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       object-fit: contain;
       border-radius: 8px;
     }
@@ -1439,98 +1439,66 @@
     }
 
     // ─── Load Profile ─────────────────────────────────────────────
-    async function loadProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
+  async function loadProfile() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { /* ... */ return; }
 
-      if (!session) {
-        loadingState.innerHTML = `
-          <div style="font-size:48px;margin-bottom:16px;">🔒</div>
-          <h3 style="color:var(--text-muted);">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
-          <a href="login.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;">تسجيل الدخول</a>
-        `;
-        return;
-      }
+  // 1. جيب من profiles
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
 
-      // جلب بيانات الحرفي من جدول providers
-      const { data: providers, error } = await supabase
-        .from('providers')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .limit(1);
+  // 2. جيب من providers (إذا كان حرفي)
+  const { data: provider } = await supabase
+    .from('providers')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .single();
 
-      if (error) {
-        console.error('Error fetching provider:', error);
-        loadingState.innerHTML = `
-          <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
-          <h3 style="color:var(--text-muted);">حدث خطأ أثناء تحميل البيانات</h3>
-        `;
-        return;
-      }
+  // 3. دمج البيانات
+  const merged = { ...profile, ...provider };
+  currentProvider = merged;
 
-      if (!providers || providers.length === 0) {
-        loadingState.innerHTML = `
-          <div style="font-size:48px;margin-bottom:16px;">📝</div>
-          <h3 style="color:var(--text-muted);">لم تقم بإضافة ملفك المهني بعد</h3>
-          <p style="color:var(--text-light);">سجل كحرفي لتظهر في المنصة</p>
-          <a href="submit.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;">تقديم طلب</a>
-        `;
-        return;
-      }
+  renderProfile(merged);
+  if (provider) {
+    await loadReviews(provider.id);
+    await loadGallery(provider.id);
+  }
 
-      currentProvider = providers[0];
-      renderProfile(currentProvider);
+  loadingState.style.display = 'none';
+  profileContent.style.display = 'block';
+}
 
-      // جلب التقييمات
-      await loadReviews(currentProvider.id);
-
-      // جلب معرض الأعمال
-      await loadGallery(currentProvider.id);
-
-      // إخفاء الـ Loading وإظهار المحتوى
-      loadingState.style.display = 'none';
-      profileContent.style.display = 'block';
-    }
 
     // ─── Render Profile ──────────────────────────────────────────
-    function renderProfile(p) {
-      // Avatar
-      const avatar = $('profileAvatar');
-      if (p.profile_image) {
-        avatar.innerHTML = `<img src="${p.profile_image}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-      } else {
-        avatar.textContent = (p.name || '?')[0];
-      }
+function renderProfile(p) {
+  const avatar = $('profileAvatar');
+  const displayName = p.full_name || p.name || '?';
+  
+  if (p.profile_image) {
+    avatar.innerHTML = `<img src="${p.profile_image}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    avatar.textContent = displayName[0].toUpperCase();
+  }
 
-      $('profileName').textContent = p.name || '—';
-      $('profileProfession').textContent = p.service_category || '—';
-      $('profileRating').textContent = p.rating?.toFixed(1) || '—';
-      $('profileReviewsCount').textContent = p.reviews_count || 0;
-      $('profileCity').textContent = p.city || '—';
+  $('profileName').textContent = displayName;
+  $('profileProfession').textContent = p.service_category || p.role || '—';
+  $('profileRating').textContent = p.rating?.toFixed(1) || '—';
+  $('profileReviewsCount').textContent = p.reviews_count || 0;
+  $('profileCity').textContent = p.city || '—';
+  $('statCompleted').textContent = p.reviews_count || 0;
+  $('statRating').textContent = p.rating?.toFixed(1) || '—';
+  $('statExperience').textContent = p.experience_years || '—';
+  $('aboutText').textContent = p.service_description || 'لا يوجد وصف مضاف بعد.';
 
-      $('statCompleted').textContent = p.reviews_count || 0;
-      $('statRating').textContent = p.rating?.toFixed(1) || '—';
-      $('statExperience').textContent = p.experience_years || '—';
-
-      $('aboutText').textContent = p.service_description || 'لا يوجد وصف مضافة بعد.';
-
-      // Badges (ديناميكية حسب البيانات)
-      const badges = [];
-      if (p.experience_years >= 3) badges.push({ text: '⏱️ الالتزام بالوقت', cls: 'blue' });
-      if (p.rating >= 4.5) badges.push({ text: '✨ جودة عالية', cls: 'green' });
-      badges.push({ text: '💰 أسعار مناسبة', cls: 'yellow' });
-
-      $('badgesRow').innerHTML = badges.map(b =>
-        `<span class="badge-tag ${b.cls}">${b.text}</span>`
-      ).join('');
-
-      // Contact buttons
-      const phone = p.phone || '';
-      const whatsapp = p.whatsapp || phone;
-      const waNumber = whatsapp.replace(/^0/, '212');
-
-      $('callBtn').href = `tel:${phone}`;
-      $('whatsappBtn').href = `https://wa.me/${waNumber}`;
-    }
+  // أزرار التواصل
+  const phone = p.phone || '';
+  const waNumber = (p.whatsapp || phone).replace(/^0/, '212');
+  $('callBtn').href = phone ? `tel:${phone}` : '#';
+  $('whatsappBtn').href = waNumber ? `https://wa.me/${waNumber}` : '#';
+}
 
     // ─── Load Gallery ─────────────────────────────────────────────
     async function loadGallery(providerId) {
