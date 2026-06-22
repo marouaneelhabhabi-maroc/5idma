@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الملف الشخصي | 5IDMA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       RESET & ROOT
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563EB;
+      --primary-dark: #1D4ED8;
+      --primary-light: #DBEAFE;
+      --success: #10B981;
+      --success-light: #D1FAE5;
+      --warning: #F59E0B;
+      --text: #1A1D23;
+      --text-muted: #6B7280;
+      --text-light: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #FFFFFF;
+      --bg-soft: #F8FAFC;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+      --radius: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-soft);
+      color: var(--text);
+      line-height: 1.7;
+      padding-top: 80px;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ============================================================
+       NAVBAR (مطابقة للصفحة الرئيسية)
+       ============================================================ */
+    nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow var(--transition);
+    }
+
+    nav.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      font-size: 26px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-khidma {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-login {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-login:hover {
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px 6px 8px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .user-btn:hover {
+      background: #fff;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .user-btn-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .user-btn-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-btn-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-btn-arrow {
+      font-size: 10px;
+      color: var(--text-muted);
+      transition: transform var(--transition);
+    }
+
+    .user-btn.open .user-btn-arrow {
+      transform: rotate(180deg);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .nav-hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    .nav-mobile-menu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 12px 0;
+      position: absolute;
+      top: 70px;
+      right: 0;
+      left: 0;
+    }
+
+    .nav-mobile-menu.open {
+      display: flex;
+    }
+
+    .nav-mobile-menu a {
+      padding: 12px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-mobile-menu a:hover {
+      background: var(--bg-soft);
+      color: var(--primary);
+    }
+
+    /* User Dropdown */
+    .user-dropdown-menu {
+      position: fixed;
+      top: 72px;
+      left: 16px;
+      width: 240px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.97);
+      transform-origin: top left;
+      transition: all var(--transition);
+      overflow: hidden;
+      direction: rtl;
+    }
+
+    .user-dropdown-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .dropdown-header {
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary-light), var(--success-light));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dropdown-header-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .dropdown-header-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dropdown-header-info .dropdown-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .dropdown-header-info .dropdown-email {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .dropdown-item:hover {
+      background: var(--bg-soft);
+      color: var(--primary);
+      padding-right: 20px;
+    }
+
+    .dropdown-logout {
+      color: #EF4444 !important;
+    }
+
+    .dropdown-logout:hover {
+      background: #FFF5F5 !important;
+      color: #DC2626 !important;
+    }
+
+    /* ============================================================
+       PROFILE CONTENT
+       ============================================================ */
+    .profile-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 5% 60px;
+    }
+
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius);
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── Profile Card ── */
+    .profile-card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      transition: box-shadow var(--transition);
+    }
+
+    .profile-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .profile-avatar-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--bg);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      background: linear-gradient(135deg, var(--primary-light), var(--success-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 18px;
+      height: 18px;
+      background: var(--success);
+      border-radius: 50%;
+      border: 3px solid var(--bg);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .profile-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .profile-name {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 12px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .verified-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .profile-profession {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .profile-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .profile-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .profile-meta-item strong {
+      color: var(--text);
+    }
+
+    .badge-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--success-light);
+      color: var(--success);
+      padding: 4px 14px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      margin-top: 8px;
+    }
+
+    .badge-online .dot-small {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition);
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+    }
+
+    /* ── Stats Cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ── About Section ── */
+    .section-card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      color: var(--primary);
+    }
+
+    .about-text {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .badges-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+    }
+
+    .badge-tag.blue {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: rgba(37, 99, 235, 0.2);
+    }
+
+    .badge-tag.green {
+      background: var(--success-light);
+      color: var(--success);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-tag.yellow {
+      background: #FEF3C7;
+      color: #D97706;
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    /* ── Gallery ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: opacity var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 28px;
+    }
+
+    .gallery-item:hover .overlay {
+      opacity: 1;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    /* ── Reviews ── */
+    .reviews-summary {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .rating-big {
+      text-align: center;
+    }
+
+    .rating-big .number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .rating-big .stars {
+      color: var(--warning);
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .rating-big .count {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .rating-distribution {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .dist-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .dist-row .label {
+      min-width: 30px;
+      color: var(--text-muted);
+    }
+
+    .dist-row .bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .dist-row .bar .fill {
+      height: 100%;
+      background: var(--warning);
+      border-radius: 4px;
+    }
+
+    .dist-row .percent {
+      min-width: 40px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Review List */
+    .review-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--success-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .review-name {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .review-stars {
+      color: var(--warning);
+      font-size: 14px;
+    }
+
+    .review-date {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-right: auto;
+    }
+
+    .review-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      padding-right: 52px;
+    }
+
+    /* Review Form */
+    .review-form {
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .review-form .stars-input {
+      display: flex;
+      gap: 4px;
+      font-size: 28px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .review-form .stars-input span {
+      color: var(--border);
+      transition: color var(--transition);
+    }
+
+    .review-form .stars-input span.active {
+      color: var(--warning);
+    }
+
+    .review-form textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color var(--transition);
+    }
+
+    .review-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .review-form .btn-submit {
+      margin-top: 12px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 32px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .review-form .btn-submit:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .review-form .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ============================================================
+       MODAL
+       ============================================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: transform var(--transition);
+      position: relative;
+    }
+
+    .modal-overlay.open .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 768px) {
+      body { padding-top: 60px; }
+
+      nav { height: 60px; }
+      .nav-links { display: none !important; }
+      .nav-hamburger { display: flex !important; }
+
+      .nav-mobile-menu.open {
+        display: flex;
+      }
+
+      .profile-card {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        padding: 24px;
+      }
+
+      .profile-avatar-wrapper {
+        margin: 0 auto;
+      }
+
+      .profile-name-row {
+        justify-content: center;
+      }
+
+      .profile-meta {
+        justify-content: center;
+      }
+
+      .profile-actions {
+        justify-content: center;
+        margin-top: 8px;
+      }
+
+      .profile-actions .btn-primary,
+      .profile-actions .btn-whatsapp {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-number {
+        font-size: 20px;
+      }
+
+      .section-card {
+        padding: 20px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+
+      .reviews-summary {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .review-text {
+        padding-right: 0;
+      }
+
+      .user-dropdown-menu {
+        left: 8px;
+        right: 8px;
+        width: auto;
+        top: 60px;
+      }
+
+      .user-btn-name {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .profile-name {
+        font-size: 20px;
+      }
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 28px;
+      }
+
+      .online-dot {
+        width: 14px;
+        height: 14px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+      }
+
+      .rating-big .number {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+  NAVBAR
+  ============================================================ -->
+  <nav id="navbar">
+    <div class="nav-hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </div>
+
+    <div class="nav-brand">
+      <a href="index.html" class="nav-logo">5IDMA</a>
+      <img src="logo-khidma.png" class="logo-khidma" alt="5IDMA">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html#services">الخدمات</a></li>
+      <li><a href="index.html#pros">المهنيون</a></li>
+      <li><a href="index.html#about">من نحن</a></li>
+    </ul>
+
+    <div class="nav-auth" id="navAuth">
+      <!-- يتم تعبئته بواسطة JavaScript -->
+    </div>
+
+    <!-- Dropdown -->
+    <div class="user-dropdown-menu" id="userDropdown">
+      <div class="dropdown-header" id="dropdownHeader"></div>
+      <div class="dropdown-divider"></div>
+      <a href="profile.html" class="dropdown-item">
+        <span class="dropdown-icon">👤</span>
+        <span>الملف الشخصي</span>
+      </a>
+      <a href="my-services.html" class="dropdown-item">
+        <span class="dropdown-icon">🛠️</span>
+        <span>خدماتي</span>
+      </a>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item dropdown-logout" onclick="logout(event)">
+        <span class="dropdown-icon">🚪</span>
+        <span>تسجيل الخروج</span>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="nav-mobile-menu" id="mobileMenu">
+      <a href="index.html#services">الخدمات</a>
+      <a href="index.html#pros">المهنيون</a>
+      <a href="index.html#about">من نحن</a>
+      <div id="mobileAuthLinks"></div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+  PROFILE CONTENT
+  ============================================================ -->
+  <div class="profile-container" id="profileContainer">
+
+    <!-- Loading State -->
+    <div id="loadingState" style="text-align:center;padding:80px 20px;">
+      <div style="font-size:48px;margin-bottom:16px;">⏳</div>
+      <h3 style="color:var(--text-muted);">جاري تحميل الملف الشخصي...</h3>
+    </div>
+
+    <!-- Profile Content (hidden until loaded) -->
+    <div id="profileContent" style="display:none;">
+
+      <!-- ── Profile Card ── -->
+      <div class="profile-card" id="profileCard">
+        <div class="profile-avatar-wrapper">
+          <div class="profile-avatar" id="profileAvatar">?</div>
+          <div class="online-dot"></div>
+        </div>
+
+        <div class="profile-info">
+          <div class="profile-name-row">
+            <h1 class="profile-name" id="profileName">—</h1>
+            <span class="verified-badge">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              موثق
+            </span>
+          </div>
+          <div class="profile-profession" id="profileProfession">—</div>
+
+          <div class="profile-meta">
+            <span class="profile-meta-item">⭐ <strong id="profileRating">—</strong></span>
+            <span class="profile-meta-item">📝 <strong id="profileReviewsCount">—</strong> تقييم</span>
+            <span class="profile-meta-item">📍 <strong id="profileCity">—</strong></span>
+            <span class="profile-meta-item">🛡️ موثق</span>
+          </div>
+
+          <div class="badge-online">
+            <span class="dot-small"></span>
+            متصل الآن
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <a href="#" class="btn-primary" id="callBtn">📞 اتصل الآن</a>
+          <a href="#" class="btn-whatsapp" id="whatsappBtn" target="_blank">💬 واتساب</a>
+        </div>
+      </div>
+
+      <!-- ── Stats ── -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-number" id="statCompleted">—</div>
+          <div class="stat-label">خدمات مكتملة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-number" id="statRating">—</div>
+          <div class="stat-label">التقييم</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-number" id="statExperience">—</div>
+          <div class="stat-label">سنوات الخبرة</div>
+        </div>
+      </div>
+
+      <!-- ── About ── -->
+      <div class="section-card">
+        <div class="section-title">📋 نبذة عني</div>
+        <p class="about-text" id="aboutText">لا يوجد وصف مضافة بعد.</p>
+        <div class="badges-row" id="badgesRow">
+          <span class="badge-tag blue">⏱️ الالتزام بالوقت</span>
+          <span class="badge-tag green">✨ جودة عالية</span>
+          <span class="badge-tag yellow">💰 أسعار مناسبة</span>
+        </div>
+      </div>
+
+      <!-- ── Gallery ── -->
+      <div class="section-card">
+        <div class="section-title">🖼️ معرض <span>الأعمال</span></div>
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- يتم تعبئته بواسطة JavaScript -->
+        </div>
+      </div>
+
+      <!-- ── Reviews ── -->
+      <div class="section-card">
+        <div class="section-title">💬 التقييمات <span>والآراء</span></div>
+
+        <!-- Summary -->
+        <div class="reviews-summary" id="reviewsSummary">
+          <div class="rating-big">
+            <div class="number" id="avgRatingBig">0</div>
+            <div class="stars" id="starsBig">☆☆☆☆☆</div>
+            <div class="count" id="reviewsCountBig">0 تقييم</div>
+          </div>
+          <div class="rating-distribution" id="ratingDistribution">
+            <!-- يتم تعبئته بواسطة JavaScript -->
+          </div>
+        </div>
+
+        <!-- Review List -->
+        <div id="reviewsList">
+          <!-- يتم تعبئته بواسطة JavaScript -->
+        </div>
+
+        <!-- Review Form (only for logged in users) -->
+        <div class="review-form" id="reviewForm" style="display:none;">
+          <h4 style="font-weight:700;margin-bottom:8px;">أضف تقييمك</h4>
+          <div class="stars-input" id="starsInput">
+            <span data-value="1">☆</span>
+            <span data-value="2">☆</span>
+            <span data-value="3">☆</span>
+            <span data-value="4">☆</span>
+            <span data-value="5">☆</span>
+          </div>
+          <textarea id="reviewComment" placeholder="اكتب رأيك هنا..."></textarea>
+          <button class="btn-submit" id="submitReviewBtn" onclick="submitReview()">إرسال التقييم</button>
+        </div>
+      </div>
+
+    </div><!-- /profileContent -->
+  </div>
+
+  <!-- ============================================================
+  IMAGE MODAL
+  ============================================================ -->
+  <div class="modal-overlay" id="imageModal" onclick="closeImageModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeImageModal()">✕</button>
+      <img id="modalImage" src="" alt="معرض الأعمال">
+    </div>
+  </div>
+
+  <!-- ============================================================
+  SCRIPTS
+  ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ─── Supabase Client ──────────────────────────────────────────
+    const supabase = window.supabase.createClient(
+      "https://kacutivlrarulhbrzsil.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthY3V0aXZscmFydWxoYnJ6c2lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDYyNTQsImV4cCI6MjA5NjA4MjI1NH0.U39OH4ysCEpQGGkJabKRw_u22SVLv8J7elUzESdxjTY"
+    );
+
+    // ─── State ────────────────────────────────────────────────────
+    let currentUser = null;
+    let currentProvider = null;
+    let selectedRating = 0;
+    let allReviews = [];
+
+    // ─── DOM Refs ─────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    const loadingState = $('loadingState');
+    const profileContent = $('profileContent');
+
+    // ─── Auth UI ──────────────────────────────────────────────────
+    async function updateAuthUI() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const navAuth = $('navAuth');
+      const mobileAuth = $('mobileAuthLinks');
+      const dropdown = $('userDropdown');
+
+      if (session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, email')
+          .eq('id', session.user.id)
+          .single();
+
+        const name = profile?.full_name || session.user.email.split('@')[0];
+        const email = profile?.email || session.user.email;
+        const initial = name[0].toUpperCase();
+        currentUser = session.user;
+
+        navAuth.innerHTML = `
+          <div class="user-btn" id="userBtn" onclick="toggleDropdown(event)">
+            <div class="user-btn-avatar">${initial}</div>
+            <span class="user-btn-name">${name}</span>
+            <span class="user-btn-arrow">▼</span>
+          </div>`;
+
+        $('dropdownHeader').innerHTML = `
+          <div class="dropdown-header-avatar">${initial}</div>
+          <div class="dropdown-header-info">
+            <div class="dropdown-name">${name}</div>
+            <div class="dropdown-email">${email}</div>
+          </div>`;
+
+        mobileAuth.innerHTML = `
+          <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg-soft);border-radius:12px">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--success));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">${initial}</div>
+              <div>
+                <div style="font-weight:800;font-size:14px">${name}</div>
+                <div style="font-size:11px;color:var(--text-muted)">${email}</div>
+              </div>
+            </div>
+            <a href="profile.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text);font-weight:600;font-size:14px">👤 الملف الشخصي</a>
+            <a href="my-services.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text);font-weight:600;font-size:14px">🛠️ خدماتي</a>
+            <div onclick="logout(event)" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#EF4444;font-weight:700;font-size:14px;cursor:pointer">🚪 تسجيل الخروج</div>
+          </div>`;
+
+        // Show review form if user is logged in
+        const reviewForm = $('reviewForm');
+        if (reviewForm) reviewForm.style.display = 'block';
+
+      } else {
+        navAuth.innerHTML = `
+          <a href="login.html" class="btn-login">
+            <span>🔑</span>
+            <span>تسجيل الدخول</span>
+          </a>`;
+
+        if (dropdown) dropdown.classList.remove('open');
+
+        mobileAuth.innerHTML = `
+          <div style="padding:12px 16px">
+            <a href="login.html" style="text-decoration:none;display:block;text-align:center;padding:12px;border:2px solid var(--primary);color:var(--primary);border-radius:50px;font-weight:700;font-size:14px">🔑 تسجيل الدخول</a>
+          </div>`;
+
+        const reviewForm = $('reviewForm');
+        if (reviewForm) reviewForm.style.display = 'none';
+      }
+    }
+
+    // ─── Dropdown ─────────────────────────────────────────────────
+    function toggleDropdown(event) {
+      event.stopPropagation();
+      const dropdown = $('userDropdown');
+      const userBtn = $('userBtn');
+      const isOpen = dropdown.classList.contains('open');
+
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        if (userBtn) userBtn.classList.add('open');
+      } else {
+        dropdown.classList.remove('open');
+        if (userBtn) userBtn.classList.remove('open');
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const dropdown = $('userDropdown');
+      const userBtn = $('userBtn');
+      if (dropdown && !dropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+        dropdown.classList.remove('open');
+        userBtn?.classList.remove('open');
+      }
+    });
+
+    // ─── Logout ───────────────────────────────────────────────────
+    async function logout(event) {
+      if (event) event.stopPropagation();
+      $('userDropdown')?.classList.remove('open');
+      await supabase.auth.signOut();
+      updateAuthUI();
+      window.location.href = 'index.html';
+    }
+
+    // ─── Mobile Menu ──────────────────────────────────────────────
+    function toggleMobileMenu() {
+      $('mobileMenu').classList.toggle('open');
+    }
+
+    // ─── Load Profile ─────────────────────────────────────────────
+    async function loadProfile() {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        loadingState.innerHTML = `
+          <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+          <h3 style="color:var(--text-muted);">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
+          <a href="login.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;">تسجيل الدخول</a>
+        `;
+        return;
+      }
+
+      // جلب بيانات الحرفي من جدول providers
+      const { data: providers, error } = await supabase
+        .from('providers')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .limit(1);
+
+      if (error) {
+        console.error('Error fetching provider:', error);
+        loadingState.innerHTML = `
+          <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+          <h3 style="color:var(--text-muted);">حدث خطأ أثناء تحميل البيانات</h3>
+        `;
+        return;
+      }
+
+      if (!providers || providers.length === 0) {
+        loadingState.innerHTML = `
+          <div style="font-size:48px;margin-bottom:16px;">📝</div>
+          <h3 style="color:var(--text-muted);">لم تقم بإضافة ملفك المهني بعد</h3>
+          <p style="color:var(--text-light);">سجل كحرفي لتظهر في المنصة</p>
+          <a href="submit.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;">تقديم طلب</a>
+        `;
+        return;
+      }
+
+      currentProvider = providers[0];
+      renderProfile(currentProvider);
+
+      // جلب التقييمات
+      await loadReviews(currentProvider.id);
+
+      // جلب معرض الأعمال
+      await loadGallery(currentProvider.id);
+
+      // إخفاء الـ Loading وإظهار المحتوى
+      loadingState.style.display = 'none';
+      profileContent.style.display = 'block';
+    }
+
+    // ─── Render Profile ──────────────────────────────────────────
+    function renderProfile(p) {
+      // Avatar
+      const avatar = $('profileAvatar');
+      if (p.profile_image) {
+        avatar.innerHTML = `<img src="${p.profile_image}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      } else {
+        avatar.textContent = (p.name || '?')[0];
+      }
+
+      $('profileName').textContent = p.name || '—';
+      $('profileProfession').textContent = p.service_category || '—';
+      $('profileRating').textContent = p.rating?.toFixed(1) || '—';
+      $('profileReviewsCount').textContent = p.reviews_count || 0;
+      $('profileCity').textContent = p.city || '—';
+
+      $('statCompleted').textContent = p.reviews_count || 0;
+      $('statRating').textContent = p.rating?.toFixed(1) || '—';
+      $('statExperience').textContent = p.experience_years || '—';
+
+      $('aboutText').textContent = p.service_description || 'لا يوجد وصف مضافة بعد.';
+
+      // Badges (ديناميكية حسب البيانات)
+      const badges = [];
+      if (p.experience_years >= 3) badges.push({ text: '⏱️ الالتزام بالوقت', cls: 'blue' });
+      if (p.rating >= 4.5) badges.push({ text: '✨ جودة عالية', cls: 'green' });
+      badges.push({ text: '💰 أسعار مناسبة', cls: 'yellow' });
+
+      $('badgesRow').innerHTML = badges.map(b =>
+        `<span class="badge-tag ${b.cls}">${b.text}</span>`
+      ).join('');
+
+      // Contact buttons
+      const phone = p.phone || '';
+      const whatsapp = p.whatsapp || phone;
+      const waNumber = whatsapp.replace(/^0/, '212');
+
+      $('callBtn').href = `tel:${phone}`;
+      $('whatsappBtn').href = `https://wa.me/${waNumber}`;
+    }
+
+    // ─── Load Gallery ─────────────────────────────────────────────
+    async function loadGallery(providerId) {
+      const { data, error } = await supabase
+        .from('provider_gallery')
+        .select('*')
+        .eq('provider_id', providerId)
+        .order('order', { ascending: true });
+
+      const grid = $('galleryGrid');
+
+      if (error || !data || data.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🖼️</div>
+            <h3>لا توجد صور في المعرض</h3>
+            <p style="color:var(--text-light);font-size:14px;">أضف صوراً لأعمالك لتبرز مهاراتك</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = data.map(img => `
+        <div class="gallery-item" onclick="openImageModal('${img.image_url}')">
+          <img src="${img.image_url}" alt="${img.title || 'صورة العمل'}" loading="lazy">
+          <div class="overlay">🔍</div>
+        </div>
+      `).join('');
+    }
+
+    // ─── Image Modal ─────────────────────────────────────────────
+    function openImageModal(url) {
+      const modal = $('imageModal');
+      $('modalImage').src = url;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      $('imageModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ─── Load Reviews ────────────────────────────────────────────
+    async function loadReviews(providerId) {
+      const { data, error } = await supabase
+        .from('provider_reviews')
+        .select('*')
+        .eq('provider_id', providerId)
+        .order('created_at', { ascending: false });
+
+      allReviews = data || [];
+
+      if (error) {
+        console.error('Error loading reviews:', error);
+        return;
+      }
+
+      renderReviews(allReviews);
+    }
+
+    function renderReviews(reviews) {
+      const total = reviews.length;
+      const avg = total > 0
+        ? reviews.reduce((s, r) => s + r.rating, 0) / total
+        : 0;
+
+      $('avgRatingBig').textContent = avg.toFixed(1);
+      $('starsBig').textContent = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+      $('reviewsCountBig').textContent = total + ' تقييم';
+
+      // Distribution
+      const dist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      reviews.forEach(r => { if (dist[r.rating] !== undefined) dist[r.rating]++; });
+
+      $('ratingDistribution').innerHTML = [5, 4, 3, 2, 1].map(r => {
+        const count = dist[r] || 0;
+        const pct = total > 0 ? (count / total * 100) : 0;
+        return `
+          <div class="dist-row">
+            <span class="label">${r}★</span>
+            <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+            <span class="percent">${Math.round(pct)}%</span>
+          </div>`;
+      }).join('');
+
+      // List
+      const list = $('reviewsList');
+
+      if (total === 0) {
+        list.innerHTML = `
+          <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
+            <div style="font-size:32px;margin-bottom:8px;">💬</div>
+            <p>لا توجد تقييمات بعد. كن أول من يقيم!</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = reviews.map(r => {
+        const date = new Date(r.created_at);
+        const formatted = date.toLocaleDateString('ar-MA');
+        const initial = r.user_id ? r.user_id[0].toUpperCase() : '?';
+
+        return `
+          <div class="review-item">
+            <div class="review-header">
+              <div class="review-avatar">${initial}</div>
+              <div>
+                <div class="review-name">مستخدم ${r.user_id?.slice(0, 6) || '—'}</div>
+                <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+              </div>
+              <div class="review-date">${formatted}</div>
+            </div>
+            <div class="review-text">${r.comment || 'لا يوجد تعليق'}</div>
+          </div>`;
+      }).join('');
+    }
+
+    // ─── Submit Review ────────────────────────────────────────────
+    async function submitReview() {
+      if (!currentUser) {
+        alert('يرجى تسجيل الدخول لإضافة تقييم');
+        return;
+      }
+
+      if (selectedRating === 0) {
+        alert('يرجى اختيار عدد النجوم');
+        return;
+      }
+
+      const comment = $('reviewComment').value.trim() || null;
+
+      const { data, error } = await supabase
+        .from('provider_reviews')
+        .insert({
+          provider_id: currentProvider.id,
+          user_id: currentUser.id,
+          rating: selectedRating,
+          comment: comment
+        });
+
+      if (error) {
+        console.error('Error submitting review:', error);
+        alert('حدث خطأ أثناء إرسال التقييم');
+        return;
+      }
+
+      // Reset form
+      selectedRating = 0;
+      $('reviewComment').value = '';
+      document.querySelectorAll('#starsInput span').forEach(el => el.textContent = '☆');
+
+      // Reload reviews
+      await loadReviews(currentProvider.id);
+
+      // تحديث إحصائيات الحرفي في الـ UI
+      const { data: updated } = await supabase
+        .from('providers')
+        .select('rating, reviews_count')
+        .eq('id', currentProvider.id)
+        .single();
+
+      if (updated) {
+        $('profileRating').textContent = updated.rating?.toFixed(1) || '—';
+        $('profileReviewsCount').textContent = updated.reviews_count || 0;
+        $('statCompleted').textContent = updated.reviews_count || 0;
+        $('statRating').textContent = updated.rating?.toFixed(1) || '—';
+      }
+
+      alert('تم إرسال تقييمك بنجاح!');
+    }
+
+    // ─── Stars Input ──────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const stars = document.querySelectorAll('#starsInput span');
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const value = parseInt(this.dataset.value);
+          selectedRating = value;
+          stars.forEach((s, i) => {
+            s.textContent = i < value ? '★' : '☆';
+            s.classList.toggle('active', i < value);
+          });
+        });
+        star.addEventListener('mouseenter', function() {
+          const value = parseInt(this.dataset.value);
+          stars.forEach((s, i) => {
+            s.textContent = i < value ? '★' : '☆';
+          });
+        });
+        star.addEventListener('mouseleave', function() {
+          stars.forEach((s, i) => {
+            s.textContent = i < selectedRating ? '★' : '☆';
+          });
+        });
+      });
+    });
+
+    // ─── Navbar Scroll Effect ────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      const nav = $('navbar');
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // ─── Init ─────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      await updateAuthUI();
+      await loadProfile();
+    });
+
+    // Re-run when auth state changes
+    supabase.auth.onAuthStateChange(() => {
+      updateAuthUI();
+    });
+  </script>
+
+</body>
+</html>
