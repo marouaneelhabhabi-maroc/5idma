@@ -452,6 +452,29 @@ body {
         </div>
       </div>
  
+
+<!-- حقول إضافية للمهني فقط -->
+<div id="proFields" style="display:none;">
+  <div class="form-group">
+    <label class="form-label">نبذة عني</label>
+    <div class="input-wrap">
+      <textarea id="regBio" class="form-input"
+        placeholder="صف خدماتك وخبرتك..."
+        style="min-height:80px;padding-top:12px;resize:vertical;padding-right:16px;"></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">سنوات الخبرة</label>
+    <div class="input-wrap">
+      <span class="input-icon">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </span>
+      <input type="number" id="regExperience" class="form-input"
+        placeholder="مثلاً: 5" min="0" max="50" />
+    </div>
+  </div>
+</div>
+
       <div class="form-group">
         <label class="form-label">البريد الإلكتروني</label>
         <div class="input-wrap">
@@ -548,6 +571,8 @@ function selectRole(role, el) {
   selectedRole = role;
   document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+  // إظهار/إخفاء حقول المهني
+  document.getElementById('proFields').style.display = role === 'pro' ? 'block' : 'none';
 }
  
 // ── ALERT ─────────────────────────────────────────────────────────────
@@ -663,13 +688,22 @@ async function handleRegister(e) {
 
 // حفظ البيانات في جدول profiles
 if (data.user) {
+
+
+  // إذا كان مهني، جيب القيم الزايدة
+const bio = selectedRole === 'pro' ? (document.getElementById('regBio').value.trim() || null) : null;
+const experience = selectedRole === 'pro' ? (parseInt(document.getElementById('regExperience').value) || null) : null;
+
   await _sb.from('profiles').upsert({
     id: data.user.id,
     full_name: name,
     email: email,
     city: city,
-    role: selectedRole
+    role: selectedRole,
+    service_description: bio,        // ← جديد
+    experience_years: experience
   });
+
 }
 
 showAlert('تم إنشاء الحساب بنجاح! سيتم تحويلك الآن...', 'success');
