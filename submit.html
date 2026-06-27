@@ -460,12 +460,6 @@ if (profileImg) {
   document.getElementById('avatarZone').style.display = 'none';
 }
 
-// ── المدينة تلقائياً ──
-if (currentProfile.city) {
-  const citySelect = document.getElementById('city');
-  const opt = [...citySelect.options].find(o => o.value === currentProfile.city);
-  if (opt) citySelect.value = currentProfile.city;
-}
 
     if (currentProfile.city) {
       const citySelect = document.getElementById('city');
