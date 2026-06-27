@@ -638,7 +638,7 @@
       if (session) {
         const { data: profile } = await sb
           .from('profiles')
-          .select('full_name, email')
+          .select('full_name, email, profile_image')
           .eq('id', session.user.id)
           .single();
  
@@ -648,14 +648,22 @@
         currentUser = session.user;
  
         navAuth.innerHTML = `
-          <div class="user-btn" id="userBtn" onclick="toggleDropdown(event)">
-            <div class="user-btn-avatar">${initial}</div>
+  <div class="user-btn" id="userBtn" onclick="toggleDropdown(event)">
+    <div class="user-btn-avatar">
+      ${profile?.profile_image 
+        ? `<img src="${profile.profile_image}" alt="${name}">` 
+        : initial}
+    </div>
             <span class="user-btn-name">${name}</span>
             <span class="user-btn-arrow">▼</span>
           </div>`;
  
         $('dropdownHeader').innerHTML = `
-          <div class="dropdown-header-avatar">${initial}</div>
+          <div class="dropdown-header-avatar">
+    ${profile?.profile_image 
+      ? `<img src="${profile.profile_image}" alt="${name}">` 
+      : initial}
+  </div>
           <div class="dropdown-header-info">
             <div class="dropdown-name">${name}</div>
             <div class="dropdown-email">${email}</div>
@@ -801,13 +809,15 @@
       }
  
       $('profileName').textContent = displayName;
-      $('profileProfession').textContent = p.service_category || p.role || '—';
+     // بعد
+$('profileProfession').textContent = p.service_category || (p.role === 'pro' ? 'مهني / حرفي' : p.role === 'client' ? 'زبون' : p.role) || '—';
       $('profileRating').textContent = p.rating ? p.rating.toFixed(1) : '—';
       $('profileReviewsCount').textContent = p.reviews_count || 0;
       $('profileCity').textContent = p.city || '—';
       $('statCompleted').textContent = p.reviews_count || 0;
       $('statRating').textContent = p.rating ? p.rating.toFixed(1) : '—';
-      $('statExperience').textContent = p.experience_years || '—';
+// بعد  
+$('statExperience').textContent = p.experience_years ? `${p.experience_years} سنوات` : '—';
       $('aboutText').textContent = p.service_description || 'لا يوجد وصف مضاف بعد.';
  
       const phone = p.phone || '';
