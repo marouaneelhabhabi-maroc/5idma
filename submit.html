@@ -1,4 +1,10 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قدم خدمتك - خدماتي المغرب</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
@@ -56,10 +62,12 @@
   .field-group{display:flex;flex-direction:column;gap:6px}
   .field-label{font-size:13px;font-weight:600;color:var(--gray-800)}
   .field-label span{color:#E53935}
+  .field-hint{font-size:11px;color:var(--gray-400);font-weight:500}
   .field-input{width:100%;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;font-family:'Cairo',sans-serif;color:var(--gray-800);background:var(--white);outline:none;transition:border .2s,box-shadow .2s;direction:rtl}
   .field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,0.12)}
   .field-input.error{border-color:#E53935;box-shadow:0 0 0 3px rgba(229,57,53,0.12)}
   .field-input::placeholder{color:var(--gray-400)}
+  .field-input:disabled,.field-input.locked{background:var(--gray-100);color:var(--gray-600);cursor:not-allowed}
   select.field-input{cursor:pointer}
   textarea.field-input{resize:vertical;min-height:100px}
   .error-msg{font-size:12px;color:#E53935;display:none}
@@ -101,8 +109,8 @@
   .btn-outline{background:var(--white);color:var(--gray-600);border:1.5px solid var(--gray-200);padding:12px 20px}
   .btn-outline:hover{background:var(--gray-100)}
   .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-  .btn-loading{position:relative;pointer-events:none}
-  .btn-loading::after{content:'';width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+  .btn-loading{position:relative;pointer-events:none;color:transparent!important}
+  .btn-loading::after{content:'';position:absolute;width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;left:50%;top:50%;margin:-9px 0 0 -9px}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* SUCCESS */
@@ -114,6 +122,14 @@
   .status-dot{width:8px;height:8px;background:#FF9800;border-radius:50%;animation:pulse 1.5s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
+  /* TOP-LEVEL LOADER (initial profile fetch) */
+  .page-loader{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--gray-600);font-size:14px}
+  .page-loader .spinner{width:34px;height:34px;border:3px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+
+  .banner{display:none;align-items:center;gap:10px;background:#FFF3E0;color:#E65100;border:1px solid #FFE0B2;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:1rem}
+  .banner.show{display:flex}
+  .banner.error{background:#FDECEA;color:#C62828;border-color:#F5C6CB}
+
   @media(max-width:540px){
     .hero h1{font-size:2rem}
     .field-row{grid-template-columns:1fr}
@@ -121,8 +137,10 @@
     .hero-stats{gap:1.25rem}
   }
 </style>
+</head>
+<body>
 
-<div class="page">
+<div class="page" id="app">
   <div class="hero">
     <div class="hero-badge">منصة خدماتي المغرب</div>
     <h1>قدم خدمتك 🚀</h1>
@@ -136,507 +154,667 @@
 
   <div class="form-container">
 
-    <!-- PROGRESS -->
-    <div class="progress-card">
-      <div class="progress-steps" id="progressSteps">
-        <div class="step-item" onclick="goToStep(1)">
-          <div class="step-dot active" id="dot1">1</div>
-          <div class="step-label active" id="lbl1">معلوماتك</div>
-        </div>
-        <div class="step-line" id="line1"></div>
-        <div class="step-item" onclick="goToStep(2)">
-          <div class="step-dot" id="dot2">2</div>
-          <div class="step-label" id="lbl2">الخدمة</div>
-        </div>
-        <div class="step-line" id="line2"></div>
-        <div class="step-item" onclick="goToStep(3)">
-          <div class="step-dot" id="dot3">3</div>
-          <div class="step-label" id="lbl3">الموقع</div>
-        </div>
-        <div class="step-line" id="line3"></div>
-        <div class="step-item" onclick="goToStep(4)">
-          <div class="step-dot" id="dot4">4</div>
-          <div class="step-label" id="lbl4">الصور</div>
-        </div>
-      </div>
-      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:25%"></div></div>
+    <!-- INITIAL LOADER (while we fetch the session + profile) -->
+    <div class="page-loader" id="initialLoader">
+      <div class="spinner"></div>
+      <span>كنجيبو معلوماتك...</span>
     </div>
 
-    <!-- STEP 1 -->
-    <div class="form-card" id="step1">
-      <div class="form-title">المعلومات الشخصية</div>
-      <div class="form-subtitle">أدخل معلوماتك الأساسية باش نتعرفو عليك</div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">الاسم الكامل <span>*</span></label>
-          <input class="field-input" id="fullname" placeholder="مثال: محمد الأمين بوشتى" type="text">
-          <span class="error-msg" id="err-fullname">الاسم مطلوب</span>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">رقم الهاتف <span>*</span></label>
-          <input class="field-input" id="phone" placeholder="06xxxxxxxx" type="tel" maxlength="10">
-          <span class="error-msg" id="err-phone">أدخل رقم هاتف صحيح</span>
-        </div>
-        <div class="field-group">
-          <label class="field-label">رقم واتساب <span>*</span></label>
-          <input class="field-input" id="whatsapp" placeholder="06xxxxxxxx" type="tel" maxlength="10">
-          <span class="error-msg" id="err-whatsapp">رقم واتساب مطلوب</span>
-        </div>
-      </div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">البريد الإلكتروني</label>
-          <input class="field-input" id="email" placeholder="example@gmail.com" type="email">
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">كلمة السر <span>*</span></label>
-          <input class="field-input" id="password" placeholder="8 أحرف على الأقل" type="password">
-          <span class="error-msg" id="err-password">8 أحرف على الأقل</span>
-        </div>
-        <div class="field-group">
-          <label class="field-label">تأكيد كلمة السر <span>*</span></label>
-          <input class="field-input" id="confirm-password" placeholder="أعد كتابة كلمة السر" type="password">
-          <span class="error-msg" id="err-confirm">كلمتا السر غير متطابقتين</span>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="nextStep(1)">التالي <i class="ti ti-arrow-left"></i></button>
-      </div>
-    </div>
+    <!-- everything below is hidden until profile is loaded -->
+    <div id="appContent" style="display:none">
 
-    <!-- STEP 2 -->
-    <div class="form-card" id="step2" style="display:none">
-      <div class="form-title">معلومات الخدمة</div>
-      <div class="form-subtitle">خبرنا شنو كاتقدم وعلاش أنت الأحسن</div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">نوع الخدمة <span>*</span></label>
-          <select class="field-input" id="service-type">
-            <option value="">— اختار نوع الخدمة —</option>
-            <option>بلومبي</option><option>كهربائي</option><option>نجار</option>
-            <option>ميكانيكي</option><option>صباغ</option><option>حداد</option>
-            <option>مصور</option><option>مطور مواقع</option><option>مصمم جرافيك</option>
-            <option>تنظيف المنازل</option><option>نقل الأثاث</option>
-            <option>تكييف وتبريد</option><option>خدمات أخرى</option>
-          </select>
-          <span class="error-msg" id="err-service-type">اختار نوع الخدمة</span>
-        </div>
-      </div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">عنوان الخدمة <span>*</span></label>
-          <input class="field-input" id="service-title" placeholder="مثال: بلومبي محترف لإصلاح التسربات" type="text">
-          <span class="error-msg" id="err-service-title">أدخل عنوان الخدمة</span>
-        </div>
-      </div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">وصف الخدمة <span>*</span></label>
-          <textarea class="field-input" id="service-desc" placeholder="اشرح خدمتك والخبرة ديالك والخدمات اللي كتقدم..."></textarea>
-          <span class="error-msg" id="err-service-desc">أدخل وصف الخدمة</span>
-        </div>
-      </div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">سنوات الخبرة <span>*</span></label>
-          <input class="field-input" id="experience" placeholder="مثال: 5" type="number" min="0" max="50">
-          <span class="error-msg" id="err-experience">أدخل سنوات الخبرة</span>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-outline" onclick="prevStep(2)"><i class="ti ti-arrow-right"></i> السابق</button>
-        <button class="btn btn-primary" onclick="nextStep(2)">التالي <i class="ti ti-arrow-left"></i></button>
-      </div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div class="form-card" id="step3" style="display:none">
-      <div class="form-title">الموقع والثمن</div>
-      <div class="form-subtitle">وين كاتخدم وبشحال</div>
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">المدينة <span>*</span></label>
-          <select class="field-input" id="city">
-            <option value="">— اختار المدينة —</option>
-            <option>الدار البيضاء</option><option>الرباط</option><option>فاس</option>
-            <option>مراكش</option><option>طنجة</option><option>أكادير</option>
-            <option>مكناس</option><option>وجدة</option><option>القنيطرة</option>
-            <option>تطوان</option><option>العيون</option><option>خريبكة</option>
-            <option>الجديدة</option><option>آسفي</option><option>الناظور</option>
-            <option>بني ملال</option>
-          </select>
-          <span class="error-msg" id="err-city">اختار المدينة</span>
-        </div>
-        <div class="field-group">
-          <label class="field-label">الحي أو المنطقة</label>
-          <input class="field-input" id="district" placeholder="مثال: حي الرياض" type="text">
-        </div>
-      </div>
-      <div class="field-row single">
-        <div class="field-group">
-          <label class="field-label">الثمن الابتدائي <span>*</span></label>
-          <input class="field-input" id="price" placeholder="مثال: 80 درهم" type="text">
-          <span class="error-msg" id="err-price">أدخل الثمن</span>
-        </div>
-      </div>
-      <label class="checkbox-row">
-        <input type="checkbox" id="outside-city">
-        <label for="outside-city">🚗 كنخدم خارج المدينة</label>
-      </label>
-      <div class="btn-row">
-        <button class="btn btn-outline" onclick="prevStep(3)"><i class="ti ti-arrow-right"></i> السابق</button>
-        <button class="btn btn-primary" onclick="nextStep(3)">التالي <i class="ti ti-arrow-left"></i></button>
-      </div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="form-card" id="step4" style="display:none">
-      <div class="form-title">الصور والتحقق</div>
-      <div class="form-subtitle">ضيف صورتك وأعمالك السابقة</div>
-
-      <div class="field-group" style="margin-bottom:1rem">
-        <label class="field-label">صورة شخصية <span>*</span></label>
-        <div class="upload-zone" id="avatarZone" onclick="document.getElementById('avatarInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'avatar')">
-          <i class="ti ti-user-circle" aria-hidden="true"></i>
-          <div class="uz-title">اختار صورتك الشخصية</div>
-          <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
-        </div>
-        <input type="file" id="avatarInput" accept="image/*" onchange="handleFile(this,'avatar')">
-        <span class="error-msg" id="err-avatar">الصورة الشخصية مطلوبة</span>
-      </div>
-
-      <div class="field-group" style="margin-bottom:1rem">
-        <label class="field-label">صور الأعمال السابقة</label>
-        <div class="upload-zone" id="workZone" onclick="document.getElementById('workInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'work')">
-          <i class="ti ti-photo" aria-hidden="true"></i>
-          <div class="uz-title">ضيف صور أعمالك (10 صور كحد أقصى)</div>
-          <div class="uz-sub">اسحب وأفلت أو اضغط للاختيار</div>
-        </div>
-        <input type="file" id="workInput" accept="image/*" multiple onchange="handleFile(this,'work')">
-        <div class="preview-grid" id="workPreviews"></div>
-      </div>
-
-      <div class="field-group" style="margin-bottom:1.5rem">
-        <label class="field-label">البطاقة الوطنية <span style="color:var(--gray-400);font-weight:400">(اختياري)</span></label>
-        <div class="upload-zone" id="idZone" onclick="document.getElementById('idInput').click()">
-          <i class="ti ti-id" aria-hidden="true"></i>
-          <div class="uz-title">ارفع نسخة من البطاقة الوطنية</div>
-          <div class="uz-sub">للتحقق من الحساب وزيادة الثقة</div>
-        </div>
-        <input type="file" id="idInput" accept="image/*,application/pdf" onchange="handleFile(this,'id')">
-      </div>
-
-      <!-- REVIEW -->
-      <div class="review-card" id="reviewCard" style="display:none">
-        <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:.75rem">📋 مراجعة المعلومات</div>
-        <div class="review-header">
-          <div class="review-avatar-placeholder" id="reviewAvatarCircle">م</div>
-          <div>
-            <div class="review-name" id="reviewName">—</div>
-            <div class="review-badge" id="reviewBadge">✓ كل شي مزيان</div>
+      <!-- PROGRESS -->
+      <div class="progress-card">
+        <div class="progress-steps" id="progressSteps">
+          <div class="step-item" onclick="goToStep(1)">
+            <div class="step-dot active" id="dot1">1</div>
+            <div class="step-label active" id="lbl1">معلوماتك</div>
+          </div>
+          <div class="step-line" id="line1"></div>
+          <div class="step-item" onclick="goToStep(2)">
+            <div class="step-dot" id="dot2">2</div>
+            <div class="step-label" id="lbl2">الخدمة</div>
+          </div>
+          <div class="step-line" id="line2"></div>
+          <div class="step-item" onclick="goToStep(3)">
+            <div class="step-dot" id="dot3">3</div>
+            <div class="step-label" id="lbl3">الموقع</div>
+          </div>
+          <div class="step-line" id="line3"></div>
+          <div class="step-item" onclick="goToStep(4)">
+            <div class="step-dot" id="dot4">4</div>
+            <div class="step-label" id="lbl4">الصور</div>
           </div>
         </div>
-        <div class="review-grid">
-          <div class="review-item"><div class="review-item-label">نوع الخدمة</div><div class="review-item-value" id="reviewService">—</div></div>
-          <div class="review-item"><div class="review-item-label">المدينة</div><div class="review-item-value" id="reviewCity">—</div></div>
-          <div class="review-item"><div class="review-item-label">الثمن</div><div class="review-item-value" id="reviewPrice">—</div></div>
-          <div class="review-item"><div class="review-item-label">سنوات الخبرة</div><div class="review-item-value" id="reviewExp">—</div></div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:25%"></div></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="form-card" id="step1">
+        <div class="form-title">المعلومات الشخصية</div>
+        <div class="form-subtitle">هاد المعلومات جايا من الحساب ديالك، غير أكد كلمة السر باش تكمل</div>
+
+        <div class="banner" id="profileBanner"></div>
+
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">الاسم الكامل</label>
+            <input class="field-input locked" id="fullname" type="text" disabled>
+            <span class="field-hint">جاي من حسابك، إلا بغيتي تبدلو دوز لإعدادات الحساب</span>
+          </div>
+        </div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">البريد الإلكتروني</label>
+            <input class="field-input locked" id="email" type="email" disabled>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">رقم الهاتف <span>*</span></label>
+            <input class="field-input" id="phone" placeholder="06xxxxxxxx" type="tel" maxlength="10">
+            <span class="error-msg" id="err-phone">أدخل رقم هاتف صحيح (10 أرقام)</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">رقم واتساب <span>*</span></label>
+            <input class="field-input" id="whatsapp" placeholder="06xxxxxxxx" type="tel" maxlength="10">
+            <span class="error-msg" id="err-whatsapp">رقم واتساب مطلوب (10 أرقام)</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">أكد كلمة السر ديال حسابك <span>*</span></label>
+            <input class="field-input" id="password" placeholder="دخل كلمة السر ديالك للتحقق" type="password" autocomplete="current-password">
+            <span class="error-msg" id="err-password">كلمة السر غير صحيحة</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="step1NextBtn" onclick="nextStep(1)">التالي <i class="ti ti-arrow-left"></i></button>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-outline" onclick="prevStep(4)"><i class="ti ti-arrow-right"></i> السابق</button>
-        <button class="btn btn-success" id="submitBtn" onclick="submitForm()">
-          <i class="ti ti-rocket" aria-hidden="true"></i> نشر الخدمة
-        </button>
+      <!-- STEP 2 -->
+      <div class="form-card" id="step2" style="display:none">
+        <div class="form-title">معلومات الخدمة</div>
+        <div class="form-subtitle">خبرنا شنو كاتقدم وعلاش أنت الأحسن</div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">نوع الخدمة <span>*</span></label>
+            <select class="field-input" id="service-type">
+              <option value="">— اختار نوع الخدمة —</option>
+              <option>بلومبي</option><option>كهربائي</option><option>نجار</option>
+              <option>ميكانيكي</option><option>صباغ</option><option>حداد</option>
+              <option>مصور</option><option>مطور مواقع</option><option>مصمم جرافيك</option>
+              <option>تنظيف المنازل</option><option>نقل الأثاث</option>
+              <option>تكييف وتبريد</option><option>خدمات أخرى</option>
+            </select>
+            <span class="error-msg" id="err-service-type">اختار نوع الخدمة</span>
+          </div>
+        </div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">عنوان الخدمة <span>*</span></label>
+            <input class="field-input" id="service-title" placeholder="مثال: بلومبي محترف لإصلاح التسربات" type="text">
+            <span class="error-msg" id="err-service-title">أدخل عنوان الخدمة</span>
+          </div>
+        </div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">وصف الخدمة <span>*</span></label>
+            <textarea class="field-input" id="service-desc" placeholder="اشرح خدمتك والخبرة ديالك والخدمات اللي كتقدم..."></textarea>
+            <span class="error-msg" id="err-service-desc">أدخل وصف الخدمة</span>
+          </div>
+        </div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">سنوات الخبرة <span>*</span></label>
+            <input class="field-input" id="experience" placeholder="مثال: 5" type="number" min="0" max="50">
+            <span class="error-msg" id="err-experience">أدخل سنوات الخبرة</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="prevStep(2)"><i class="ti ti-arrow-right"></i> السابق</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">التالي <i class="ti ti-arrow-left"></i></button>
+        </div>
       </div>
-    </div>
+
+      <!-- STEP 3 -->
+      <div class="form-card" id="step3" style="display:none">
+        <div class="form-title">الموقع والثمن</div>
+        <div class="form-subtitle">وين كاتخدم وبشحال</div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">المدينة <span>*</span></label>
+            <select class="field-input" id="city">
+              <option value="">— اختار المدينة —</option>
+              <option>الدار البيضاء</option><option>الرباط</option><option>فاس</option>
+              <option>مراكش</option><option>طنجة</option><option>أكادير</option>
+              <option>مكناس</option><option>وجدة</option><option>القنيطرة</option>
+              <option>تطوان</option><option>العيون</option><option>خريبكة</option>
+              <option>الجديدة</option><option>آسفي</option><option>الناظور</option>
+              <option>بني ملال</option>
+            </select>
+            <span class="error-msg" id="err-city">اختار المدينة</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">الحي أو المنطقة</label>
+            <input class="field-input" id="district" placeholder="مثال: حي الرياض" type="text">
+          </div>
+        </div>
+        <div class="field-row single">
+          <div class="field-group">
+            <label class="field-label">الثمن الابتدائي <span>*</span></label>
+            <input class="field-input" id="price" placeholder="مثال: 80 درهم" type="text">
+            <span class="error-msg" id="err-price">أدخل الثمن</span>
+          </div>
+        </div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="outside-city">
+          <label for="outside-city">🚗 كنخدم خارج المدينة</label>
+        </label>
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="prevStep(3)"><i class="ti ti-arrow-right"></i> السابق</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">التالي <i class="ti ti-arrow-left"></i></button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="form-card" id="step4" style="display:none">
+        <div class="form-title">الصور والتحقق</div>
+        <div class="form-subtitle">ضيف صورتك وأعمالك السابقة</div>
+
+        <div class="field-group" style="margin-bottom:1rem">
+          <label class="field-label">صورة شخصية <span>*</span></label>
+          <div class="upload-zone" id="avatarZone" onclick="document.getElementById('avatarInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'avatar')">
+            <i class="ti ti-user-circle" aria-hidden="true"></i>
+            <div class="uz-title">اختار صورتك الشخصية</div>
+            <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
+          </div>
+          <input type="file" id="avatarInput" accept="image/*" onchange="handleFile(this,'avatar')">
+          <img class="avatar-preview" id="avatarPreviewImg" style="display:none">
+          <span class="error-msg" id="err-avatar">الصورة الشخصية مطلوبة</span>
+        </div>
+
+        <div class="field-group" style="margin-bottom:1rem">
+          <label class="field-label">صور الأعمال السابقة</label>
+          <div class="upload-zone" id="workZone" onclick="document.getElementById('workInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'work')">
+            <i class="ti ti-photo" aria-hidden="true"></i>
+            <div class="uz-title">ضيف صور أعمالك (10 صور كحد أقصى)</div>
+            <div class="uz-sub">اسحب وأفلت أو اضغط للاختيار</div>
+          </div>
+          <input type="file" id="workInput" accept="image/*" multiple onchange="handleFile(this,'work')">
+          <div class="preview-grid" id="workPreviews"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- REVIEW -->
+        <div class="review-card" id="reviewCard"></div>
+
+        <div class="banner error" id="submitBanner"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="prevStep(4)"><i class="ti ti-arrow-right"></i> السابق</button>
+          <button class="btn btn-success" id="submitBtn" onclick="submitApplication()">إرسال الطلب <i class="ti ti-check"></i></button>
+        </div>
+      </div>
+
+    </div><!-- /appContent -->
 
     <!-- SUCCESS -->
     <div class="success-page" id="successPage">
       <div class="success-icon">✅</div>
       <div class="success-title">تم إرسال طلبك بنجاح!</div>
-      <div class="status-pill"><div class="status-dot"></div>قيد المراجعة</div>
-      <p class="success-text">سيتم مراجعة خدمتك من طرف الإدارة قبل نشرها على المنصة. غادي تصلك رسالة على واتساب حين يتم القبول.</p>
-      <button class="btn btn-primary" onclick="resetForm()" style="margin:0 auto;display:inline-flex">
-        <i class="ti ti-home" aria-hidden="true"></i> العودة للرئيسية
-      </button>
+      <div class="status-pill"><span class="status-dot"></span> طلبك قيد المراجعة</div>
+      <div class="success-text">شكراً ليك! فريقنا غادي يراجع المعلومات ديالك ويتواصل معاك فأقرب وقت ممكن عبر الهاتف أو البريد الإلكتروني.</div>
+      <button class="btn btn-primary" style="max-width:240px;margin:0 auto" onclick="location.reload()">رجوع للرئيسية</button>
     </div>
 
   </div>
 </div>
 
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* =========================================================
+   SUPABASE INIT
+   ========================================================= */
 const SUPABASE_URL = "https://kacutivlrarulhbrzsil.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthY3V0aXZscmFydWxoYnJ6c2lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDYyNTQsImV4cCI6MjA5NjA4MjI1NH0.U39OH4ysCEpQGGkJabKRw_u22SVLv8J7elUzESdxjTY"; // ← anon key ديالك من Supabase dashboard
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthY3V0aXZscmFydWxoYnJ6c2lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDYyNTQsImV4cCI6MjA5NjA4MjI1NH0.U39OH4ysCEpQGGkJabKRw_u22SVLv8J7elUzESdxjTY";
+ 
+var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ 
+let currentUser   = null;
+let currentProfile = null;
+let currentStep   = 1;
+const totalSteps  = 4;
+let passwordVerified = false;
+ 
+const avatarFile = { file: null, dataUrl: null };
+const workFiles  = [];
+ 
+/* =========================================================
+   BOOTSTRAP
+   ========================================================= */
+async function init() {
+  try {
+    // 1) جيب session
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+ 
+    if (sessionError) {
+      console.error('Session error:', sessionError);
+      showInitError("خطأ في جلسة المستخدم. عاود حاول أو سجل الدخول من جديد.");
+      return;
+    }
+ 
+    if (!session || !session.user) {
+      showInitError("خاصك تدخل لحسابك (تسجيل الدخول) قبل ما تقدم خدمتك.");
+      return;
+    }
+ 
+    currentUser = session.user;
+    console.log('✅ Session found:', currentUser.email);
+ 
+    // 2) جيب profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+     .select('id, full_name, email, city, role, created_at, profile_image')
+      .eq('id', currentUser.id)
+      .single();
+ 
+    if (profileError) {
+      console.warn('Profile error:', profileError.message);
+      // مزيان نكملو حتى بدون profile — نستعملو بيانات auth مباشرة
+      currentProfile = {
+        id: currentUser.id,
+        full_name: currentUser.user_metadata?.full_name || '',
+        email: currentUser.email,
+        city: currentUser.user_metadata?.city || ''
+      };
+    } else {
+      currentProfile = profile;
+      console.log('✅ Profile found:', currentProfile.full_name);
+    }
+ 
+// ── عمر الـ fields تلقائياً ──
+document.getElementById('fullname').value = 
+  currentProfile.full_name || currentUser.user_metadata?.full_name || '';
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-</script>
+document.getElementById('email').value = 
+  currentProfile.email || currentUser.email || '';
+
+// ── صورة البروفيل تلقائياً ──
+const profileImg = currentProfile.profile_image || 
+  currentUser.user_metadata?.avatar_url || null;
+
+if (profileImg) {
+  avatarFile.dataUrl = profileImg;
+  avatarFile.file = null; // مافيهاش file، غير URL
+  const img = document.getElementById('avatarPreviewImg');
+  img.src = profileImg;
+  img.style.display = 'block';
+  // أخبي الـ upload zone
+  document.getElementById('avatarZone').style.display = 'none';
+}
 
 
-<script>
-let currentStep = 1;
-const totalSteps = 4;
-const data = {};
-
-
-
-
-
-
-
-
-
-
-function updateProgress(step) {
-  for (let i = 1; i <= 4; i++) {
+    if (currentProfile.city) {
+      const citySelect = document.getElementById('city');
+      const opt = [...citySelect.options].find(o => o.value === currentProfile.city);
+      if (opt) citySelect.value = currentProfile.city;
+    }
+ 
+    // 4) أظهر المحتوى
+    document.getElementById('initialLoader').style.display = 'none';
+    document.getElementById('appContent').style.display    = 'block';
+ 
+  } catch (err) {
+    console.error('init() crashed:', err);
+    showInitError("صرا خطأ غير متوقع: " + err.message);
+  }
+}
+ 
+function showInitError(msg) {
+  document.getElementById('initialLoader').innerHTML =
+    `<div style="text-align:center">
+       <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+       <div style="color:#C62828;font-weight:600;margin-bottom:1rem">${msg}</div>
+       <button class="btn btn-primary" onclick="location.href='login.html'">تسجيل الدخول</button>
+     </div>`;
+}
+ 
+document.addEventListener('DOMContentLoaded', init);
+ 
+/* =========================================================
+   STEP NAVIGATION
+   ========================================================= */
+function updateProgressUI() {
+  for (let i = 1; i <= totalSteps; i++) {
     const dot = document.getElementById('dot' + i);
     const lbl = document.getElementById('lbl' + i);
-    dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
-    dot.innerHTML = i < step ? '✓' : i;
-    lbl.className = 'step-label' + (i < step ? ' done' : i === step ? ' active' : '');
-    if (i < 4) document.getElementById('line' + i).className = 'step-line' + (i < step ? ' done' : '');
+    dot.classList.remove('active', 'done');
+    lbl.classList.remove('active', 'done');
+    if (i < currentStep) {
+      dot.classList.add('done');
+      lbl.classList.add('done');
+      dot.innerHTML = '<i class="ti ti-check"></i>';
+    } else if (i === currentStep) {
+      dot.classList.add('active');
+      lbl.classList.add('active');
+      dot.textContent = i;
+    } else {
+      dot.textContent = i;
+    }
   }
-  document.getElementById('progressFill').style.width = (step / totalSteps * 100) + '%';
-}
-
-function showStep(n) {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('step' + i);
-    if (el) el.style.display = i === n ? 'block' : 'none';
+  for (let i = 1; i < totalSteps; i++) {
+    document.getElementById('line' + i).classList.toggle('done', i < currentStep);
   }
-  updateProgress(n);
-  currentStep = n;
-  if (n === 4) updateReview();
+  document.getElementById('progressFill').style.width =
+    ((currentStep - 1) / (totalSteps - 1) * 75 + 25) + '%';
 }
-
-function goToStep(n) {
-  if (n < currentStep) showStep(n);
+ 
+function showStep(step) {
+  for (let i = 1; i <= totalSteps; i++) {
+    document.getElementById('step' + i).style.display = (i === step) ? 'block' : 'none';
+  }
+  currentStep = step;
+  updateProgressUI();
+  if (step === 4) renderReview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-function validateStep1() {
-  let ok = true;
-  const fn = document.getElementById('fullname').value.trim();
-  const ph = document.getElementById('phone').value.trim();
-  const wa = document.getElementById('whatsapp').value.trim();
-  const pw = document.getElementById('password').value;
-  const cp = document.getElementById('confirm-password').value;
-  const moroccoReg = /^(06|07)\d{8}$/;
-  showErr('fullname', !fn);
-  showErr('phone', !moroccoReg.test(ph));
-  showErr('whatsapp', !moroccoReg.test(wa));
-  showErr('password', pw.length < 8);
-  showErr('confirm', pw !== cp || cp.length === 0);
-  if (!fn || !moroccoReg.test(ph) || !moroccoReg.test(wa) || pw.length < 8 || pw !== cp) ok = false;
+ 
+function goToStep(step) {
+  if (step > currentStep) return;
+  showStep(step);
+}
+ 
+function prevStep(from) { showStep(from - 1); }
+ 
+async function nextStep(from) {
+  const ok = await validateStep(from);
+  if (!ok) return;
+  showStep(from + 1);
+}
+ 
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+function setError(fieldId, show) {
+  const input = document.getElementById(fieldId);
+  const err   = document.getElementById('err-' + fieldId);
+  if (input) input.classList.toggle('error', show);
+  if (err)   err.classList.toggle('show', show);
+}
+ 
+function isValidMoroccanPhone(v) {
+  return /^0[5-7][0-9]{8}$/.test(v.trim());
+}
+ 
+async function validateStep(step) {
+  if (step === 1) return validateStep1();
+  if (step === 2) return validateStep2();
+  if (step === 3) return validateStep3();
+  return true;
+}
+ 
+async function validateStep1() {
+  let valid = true;
+ 
+  const phone    = document.getElementById('phone').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  const password = document.getElementById('password').value;
+ 
+  const phoneOk = isValidMoroccanPhone(phone);
+  setError('phone', !phoneOk);
+  if (!phoneOk) valid = false;
+ 
+  const whatsappOk = isValidMoroccanPhone(whatsapp);
+  setError('whatsapp', !whatsappOk);
+  if (!whatsappOk) valid = false;
+ 
+  if (!password) {
+    setError('password', true);
+    document.getElementById('err-password').textContent = 'دخل كلمة السر ديالك';
+    valid = false;
+  }
+ 
+  if (!valid) return false;
+ 
+  const btn = document.getElementById('step1NextBtn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+  showBanner('profileBanner', '', false);
+ 
+  const email = currentProfile.email || currentUser.email;
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+ 
+  btn.classList.remove('btn-loading');
+  btn.disabled = false;
+ 
+  if (error) {
+    setError('password', true);
+    document.getElementById('err-password').textContent = 'كلمة السر غير صحيحة، عاود حاول';
+    return false;
+  }
+ 
+  passwordVerified = true;
+  setError('password', false);
+  return true;
+}
+ 
+function validateStep2() {
+  let valid = true;
+  const type  = document.getElementById('service-type').value;
+  const title = document.getElementById('service-title').value.trim();
+  const desc  = document.getElementById('service-desc').value.trim();
+  const exp   = document.getElementById('experience').value;
+ 
+  setError('service-type', !type);  if (!type) valid = false;
+  setError('service-title', !title); if (!title) valid = false;
+  setError('service-desc', !desc);  if (!desc) valid = false;
+  const expOk = exp !== '' && Number(exp) >= 0;
+  setError('experience', !expOk);   if (!expOk) valid = false;
+ 
+  return valid;
+}
+ 
+function validateStep3() {
+  let valid = true;
+  const city  = document.getElementById('city').value;
+  const price = document.getElementById('price').value.trim();
+ 
+  setError('city', !city);   if (!city) valid = false;
+  setError('price', !price); if (!price) valid = false;
+ 
+  return valid;
+}
+ 
+function validateStep4() {
+const ok = !!avatarFile.dataUrl || !!avatarFile.file;
+  setError('avatar', !ok);
   return ok;
 }
-
-function validateStep2() {
-  const st = document.getElementById('service-type').value;
-  const tt = document.getElementById('service-title').value.trim();
-  const ds = document.getElementById('service-desc').value.trim();
-  const ex = document.getElementById('experience').value;
-  showErr('service-type', !st);
-  showErr('service-title', !tt);
-  showErr('service-desc', !ds);
-  showErr('experience', !ex);
-  return st && tt && ds && ex;
+ 
+function showBanner(id, msg, isError) {
+  const el = document.getElementById(id);
+  if (!msg) { el.classList.remove('show'); return; }
+  el.textContent = msg;
+  el.classList.toggle('error', !!isError);
+  el.classList.add('show');
 }
-
-function validateStep3() {
-  const ci = document.getElementById('city').value;
-  const pr = document.getElementById('price').value.trim();
-  showErr('city', !ci);
-  showErr('price', !pr);
-  return ci && pr;
+ 
+/* =========================================================
+   FILE UPLOAD
+   ========================================================= */
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
-
-function validateStep4() {
-  const hasAvatar = document.getElementById('avatarInput').files.length > 0;
-  showErr('avatar', !hasAvatar);
-  return hasAvatar;
-}
-
-function showErr(id, show) {
-  const el = document.getElementById('err-' + id);
-  const input = document.getElementById(id);
-  if (el) el.className = 'error-msg' + (show ? ' show' : '');
-  if (input) input.className = input.className.replace(' error','') + (show ? ' error' : '');
-}
-
-function nextStep(s) {
-  const valid = s === 1 ? validateStep1() : s === 2 ? validateStep2() : s === 3 ? validateStep3() : true;
-  if (valid) showStep(s + 1);
-}
-
-function prevStep(s) { showStep(s - 1); }
-
-function handleFile(input, type) {
-  const files = input.files;
+ 
+async function handleFile(input, kind) {
+  const files = [...input.files];
   if (!files.length) return;
-  if (type === 'avatar') {
-    const url = URL.createObjectURL(files[0]);
-    const zone = document.getElementById('avatarZone');
-    zone.innerHTML = '<img class="avatar-preview" src="' + url + '" alt="صورة شخصية"><div class="uz-sub" style="margin-top:8px">تم الاختيار ✓</div>';
-    showErr('avatar', false);
-    updateReview();
-  } else if (type === 'work') {
-    const grid = document.getElementById('workPreviews');
-    grid.innerHTML = '';
-    const max = Math.min(files.length, 10);
-    for (let i = 0; i < max; i++) {
-      const img = document.createElement('img');
-      img.className = 'preview-img';
-      img.src = URL.createObjectURL(files[i]);
-      grid.appendChild(img);
+ 
+  if (kind === 'avatar') {
+    const file = files[0];
+    if (file.size > 5 * 1024 * 1024) { alert('الصورة كبيرة بزاف (الحد الأقصى 5MB)'); return; }
+    avatarFile.file   = file;
+    avatarFile.dataUrl = await readFileAsDataUrl(file);
+    const img = document.getElementById('avatarPreviewImg');
+    img.src           = avatarFile.dataUrl;
+    img.style.display = 'block';
+    setError('avatar', false);
+  } else {
+    for (const file of files) {
+      if (workFiles.length >= 10) break;
+      if (file.size > 5 * 1024 * 1024) continue;
+      const dataUrl = await readFileAsDataUrl(file);
+      workFiles.push({ file, dataUrl });
     }
-  } else if (type === 'id') {
-    const zone = document.getElementById('idZone');
-    zone.innerHTML = '<i class="ti ti-circle-check" style="font-size:2rem;color:var(--green)"></i><div class="uz-title">تم رفع البطاقة ✓</div>';
+    renderWorkPreviews();
   }
 }
-
-function handleDrop(e, type) {
+ 
+function renderWorkPreviews() {
+  document.getElementById('workPreviews').innerHTML = workFiles.map((f, i) =>
+    `<img class="preview-img" src="${f.dataUrl}" alt="صورة عمل ${i + 1}">`
+  ).join('');
+}
+ 
+function handleDrop(e, kind) {
   e.preventDefault();
-  document.getElementById(type === 'avatar' ? 'avatarZone' : 'workZone').classList.remove('drag');
-  const dt = e.dataTransfer;
-  const fakeInput = {files: dt.files};
-  handleFile(fakeInput, type);
+  e.currentTarget.classList.remove('drag');
+  const input = document.getElementById(kind === 'avatar' ? 'avatarInput' : 'workInput');
+  input.files = e.dataTransfer.files;
+  handleFile(input, kind);
 }
-
-function updateReview() {
-  const rc = document.getElementById('reviewCard');
-  const name = document.getElementById('fullname').value;
-  const svc = document.getElementById('service-type').value;
-  const city = document.getElementById('city').value;
-  const price = document.getElementById('price').value;
-  const exp = document.getElementById('experience').value;
-  if (name || svc || city) {
-    rc.style.display = 'block';
-    document.getElementById('reviewName').textContent = name || '—';
-    document.getElementById('reviewService').textContent = svc || '—';
-    document.getElementById('reviewCity').textContent = city || '—';
-    document.getElementById('reviewPrice').textContent = price ? price + ' درهم' : '—';
-    document.getElementById('reviewExp').textContent = exp ? exp + ' سنوات' : '—';
-    if (name) document.getElementById('reviewAvatarCircle').textContent = name[0];
+ 
+/* =========================================================
+   REVIEW
+   ========================================================= */
+function renderReview() {
+  const fullname    = document.getElementById('fullname').value     || '—';
+  const email       = document.getElementById('email').value        || '—';
+  const phone       = document.getElementById('phone').value        || '—';
+  const city        = document.getElementById('city').value         || '—';
+  const serviceType = document.getElementById('service-type').value || '—';
+  const price       = document.getElementById('price').value        || '—';
+ 
+  const initials = fullname.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('');
+ 
+  const avatarBlock = avatarFile.dataUrl
+    ? `<img class="review-avatar" src="${avatarFile.dataUrl}">`
+    : `<div class="review-avatar-placeholder">${initials || '?'}</div>`;
+ 
+  document.getElementById('reviewCard').innerHTML = `
+    <div class="review-header">
+      ${avatarBlock}
+      <div>
+        <div class="review-name">${fullname}</div>
+        <div class="review-badge"><i class="ti ti-shield-check"></i> طلب جديد</div>
+      </div>
+    </div>
+    <div class="review-grid">
+      <div class="review-item"><div class="review-item-label">البريد الإلكتروني</div><div class="review-item-value">${email}</div></div>
+      <div class="review-item"><div class="review-item-label">الهاتف</div><div class="review-item-value">${phone}</div></div>
+      <div class="review-item"><div class="review-item-label">المدينة</div><div class="review-item-value">${city}</div></div>
+      <div class="review-item"><div class="review-item-label">نوع الخدمة</div><div class="review-item-value">${serviceType}</div></div>
+      <div class="review-item"><div class="review-item-label">الثمن الابتدائي</div><div class="review-item-value">${price}</div></div>
+      <div class="review-item"><div class="review-item-label">صور الأعمال</div><div class="review-item-value">${workFiles.length} صورة</div></div>
+    </div>
+  `;
+}
+ 
+/* =========================================================
+   SUBMIT  ← هنا الإصلاح الرئيسي: providers بدل provider_applications
+           + أسماء الأعمدة الصحيحة حسب schema ديالك
+   ========================================================= */
+async function submitApplication() {
+  if (!passwordVerified) {
+    showBanner('submitBanner', 'خاصك تأكد كلمة السر ديالك فالخطوة 1 قبل الإرسال.', true);
+    goToStep(1);
+    return;
   }
-}
-
-
-async function submitForm() {
   if (!validateStep4()) return;
-
+ 
   const btn = document.getElementById('submitBtn');
-  btn.className = 'btn btn-success btn-loading';
-  btn.innerHTML = 'جاري الإرسال...';
+  btn.classList.add('btn-loading');
   btn.disabled = true;
-
+  showBanner('submitBanner', '', false);
+ 
   try {
-    // 1. رفع الصورة الشخصية
-    let avatar_url = null;
-    const avatarFile = document.getElementById('avatarInput').files[0];
-    if (avatarFile) {
-      const avatarName = `avatars/avatar-${Date.now()}.jpg`;
-      const { error: avatarErr } = await supabaseClient.storage
+    // 1) Upload avatar → provider-photos bucket
+    let avatarUrl = null;
+if (avatarFile.file) {
+  // رفع صورة جديدة
+  const path = `${currentUser.id}/avatar-${Date.now()}-${avatarFile.file.name}`;
+  const { error: upErr } = await supabase.storage
+    .from('provider-files')
+    .upload(path, avatarFile.file, { upsert: true });
+  if (upErr) throw new Error('فشل رفع الصورة الشخصية: ' + upErr.message);
+  const { data: pub } = supabase.storage.from('provider-files').getPublicUrl(path);
+  avatarUrl = pub.publicUrl;
+} else if (avatarFile.dataUrl) {
+  // استعمل URL من البروفيل مباشرة
+  avatarUrl = avatarFile.dataUrl;
+} 
+ 
+    // 2) Upload work images
+    const workUrls = [];
+    for (const f of workFiles) {
+      const path = `${currentUser.id}/work-${Date.now()}-${Math.random().toString(36).slice(2)}-${f.file.name}`;
+      const { error: upErr } = await supabase.storage
         .from('provider-files')
-        .upload(avatarName, avatarFile);
-      if (!avatarErr) {
-        // ✅ 
-const { data: avatarData } = supabaseClient.storage
-          .from('provider-files')
-          .getPublicUrl(avatarName);
-        avatar_url = avatarData.publicUrl;
-      }
+        .upload(path, f.file, { upsert: true });
+      if (upErr) throw new Error('فشل رفع صورة عمل: ' + upErr.message);
+      const { data: pub } = supabase.storage.from('provider-files').getPublicUrl(path);
+      workUrls.push(pub.publicUrl);
     }
-
-    // 2. رفع صور الأعمال
-    let work_images = [];
-    const workFiles = document.getElementById('workInput').files;
-    for (let i = 0; i < Math.min(workFiles.length, 10); i++) {
-      const fileName = `works/work-${Date.now()}-${i}.jpg`;
-      const { error: workErr } = await supabaseClient.storage
-        .from('provider-files')
-        .upload(fileName, workFiles[i]);
-      if (!workErr) {
-        const { data: workData } = supabaseClient.storage
-          .from('provider-files')
-          .getPublicUrl(fileName);
-        work_images.push(workData.publicUrl);
-      }
-    }
-
-    // 3. رفع البطاقة الوطنية
-    let id_card_url = null;
-    const idFile = document.getElementById('idInput').files[0];
-    if (idFile) {
-      const idName = `id-cards/id-${Date.now()}.jpg`;
-      const { error: idErr } = await supabaseClient.storage
-        .from('provider-files')
-        .upload(idName, idFile);
-      if (!idErr) {
-        const { data: idData } = supabaseClient.storage
-          .from('provider-files')
-          .getPublicUrl(idName);
-        id_card_url = idData.publicUrl;
-      }
-    }
-
-    // 4. إدراج البيانات فالداطابيز ← هاد الجزء كان ناقص!
-    const { error: insertErr } = await supabaseClient
-      .from('providers')
-      .insert([{
-        name: document.getElementById('fullname').value,
-        phone: document.getElementById('phone').value,
-        whatsapp: document.getElementById('whatsapp').value,
-        email: document.getElementById('email').value,
-        service_category: document.getElementById('service-type').value,
-        service_title: document.getElementById('service-title').value,
-        service_description: document.getElementById('service-desc').value,
-        experience_years: parseInt(document.getElementById('experience').value),
-        city: document.getElementById('city').value,
-        district: document.getElementById('district').value,
-        price: document.getElementById('price').value,
-        profile_image: avatar_url,
-        service_images: work_images,
-        national_id_image: id_card_url,
-        rating: 0,
-        reviews_count: 0,
-        status: 'pending'
-      }]);
-
-    if (insertErr) throw insertErr;
-
-    // 5. صفحة النجاح
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById('step' + i);
-      if (el) el.style.display = 'none';
-    }
-    document.querySelector('.progress-card').style.display = 'none';
+ 
+    // 3) Insert في جدول providers (الأعمدة حسب schema ديالك بالضبط)
+    const payload = {
+      user_id:             currentUser.id,
+      name:                document.getElementById('fullname').value,
+      email:               document.getElementById('email').value,
+      phone:               document.getElementById('phone').value,
+      whatsapp:            document.getElementById('whatsapp').value,
+      service_category:    document.getElementById('service-type').value,
+      service_title:       document.getElementById('service-title').value,
+      service_description: document.getElementById('service-desc').value,
+      experience_years:    Number(document.getElementById('experience').value),
+      city:                document.getElementById('city').value,
+      district:            document.getElementById('district').value,
+      price:               document.getElementById('price').value,
+      profile_image:       avatarUrl,
+      service_images:      workUrls,
+      status:              'pending'
+    };
+ 
+    console.log('Inserting into providers:', payload);
+ 
+    const { error: insertErr } = await supabase.from('providers').insert(payload);
+    if (insertErr) throw new Error('فشل حفظ الطلب: ' + insertErr.message);
+ 
+    // ✅ نجح
+    document.getElementById('appContent').style.display = 'none';
     document.getElementById('successPage').style.display = 'block';
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+ 
   } catch (err) {
-    console.error('خطأ:', err);
-    alert('وقع خطأ أثناء الإرسال. حاول مرة أخرى.');
-    btn.className = 'btn btn-success';
-    btn.innerHTML = '<i class="ti ti-rocket"></i> نشر الخدمة';
+    console.error('submitApplication error:', err);
+    showBanner('submitBanner', err.message || 'صرا خطأ غير متوقع، حاول مرة أخرى', true);
+  } finally {
+    btn.classList.remove('btn-loading');
     btn.disabled = false;
   }
 }
-
-function resetForm() {
-  document.getElementById('successPage').style.display = 'none';
-  document.getElementById('progressSteps').closest('.progress-card').style.display = 'block';
-  showStep(1);
-}
-
-showStep(1);
 </script>
+</body>
+</html>
