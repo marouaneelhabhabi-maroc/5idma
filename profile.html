@@ -358,7 +358,7 @@
       border: 1px solid var(--border);
     }
     .review-form h4 { font-weight: 800; margin-bottom: 12px; font-size: 15px; }
-    .stars-input { display: flex; gap: 4px; font-size: 30px; cursor: pointer; margin-bottom: 14px; direction: ltr; justify-content: flex-end; }
+    .stars-input { display: flex; gap: 4px; font-size: 30px; cursor: pointer; margin-bottom: 14px; direction: rtl; justify-content: flex-end; }
     .stars-input span { color: #D1D5DB; transition: color 0.15s; user-select: none; }
     .stars-input span.active,
     .stars-input span.hover { color: var(--warning); }
@@ -588,11 +588,11 @@
         <div class="review-form" id="reviewForm" style="display:none;">
           <h4>أضف تقييمك</h4>
           <div class="stars-input" id="starsInput">
-            <span data-value="5">☆</span>
-            <span data-value="4">☆</span>
-            <span data-value="3">☆</span>
-            <span data-value="2">☆</span>
-            <span data-value="1">☆</span>
+   <span data-value="1">☆</span>
+  <span data-value="2">☆</span>
+  <span data-value="3">☆</span>
+  <span data-value="4">☆</span>
+  <span data-value="5">☆</span>   
           </div>
           <textarea id="reviewComment" placeholder="اكتب رأيك هنا..."></textarea>
           <button class="btn-submit" id="submitReviewBtn" onclick="submitReview()">إرسال التقييم</button>
@@ -770,8 +770,7 @@
       currentProvider = merged;
 
       renderProfile(merged);
-      await loadGallery(provider.id);
-      await loadReviews(provider.id);
+await loadReviews(viewingId);
 
       // إخفاء فورم التقييم إذا ماشي مسجل
       if (!session) {
@@ -826,7 +825,7 @@
  
         if (provider) {
           await loadGallery(provider.id);
-          await loadReviews(provider.id);
+        await loadReviews(session.user.id);// هو نفسو profile_id
         } else {
           $('galleryGrid').innerHTML = `
             <div class="empty-state">
@@ -922,16 +921,16 @@ $('statExperience').textContent = p.experience_years ? `${p.experience_years} س
     }
  
     // ─── Load Reviews ─────────────────────────────────────────────
-    async function loadReviews(providerId) {
-      const { data, error } = await sb
-        .from('provider_reviews')
-        .select('*')
-        .eq('provider_id', providerId)
-        .order('created_at', { ascending: false });
- 
-      if (error) { console.error('reviews error:', error); return; }
-      renderReviews(data || []);
-    }
+async function loadReviews(profileId) {
+  const { data, error } = await sb
+    .from('profile_reviews')
+    .select('*')
+    .eq('profile_id', profileId)
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('reviews error:', error); return; }
+  renderReviews(data || []);
+}
  
     function renderReviews(reviews) {
       const total = reviews.length;
@@ -987,59 +986,50 @@ $('statExperience').textContent = p.experience_years ? `${p.experience_years} س
  
     // ─── Submit Review ────────────────────────────────────────────
     async function submitReview() {
-      if (!currentUser) { alert('يرجى تسجيل الدخول لإضافة تقييم'); return; }
-      if (selectedRating === 0) { alert('يرجى اختيار عدد النجوم'); return; }
- 
-      const btn = $('submitReviewBtn');
-      btn.disabled = true;
-      btn.textContent = 'جاري الإرسال...';
- 
-      const comment = $('reviewComment').value.trim() || null;
- 
-      const { error } = await sb.from('provider_reviews').insert({
-        provider_id: currentProvider.id,
-        user_id: currentUser.id,
-        rating: selectedRating,
-        comment: comment
-      });
- 
-      if (error) {
-        console.error('submit review error:', error);
-        alert('حدث خطأ أثناء إرسال التقييم: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = 'إرسال التقييم';
-        return;
-      }
- 
-      // إعادة تعيين الفورم
-      selectedRating = 0;
-      $('reviewComment').value = '';
-      document.querySelectorAll('#starsInput span').forEach(s => {
-        s.textContent = '☆'; s.classList.remove('active');
-      });
-      btn.disabled = false;
-      btn.textContent = 'إرسال التقييم';
- 
-      // إعادة تحميل التقييمات
-      if (currentProvider.id) await loadReviews(currentProvider.id);
- 
-      // تحديث إحصائيات الـ UI
-      const { data: updated } = await sb
-        .from('providers')
-        .select('rating, reviews_count')
-        .eq('id', currentProvider.id)
-        .single();
- 
-      if (updated) {
-        const r = updated.rating?.toFixed(1) || '—';
-        $('profileRating').textContent = r;
-        $('profileReviewsCount').textContent = updated.reviews_count || 0;
-        $('statCompleted').textContent = updated.reviews_count || 0;
-        $('statRating').textContent = r;
-      }
- 
-      alert('✅ تم إرسال تقييمك بنجاح!');
-    }
+  if (!currentUser) { alert('يرجى تسجيل الدخول لإضافة تقييم'); return; }
+  if (selectedRating === 0) { alert('يرجى اختيار عدد النجوم'); return; }
+  if (currentProvider.id === currentUser.id) { 
+    alert('لا يمكنك تقييم نفسك'); return; 
+  }
+
+  const btn = $('submitReviewBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري الإرسال...';
+
+  // جيب اسم المستخدم من profiles
+  const { data: myProfile } = await sb
+    .from('profiles')
+    .select('full_name')
+    .eq('id', currentUser.id)
+    .single();
+
+  const { error } = await sb.from('profile_reviews').insert({
+    profile_id: currentProvider.id,  // ← id ديال الشخص المقيَّم
+    reviewer_id: currentUser.id,
+    reviewer_name: myProfile?.full_name || null,
+    rating: selectedRating,
+    comment: $('reviewComment').value.trim() || null
+  });
+
+  if (error) {
+    alert('حدث خطأ: ' + error.message);
+    btn.disabled = false;
+    btn.textContent = 'إرسال التقييم';
+    return;
+  }
+
+  // reset
+  selectedRating = 0;
+  $('reviewComment').value = '';
+  document.querySelectorAll('#starsInput span').forEach(s => {
+    s.textContent = '☆'; s.classList.remove('active');
+  });
+  btn.disabled = false;
+  btn.textContent = 'إرسال التقييم';
+
+  await loadReviews(currentProvider.id);
+  alert('✅ تم إرسال تقييمك بنجاح!');
+}
  
     // ─── Stars Input ──────────────────────────────────────────────
     function initStars() {
@@ -1054,7 +1044,7 @@ $('statExperience').textContent = p.experience_years ? `${p.experience_years} س
           const hoverVal = parseInt(this.dataset.value);
           stars.forEach(s => {
             const v = parseInt(s.dataset.value);
-            s.textContent = v >= hoverVal ? '★' : '☆';
+           s.textContent = v <= hoverVal ? '★' : '☆';
           });
         });
         star.addEventListener('mouseleave', function () {
