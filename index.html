@@ -2923,7 +2923,7 @@ async function updateAuthUI() {
     // جلب الاسم من جدول profiles
     const { data: profile } = await _sb
       .from('profiles')
-      .select('full_name, email')
+    .select('full_name, email, profile_image')
       .eq('id', session.user.id)
       .single();
 
@@ -2935,23 +2935,27 @@ async function updateAuthUI() {
 
     // ── Desktop: زر المستخدم ──
     navAuth.innerHTML = `
-      <div class="user-btn" id="userBtn" onclick="toggleDropdown(event)">
-        <div class="user-btn-avatar">
-          ${initial}
-        </div>
+  <div class="user-btn" id="userBtn" onclick="toggleDropdown(event)">
+    <div class="user-btn-avatar">
+      ${profile?.profile_image 
+        ? `<img src="${profile.profile_image}" alt="${name}">` 
+        : initial}
+    </div>
         <span class="user-btn-name">${name}</span>
         <span class="user-btn-arrow">▼</span>
       </div>`;
 
     // ── تحديث الـ Dropdown Header ──
-    document.getElementById('dropdownHeader').innerHTML = `
-      <div class="dropdown-header-avatar">
-        ${initial}
-      </div>
-      <div class="dropdown-header-info">
-        <div class="dropdown-name">${name}</div>
-        <div class="dropdown-email">${email}</div>
-      </div>`;
+document.getElementById('dropdownHeader').innerHTML = `
+  <div class="dropdown-header-avatar">
+    ${profile?.profile_image 
+      ? `<img src="${profile.profile_image}" alt="${name}">` 
+      : initial}
+  </div>
+  <div class="dropdown-header-info">
+    <div class="dropdown-name">${name}</div>
+    <div class="dropdown-email">${email}</div>
+  </div>`;
 
     // ── Mobile ──
     if (mobileAuth) {
