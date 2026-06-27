@@ -738,16 +738,68 @@
  
     // ─── Load Profile ─────────────────────────────────────────────
     async function loadProfile() {
-      const { data: { session } } = await sb.auth.getSession();
+      
  
+
+
+  const { data: { session } } = await sb.auth.getSession();
+  
+  // ── شوف واش كاين id في الـ URL ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const viewingId = urlParams.get('id');
+
+  // ── إذا كاين id في URL، بان ملف مهني آخر ──
+  if (viewingId) {
+    try {
+      const { data: provider } = await sb
+        .from('providers')
+        .select('*')
+        .eq('id', viewingId)
+        .single();
+
+      if (!provider) throw new Error('المهني غير موجود');
+
+      // جيب profile_image من profiles
+      const { data: profile } = await sb
+        .from('profiles')
+        .select('profile_image, full_name')
+        .eq('id', provider.user_id)
+        .maybeSingle();
+
+      const merged = { ...provider, profile_image: profile?.profile_image || provider.profile_image };
+      currentProvider = merged;
+
+      renderProfile(merged);
+      await loadGallery(provider.id);
+      await loadReviews(provider.id);
+
+      // إخفاء فورم التقييم إذا ماشي مسجل
       if (!session) {
-        loadingState.innerHTML = `
-          <div style="font-size:48px;margin-bottom:16px;">🔒</div>
-          <h3 style="color:var(--text-muted);font-size:17px;">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
-          <a href="login.html" class="btn-primary" style="display:inline-flex;margin-top:20px;text-decoration:none;">🔑 تسجيل الدخول</a>
-        `;
-        return;
+        const reviewForm = $('reviewForm');
+        if (reviewForm) reviewForm.style.display = 'none';
       }
+
+      loadingState.style.display = 'none';
+      profileContent.style.display = 'block';
+      return;
+
+    } catch (err) {
+      loadingState.innerHTML = `<div style="font-size:48px">⚠️</div><h3>${err.message}</h3>`;
+      return;
+    }
+  }
+
+  // ── إذا ماشي كاين id، بان ملف المستخدم المسجل ──
+  if (!session) {
+    loadingState.innerHTML = `
+      <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+      <h3 style="color:var(--text-muted);font-size:17px;">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
+      <a href="login.html" class="btn-primary" style="display:inline-flex;margin-top:20px;text-decoration:none;">🔑 تسجيل الدخول</a>
+    `;
+    return;
+  }
+
+
  
       try {
         // 1. جيب من profiles
