@@ -1889,6 +1889,16 @@ nav {
       <div class="service-name">مصور</div>
       <div class="service-count">+90 مهني</div>
     </div>
+
+
+<div class="service-card" onclick="openServicePanel('بناء','🏗️')">
+  <div class="service-icon" style="background:#F0F5FF;">🏗️</div>
+  <div class="service-name">بناء</div>
+  <div class="service-count">+95 مهني</div>
+</div>
+
+
+
     <div class="service-card" onclick="openServicePanel('مطور مواقع','💻')">
       <div class="service-icon" style="background:#E6F9F3;">💻</div>
       <div class="service-name">مطور مواقع</div>
@@ -1919,6 +1929,14 @@ nav {
       <div class="service-name">مدرس خصوصي</div>
       <div class="service-count">+300 مهني</div>
     </div>
+
+
+    <div class="service-card" onclick="location.href='#services'">
+    <div class="service-icon" style="background:#F1F5F9;">⋯</div>
+  <div class="service-name">المزيد</div>
+  <div class="service-count">خدمات أخرى</div>
+</div>
+
   </div>
 </section>
  
@@ -2823,6 +2841,23 @@ async function loadFeatured() {
   `).join('');
 }
 
+
+
+function renderStarsColored(rating) {
+  const r = Math.round(rating || 0);
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= r) {
+      html += `<span style="color:#F59E0B">★</span>`;
+    } else {
+      html += `<span style="color:#D1D5DB">☆</span>`;
+    }
+  }
+  return html;
+}
+
+
+
 function openProModal(id) {
   const p = featuredData.find(x => x.id === id);
   if (!p) return;
@@ -2870,6 +2905,9 @@ loadFeatured();
 
   
 
+
+
+
   async function loadApprovedProviders() {
     const { data, error } = await _sb
       .from('providers')
@@ -2912,10 +2950,10 @@ loadFeatured();
             </div>
           </div>
           <div class="pro-card-stats">
-            <div class="pro-stat">
-<strong>${'★'.repeat(Math.round(p.rating || 0))}${'☆'.repeat(5 - Math.round(p.rating || 0))}</strong>
-<span>${p.reviews_count || 0} تقييم</span>
-            </div>
+<div class="pro-stat">
+  <strong>${renderStarsColored(p.rating)}</strong>
+  <span>${p.reviews_count || 0} تقييم</span>
+</div>
 <div class="pro-stat">
   <strong>${p.price || '—'} د.م</strong>
   <span>السعر</span>
@@ -3097,6 +3135,9 @@ function openProDetailModal(p) {
 
   document.getElementById('mPhone').href =
     `tel:${p.phone || ''}`;
+
+
+    document.getElementById('mProfileLink').href = `profile.html?id=${p.id}`;
 
   document.getElementById('proModal')
     .classList.add('open');
