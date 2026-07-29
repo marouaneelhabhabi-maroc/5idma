@@ -2770,41 +2770,32 @@ heroSearchInput.addEventListener('input', () => {
 });
 
 async function fetchSuggestions(term) {
-  // 1) اقتراحات من القائمة الثابتة (فورية، بلا انتظار الداتابيز)
   const localMatches = knownServices
     .filter(s => s.name.includes(term))
     .map(s => ({ type: 'service', label: s.name, icon: s.icon, meta: 'خدمة' }));
 
-  // 2) اقتراحات حقيقية من قاعدة البيانات (عناوين الخدمات + المدن)
-  const { data: providersData } = await _sb
-    .from('providers')
-    .select('service_category, service_title, city')
-    .eq('status', 'approved')
-    .or(`service_category.ilike.%${term}%,service_title.ilike.%${term}%,city.ilike.%${term}%`)
-    .limit(20);
+  // استعمال الدالة الذكية بدل .ilike
+  const { data: smartResults, error } = await _sb
+    .rpc('search_providers_smart', { search_term: term });
 
   const dbMatches = [];
   const seen = new Set();
 
-  (providersData || []).forEach(p => {
-    if (p.service_title && p.service_title.includes(term) && !seen.has(p.service_title)) {
+  (smartResults || []).forEach(p => {
+    if (p.service_title && !seen.has(p.service_title)) {
       seen.add(p.service_title);
       dbMatches.push({ type: 'title', label: p.service_title, icon: '🔎', meta: p.city || '' });
     }
-    if (p.service_category && !seen.has(p.service_category) && 
-        !localMatches.some(l => l.label === p.service_category)) {
+    if (p.service_category && !seen.has(p.service_category)) {
       seen.add(p.service_category);
       dbMatches.push({ type: 'category', label: p.service_category, icon: '📂', meta: 'فئة' });
-    }
-    if (p.city && p.city.includes(term) && !seen.has('city_' + p.city)) {
-      seen.add('city_' + p.city);
-      dbMatches.push({ type: 'city', label: p.city, icon: '📍', meta: 'مدينة' });
     }
   });
 
   suggestionsList = [...localMatches, ...dbMatches].slice(0, 8);
   renderSuggestions(term);
 }
+
 
 function renderSuggestions(term) {
   activeSuggestionIndex = -1;
