@@ -116,6 +116,7 @@
    #bahtmMihani{
     margin-bottom: 0px;
     padding-bottom: 0%;
+    margin-right: 19%;
   }
 
 .nav-mobile-menu {
@@ -1875,16 +1876,7 @@ margin-right: 19%;
  
 
 
-    <div class="hero-ctas">
-      <a href="#" onclick="goToSubmit(event)" class="btn-primary">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
-        قدم خدمتك
-      </a>
-      <a href="#services" class="btn-secondary">
-        ابدأ البحث
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </a>
-    </div>
+
 
 
     <p  id="bahtmMihani">ابحث عن المهني المناسب في مدينتكــ.</p>
@@ -1892,7 +1884,7 @@ margin-right: 19%;
     <div class="search-box">
       <div class="search-field" style="flex:2">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="فاش كتحتاج مساعدة؟ مثلاً: بلومبي، كهربائي..." id="heroSearch" />
+        <input type="text" placeholder="فاش محتاج مساعدة؟ مثلاً: بلومبي، كهربائي..." id="heroSearch" />
         <div id="searchSuggestions"></div>
       </div>
       <div class="search-divider"></div>
@@ -1916,6 +1908,8 @@ margin-right: 19%;
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         ابحث
       </button>
+
+
     </div>
  
     <div style="margin-bottom: 8px;">
@@ -1929,6 +1923,16 @@ margin-right: 19%;
 <span class="example-pill" onclick="fillSearch('نقل الأثاث')">🚚 نقل الأثاث</span>
 <span class="example-pill" onclick="fillSearch('تكييف وتبريد')">❄️ تكييف وتبريد</span>
       <span class="example-pill" onclick="fillSearch('مطور مواقع')">💻 مطور مواقع</span>
+    
+        <div class="hero-ctas">
+      <a href="#" onclick="goToSubmit(event)" class="btn-primary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+        قدم خدمتك
+      </a>
+
+    </div>
+    
+    
     </div>
  
 
@@ -3352,7 +3356,7 @@ document.getElementById('dropdownHeader').innerHTML = `
     // Desktop
     navAuth.innerHTML = `
       <a href="login.html" class="btn-login">
-        <span>🔑</span>
+        <span>🔐</span>
         <span>تسجيل الدخول</span>
       </a>`;
 
