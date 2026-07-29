@@ -8,7 +8,7 @@
  <title>5IDMA | أفضل المهنيين والحرفيين في المغرب - بلومبي، كهربائي، نجار ⭐</title>
 
 <link rel="canonical" href="https://5idma.ma/">
-
+<link rel="icon" type="image/png" href="/favicon.png">
 <meta name="robots" content="index, follow">
 
 <meta property="og:type" content="website">
@@ -476,8 +476,14 @@ h1{
 .faq-grid{display:flex;flex-direction:column;gap:12px;max-width:780px}
 .faq-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .faq-item.open{border-color:var(--blue);box-shadow:0 4px 20px rgba(61, 117, 192, 0.1)}
-.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;gap:12px}
-.faq-q-text{font-size:15px;font-weight:700;color:var(--text);flex:1}
+.faq-q{display:flex;
+  background-color: #1A73E8;
+    align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;gap:12px}
+.faq-q-text{font-size:15px;font-weight:700;color: ghostwhite; flex:1}
+
+.faq-q-text:hover{
+  color: #0F1B2D;
+}
 .faq-q:hover{
   background-color: #b0e5ff;
 }
@@ -1766,7 +1772,7 @@ nav {
 
        <div id="liveBadge">
         <div class="badge-dot green"></div>
-        +253 مهني متصل الآن
+        +253 مهني متصل 
        </div>
 
       <div class="dot"></div>
@@ -1775,6 +1781,20 @@ nav {
  
     <h1>أفضل المهنيين<br><span>والحرفيين بين يديكــ ⭐</span></h1>
  
+
+
+    <div class="hero-ctas">
+      <a href="#" onclick="goToSubmit(event)" class="btn-primary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+        قدم خدمتك
+      </a>
+      <a href="#services" class="btn-secondary">
+        ابدأ البحث
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </a>
+    </div>
+
+
     <p  id="bahtmMihani">ابحث عن المهني المناسب في مدينتكــ.</p>
  
     <div class="search-box">
@@ -1818,16 +1838,7 @@ nav {
       <span class="example-pill" onclick="fillSearch('مطور مواقع')">💻 مطور مواقع</span>
     </div>
  
-    <div class="hero-ctas">
-      <a href="#" onclick="goToSubmit(event)" class="btn-primary">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
-        قدم خدمتك
-      </a>
-      <a href="#services" class="btn-secondary">
-        ابدأ البحث
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </a>
-    </div>
+
   </div>
  
   <!-- Hero Visual -->
