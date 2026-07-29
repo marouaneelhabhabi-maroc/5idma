@@ -1653,6 +1653,57 @@ margin-right: 19%;
 
 
 
+
+
+#searchSuggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(26,115,232,0.18);
+  border: 1px solid var(--border);
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 50;
+  display: none;
+  text-align: right;
+}
+#searchSuggestions.open { display: block; }
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--bg-soft);
+  transition: background .15s;
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover, .suggestion-item.active {
+  background: var(--blue-light);
+  color: var(--blue-dark);
+}
+.suggestion-item .sugg-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.suggestion-item .sugg-meta {
+  font-size: 11px; color: var(--text-muted); font-weight: 500;
+  margin-right: auto;
+}
+.suggestion-empty {
+  padding: 16px; text-align: center; color: var(--text-muted); font-size: 13px;
+}
+
 .modal-overlay-kh.open { opacity: 1; pointer-events: all; }
 .modal-kh {
   background: #fff;
@@ -1842,6 +1893,7 @@ margin-right: 19%;
       <div class="search-field" style="flex:2">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="فاش كتحتاج مساعدة؟ مثلاً: بلومبي، كهربائي..." id="heroSearch" />
+        <div id="searchSuggestions"></div>
       </div>
       <div class="search-divider"></div>
       <div class="search-field" style="flex:1">
@@ -2662,6 +2714,171 @@ function toggleMenu() {
 
 // Close on ESC
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeServicePanel(); });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let searchDebounceTimer = null;
+let suggestionsList = [];
+let activeSuggestionIndex = -1;
+
+// قائمة الخدمات المعروفة (كإضافة للاقتراح حتى بلا داتا فالباك)
+const knownServices = [
+  { name: 'بلومبي', icon: '🔧' },
+  { name: 'كهربائي', icon: '⚡' },
+  { name: 'نجار', icon: '🪚' },
+  { name: 'صباغ', icon: '🎨' },
+  { name: 'ميكانيكي', icon: '🚗' },
+  { name: 'مصور', icon: '📷' },
+  { name: 'بناء', icon: '🏗️' },
+  { name: 'مطور مواقع', icon: '💻' },
+  { name: 'منظف منازل', icon: '🧹' },
+  { name: 'ديكور', icon: '🏠' },
+  { name: 'منسق حدائق', icon: '🌿' },
+  { name: 'مصلح هواتف', icon: '📱' },
+  { name: 'حداد', icon: '⚒️' },
+  { name: 'مصمم جرافيك', icon: '🖌️' },
+  { name: 'نقل الأثاث', icon: '🚚' },
+  { name: 'تكييف وتبريد', icon: '❄️' },
+  { name: 'مدرس خصوصي', icon: '🎓' },
+];
+
+const heroSearchInput = document.getElementById('heroSearch');
+const suggestionsBox = document.getElementById('searchSuggestions');
+
+heroSearchInput.addEventListener('input', () => {
+  const term = heroSearchInput.value.trim();
+  clearTimeout(searchDebounceTimer);
+
+  if (!term) {
+    closeSuggestions();
+    return;
+  }
+
+  searchDebounceTimer = setTimeout(() => fetchSuggestions(term), 300);
+});
+
+async function fetchSuggestions(term) {
+  // 1) اقتراحات من القائمة الثابتة (فورية، بلا انتظار الداتابيز)
+  const localMatches = knownServices
+    .filter(s => s.name.includes(term))
+    .map(s => ({ type: 'service', label: s.name, icon: s.icon, meta: 'خدمة' }));
+
+  // 2) اقتراحات حقيقية من قاعدة البيانات (عناوين الخدمات + المدن)
+  const { data: providersData } = await _sb
+    .from('providers')
+    .select('service_category, service_title, city')
+    .eq('status', 'approved')
+    .or(`service_category.ilike.%${term}%,service_title.ilike.%${term}%,city.ilike.%${term}%`)
+    .limit(20);
+
+  const dbMatches = [];
+  const seen = new Set();
+
+  (providersData || []).forEach(p => {
+    if (p.service_title && p.service_title.includes(term) && !seen.has(p.service_title)) {
+      seen.add(p.service_title);
+      dbMatches.push({ type: 'title', label: p.service_title, icon: '🔎', meta: p.city || '' });
+    }
+    if (p.service_category && !seen.has(p.service_category) && 
+        !localMatches.some(l => l.label === p.service_category)) {
+      seen.add(p.service_category);
+      dbMatches.push({ type: 'category', label: p.service_category, icon: '📂', meta: 'فئة' });
+    }
+    if (p.city && p.city.includes(term) && !seen.has('city_' + p.city)) {
+      seen.add('city_' + p.city);
+      dbMatches.push({ type: 'city', label: p.city, icon: '📍', meta: 'مدينة' });
+    }
+  });
+
+  suggestionsList = [...localMatches, ...dbMatches].slice(0, 8);
+  renderSuggestions(term);
+}
+
+function renderSuggestions(term) {
+  activeSuggestionIndex = -1;
+
+  if (!suggestionsList.length) {
+    suggestionsBox.innerHTML = `<div class="suggestion-empty">ما لقيناش نتائج لـ "${term}"</div>`;
+    suggestionsBox.classList.add('open');
+    return;
+  }
+
+  suggestionsBox.innerHTML = suggestionsList.map((s, i) => `
+    <div class="suggestion-item" data-index="${i}" onclick="selectSuggestion(${i})">
+      <div class="sugg-icon">${s.icon}</div>
+      <span>${highlightMatch(s.label, term)}</span>
+      <span class="sugg-meta">${s.meta}</span>
+    </div>
+  `).join('');
+
+  suggestionsBox.classList.add('open');
+}
+
+function highlightMatch(text, term) {
+  const idx = text.indexOf(term);
+  if (idx === -1) return text;
+  return text.slice(0, idx) 
+    + `<strong style="color:var(--blue)">${text.slice(idx, idx + term.length)}</strong>` 
+    + text.slice(idx + term.length);
+}
+
+function selectSuggestion(index) {
+  const s = suggestionsList[index];
+  if (!s) return;
+  heroSearchInput.value = s.label;
+  closeSuggestions();
+  handleSearch();
+}
+
+function closeSuggestions() {
+  suggestionsBox.classList.remove('open');
+  suggestionsList = [];
+  activeSuggestionIndex = -1;
+}
+
+// التنقل بالكيبورد (فوق/تحت/إنتر)
+heroSearchInput.addEventListener('keydown', (e) => {
+  const items = suggestionsBox.querySelectorAll('.suggestion-item');
+  if (!items.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, items.length - 1);
+    updateActiveItem(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, 0);
+    updateActiveItem(items);
+  } else if (e.key === 'Enter' && activeSuggestionIndex >= 0) {
+    e.preventDefault();
+    selectSuggestion(activeSuggestionIndex);
+  }
+});
+
+function updateActiveItem(items) {
+  items.forEach((item, i) => item.classList.toggle('active', i === activeSuggestionIndex));
+  items[activeSuggestionIndex]?.scrollIntoView({ block: 'nearest' });
+}
+
+// سد الاقتراحات كي كتضغط برا
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-field') && !e.target.closest('#searchSuggestions')) {
+    closeSuggestions();
+  }
+});
+
 
 
 
