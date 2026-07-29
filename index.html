@@ -426,7 +426,7 @@ h1{
   /* ───── HERO ───── */
   .hero {
     min-height: 10vh;
-    padding: 75px 3% 4px;
+    padding: 61px 3% 1px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -561,13 +561,18 @@ padding: 10px 19%;
   /* Search Bar */
   .search-box {
     background: #fff;
+    width: 100%;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 4px 20px rgba(26,115,232,0.1);
+
     padding: 12px;
     display: flex; gap: 8px; align-items: center;
     margin-bottom: 20px;
-    border: 1.5px solid rgba(26,115,232,0.15);
+    border: 1px solid rgba(26,115,232,0.1);
     animation: fadeDown .6s .3s ease both;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
   }
  
   .search-field {
@@ -1551,10 +1556,26 @@ margin-right: 19%;
     .footer-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 600px) {
-    .search-box { flex-direction: column; }
+    .search-box { flex-direction: column;
+      padding: 6px;
+      gap: 6px;
+     border-radius: 16px;
+     }
+  .search-field input,
+  .search-field select {
+    width: 100%;
+  }
+
+
+
+  .search-field {
+    padding: 12px 10px;   /* نقصنا شوية من الجنب باش يتوسع */
+    width: 100%;
+    box-sizing: border-box;
+  }
        
     .search-divider { display: none; }
-    .search-btn { width: 100%; justify-content: center; }
+    .search-btn { width: 100%; justify-content: center;  box-sizing: border-box; }
     .steps-container { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; }
     .hero-ctas { justify-content: center; }
@@ -3011,7 +3032,8 @@ loadFeatured();
             </div>
           </div>
           <div class="pro-card-stats">
-<div class="pro-stat">
+<div class=
+"pro-stat">
   <strong>${renderStarsColored(p.rating)}</strong>
   <span>${p.reviews_count || 0} تقييم</span>
 </div>
@@ -3027,7 +3049,7 @@ loadFeatured();
 
 <div class="pro-card-footer">
   <div class="pro-price">
-    من <strong>${p.price || '—'}</strong>
+ ابتداءًّ من<strong>${p.price || '—'} د.م</strong>
   </div>
 
   <button
