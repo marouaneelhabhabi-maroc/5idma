@@ -459,13 +459,22 @@ h1{
 }
 
 
+
+
+
+
+
 /* ── FAQ ── */
-.faq-section{padding:10px 5%;
+.faq-section{
+padding: 10px 19%;
   text-align: center;
+  justify-content: center;
   
   background:var(--bg)}
 
-
+  .faq-sub{
+    margin-right: 10%;
+  }
 
 .faq-label{display:inline-flex;
   text-align: center;
@@ -482,10 +491,10 @@ h1{
 .faq-q-text{font-size:15px;font-weight:700;color: ghostwhite; flex:1}
 
 .faq-q-text:hover{
-  color: #0F1B2D;
+  color: #fafafa;
 }
 .faq-q:hover{
-  background-color: #b0e5ff;
+  background-color: #3f03ca;
 }
 .faq-icon{width:28px;height:28px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:16px;font-weight:700;flex-shrink:0;transition:transform .3s,background .2s}
 .faq-item.open .faq-icon{transform:rotate(45deg);background:var(--blue);color:#fff}
@@ -1301,10 +1310,21 @@ nav {
   transform: scaleX(1);
 }
 
+
+
+#p-sectionSub{
+margin-right: 19%;
+
+}
 .btn-login span {
   position: relative;
   z-index: 1;
 }
+
+
+
+
+
 
 /* زر المستخدم المسجل */
 .user-btn {
@@ -2098,7 +2118,7 @@ nav {
 <section class="testimonials-section scroll-reveal">
   <div class="section-label">💬 آراء الزبناء</div>
   <h2 class="section-title">واش قالو <span>زبناؤنا</span>؟</h2>
-  <p class="section-sub">ثقة عملائنا هي أفضل دليل على جودة خدماتنا.</p>
+  <p class="section-sub"  id="p-sectionSub">ثقة عملائنا هي أفضل دليل على جودة خدماتنا.</p>
  
   <div class="testimonials-grid">
     <div class="testimonial-card">
