@@ -1510,6 +1510,9 @@ margin-right: 19%;
   flex-shrink: 0;
 }
 
+
+.service-icon svg { display: block; }
+
 .dropdown-logout {
   color: #EF4444 !important;
 }
@@ -1985,106 +1988,188 @@ margin-right: 19%;
  
   <div class="services-grid">
     <div class="service-card" onclick="openServicePanel('بلومبي','🔧')">
-      <div class="service-icon" style="background:#EAF2FF;">🔧</div>
+<!-- 1. بلومبي -->
+<div class="service-icon" style="background:#EAF2FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A73E8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+  </svg>
+</div>
       <div class="service-name">بلومبي</div>
       <div class="service-count">+180 مهني</div>
     </div>
    <div class="service-card" onclick="openServicePanel('كهربائي','⚡')">
-      <div class="service-icon" style="background:#FFFBE6;">⚡</div>
-      <div class="service-name">كهربائي</div>
+<div class="service-icon" style="background:#FFFBE6;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </svg>
+</div>      <div class="service-name">كهربائي</div>
       <div class="service-count">+220 مهني</div>
     </div>
    <div class="service-card" onclick="openServicePanel('نجار','🪚')">
-      <div class="service-icon" style="background:#F0FFF4;">🪚</div>
-      <div class="service-name">نجار</div>
+<div class="service-icon" style="background:#F0FFF4;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00B87A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+    <path d="M2 22 6 18"/>
+  </svg>
+</div>      <div class="service-name">نجار</div>
       <div class="service-count">+150 مهني</div>
     </div>
    <div class="service-card" onclick="openServicePanel('صباغ','🎨')">
-      <div class="service-icon" style="background:#FFF0F0;">🎨</div>
-      <div class="service-name">صباغ</div>
+<div class="service-icon" style="background:#FFF0F0;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 11h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2v4a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-6H5a1 1 0 0 1-1-1V8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3z"/>
+  </svg>
+</div>        <div class="service-name">صباغ</div>
       <div class="service-count">+130 مهني</div>
    </div>
     <div class="service-card" onclick="openServicePanel('ميكانيكي','🚗')">
-      <div class="service-icon" style="background:#FFF5E6;">🚗</div>
-      <div class="service-name">ميكانيكي</div>
+<div class="service-icon" style="background:#FFF5E6;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 16.5V19a2 2 0 0 1-2 2v0a2 2 0 0 1-2-2v-2.5"/>
+    <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/>
+    <rect x="3" y="11" width="18" height="6" rx="2"/>
+    <circle cx="7.5" cy="17" r="1.5"/>
+    <circle cx="16.5" cy="17" r="1.5"/>
+  </svg>
+</div>      <div class="service-name">ميكانيكي</div>
       <div class="service-count">+200 مهني</div>
     </div>
     <div class="service-card" onclick="openServicePanel('مصور','📷')">
-      <div class="service-icon" style="background:#F5F0FF;">📷</div>
-      <div class="service-name">مصور</div>
+<div class="service-icon" style="background:#F5F0FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+    <circle cx="12" cy="13" r="3.5"/>
+  </svg>
+</div>      <div class="service-name">مصور</div>
       <div class="service-count">+90 مهني</div>
     </div>
 
 
 <div class="service-card" onclick="openServicePanel('بناء','🏗️')">
-  <div class="service-icon" style="background:#F0F5FF;">🏗️</div>
-  <div class="service-name">بناء</div>
+<div class="service-icon" style="background:#F0F5FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 22V12l6-4 6 4v10"/>
+    <path d="M6 22h12"/>
+    <path d="M10 22v-6h4v6"/>
+    <path d="M2 22h20"/>
+  </svg>
+</div>  <div class="service-name">بناء</div>
   <div class="service-count">+95 مهني</div>
 </div>
 
 
 
     <div class="service-card" onclick="openServicePanel('مطور مواقع','💻')">
-      <div class="service-icon" style="background:#E6F9F3;">💻</div>
-      <div class="service-name">مطور مواقع</div>
+<div class="service-icon" style="background:#E6F9F3;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00B87A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="16 18 22 12 16 6"/>
+    <polyline points="8 6 2 12 8 18"/>
+  </svg>
+</div>      <div class="service-name">مطور مواقع</div>
       <div class="service-count">+110 مهني</div>
     </div>
     <div class="service-card" onclick="openServicePanel('منظف منازل','🧹')">
-      <div class="service-icon" style="background:#E6F0FF;">🧹</div>
-      <div class="service-name">منظف منازل</div>
+<div class="service-icon" style="background:#E6F0FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 21c1.5-2 3-3 5-3s3.5 1 5 3"/>
+    <path d="M14 4 5 13l3 3 9-9-3-3z"/>
+    <path d="M17 7l3-3"/>
+  </svg>
+</div>      <div class="service-name">منظف منازل</div>
       <div class="service-count">+160 مهني</div>
     </div>
    <div class="service-card" onclick="openServicePanel('ديكور','🏠')">
-      <div class="service-icon" style="background:#FFF0FB;">🏠</div>
-      <div class="service-name">ديكور</div>
+<div class="service-icon" style="background:#FFF0FB;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9.5 12 3l9 6.5"/>
+    <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>
+  </svg>
+</div>      <div class="service-name">ديكور</div>
       <div class="service-count">+85 مهني</div>
     </div>
     <div class="service-card" onclick="openServicePanel('منسق حدائق','🌿')">
-      <div class="service-icon" style="background:#F0FFF8;">🌿</div>
-      <div class="service-name">منسق حدائق</div>
+<div class="service-icon" style="background:#F0FFF8;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 20A7 7 0 0 1 4 13c0-4 3-6 7-9 4 3 7 5 7 9a7 7 0 0 1-7 7z"/>
+    <path d="M11 20v-9"/>
+  </svg>
+</div>      <div class="service-name">منسق حدائق</div>
       <div class="service-count">+65 مهني</div>
    </div>
     <div class="service-card" onclick="openServicePanel('مصلح هواتف','📱')">
-      <div class="service-icon" style="background:#FFF5E0;">📱</div>
-      <div class="service-name">مصلح هواتف</div>
+<div class="service-icon" style="background:#FFF5E0;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="7" y="2" width="10" height="20" rx="2"/>
+    <line x1="11" y1="18" x2="13" y2="18"/>
+  </svg>
+</div>      <div class="service-name">مصلح هواتف</div>
       <div class="service-count">+140 مهني</div>
     </div>
 
     <div class="service-card" onclick="openServicePanel('حداد','⚒️')">
-  <div class="service-icon" style="background:#F5EFE6;">⚒️</div>
-  <div class="service-name">حداد</div>
+<div class="service-icon" style="background:#F5EFE6;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 3v4l-4 4-3-3 4-4z"/>
+    <path d="M14 8l7 7-3 3-7-7z"/>
+    <path d="M4 20l3-3"/>
+  </svg>
+</div>  <div class="service-name">حداد</div>
   <div class="service-count">+70 مهني</div>
 </div>
 
 <div class="service-card" onclick="openServicePanel('مصمم جرافيك','🖌️')">
-  <div class="service-icon" style="background:#F0E6FF;">🖌️</div>
-  <div class="service-name">مصمم جرافيك</div>
+<div class="service-icon" style="background:#F0E6FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 22 8 21l11-11a2.83 2.83 0 0 0-4-4L4 17l-2 5z"/>
+  </svg>
+</div>  <div class="service-name">مصمم جرافيك</div>
   <div class="service-count">+55 مهني</div>
 </div>
 
 <div class="service-card" onclick="openServicePanel('نقل الأثاث','🚚')">
-  <div class="service-icon" style="background:#E6F0FF;">🚚</div>
-  <div class="service-name">نقل الأثاث</div>
+<div class="service-icon" style="background:#E6F0FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="1" y="6" width="14" height="10" rx="1"/>
+    <path d="M15 9h4l3 3v4h-7"/>
+    <circle cx="6" cy="18" r="2"/>
+    <circle cx="17" cy="18" r="2"/>
+  </svg>
+</div>  <div class="service-name">نقل الأثاث</div>
   <div class="service-count">+80 مهني</div>
 </div>
 
 <div class="service-card" onclick="openServicePanel('تكييف وتبريد','❄️')">
-  <div class="service-icon" style="background:#E6FBFF;">❄️</div>
-  <div class="service-name">تكييف وتبريد</div>
+<div class="service-icon" style="background:#E6FBFF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="2" x2="12" y2="22"/>
+    <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/>
+    <line x1="4.9" y1="19.1" x2="19.1" y2="4.9"/>
+    <line x1="2" y1="12" x2="22" y2="12"/>
+  </svg>
+</div>  <div class="service-name">تكييف وتبريد</div>
   <div class="service-count">+60 مهني</div>
 </div>
 
 
    <div class="service-card" onclick="openServicePanel('مدرس خصوصي','🎓')">
-      <div class="service-icon" style="background:#EFF6FF;">🎓</div>
-      <div class="service-name">مدرس خصوصي</div>
+<div class="service-icon" style="background:#EFF6FF;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 10 12 5 2 10l10 5 10-5z"/>
+    <path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/>
+  </svg>
+</div>      <div class="service-name">مدرس خصوصي</div>
       <div class="service-count">+300 مهني</div>
     </div>
 
 
     <div class="service-card" onclick="location.href='#services'">
-    <div class="service-icon" style="background:#F1F5F9;">⋯</div>
-  <div class="service-name">المزيد</div>
+<div class="service-icon" style="background:#F1F5F9;">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="5" cy="12" r="1.5"/>
+    <circle cx="12" cy="12" r="1.5"/>
+    <circle cx="19" cy="12" r="1.5"/>
+  </svg>
+</div>  <div class="service-name">المزيد</div>
   <div class="service-count">خدمات أخرى</div>
 </div>
 
