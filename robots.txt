@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /admin.html
 
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://l9a5dma/sitemap.xml
