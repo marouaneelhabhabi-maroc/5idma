@@ -192,7 +192,7 @@
       <!-- STEP 1 -->
       <div class="form-card" id="step1">
         <div class="form-title">المعلومات الشخصية</div>
-        <div class="form-subtitle">هاد المعلومات جايا من الحساب ديالك، غير أكد كلمة السر باش تكمل</div>
+        <div class="form-subtitle">المعلومات مستخرجة من حسابك. المرجو تأكيد كلمة السر للمتابعة✅</div>
 
         <div class="banner" id="profileBanner"></div>
 
@@ -200,7 +200,7 @@
           <div class="field-group">
             <label class="field-label">الاسم الكامل</label>
             <input class="field-input locked" id="fullname" type="text" disabled>
-            <span class="field-hint">جاي من حسابك، إلا بغيتي تبدلو دوز لإعدادات الحساب</span>
+            
           </div>
         </div>
         <div class="field-row single">
@@ -240,20 +240,31 @@
       <!-- STEP 2 -->
       <div class="form-card" id="step2" style="display:none">
         <div class="form-title">معلومات الخدمة</div>
-        <div class="form-subtitle">خبرنا شنو كاتقدم وعلاش أنت الأحسن</div>
+        <div class="form-subtitle">شارك تفاصيل خدمتك و وضح علاش تستحق الاختيار</div>
         <div class="field-row single">
           <div class="field-group">
             <label class="field-label">نوع الخدمة <span>*</span></label>
-            <select class="field-input" id="service-type">
-              <option value="">— اختار نوع الخدمة —</option>
-              <option>بلومبي</option><option>كهربائي</option><option>نجار</option>
-              <option>ميكانيكي</option><option>صباغ</option><option>حداد</option>
-              <option>مصور</option><option>مطور مواقع</option><option>مصمم جرافيك</option>
-              <option>تنظيف المنازل</option>
-              <option>بناء</option>
-              <option>نقل الأثاث</option>
-              <option>تكييف وتبريد</option><option>خدمات أخرى</option>
-            </select>
+           <select class="field-input" id="service-type">
+  <option value="">— اختار نوع الخدمة —</option>
+  <option>بلومبي</option>
+  <option>كهربائي</option>
+  <option>نجار</option>
+  <option>صباغ</option>
+  <option>ميكانيكي</option>
+  <option>مصور</option>
+  <option>بناء</option>
+  <option>مطور مواقع</option>
+  <option>منظف منازل</option>
+  <option>ديكور</option>
+  <option>منسق حدائق</option>
+  <option>مصلح هواتف</option>
+  <option>حداد</option>
+  <option>مصمم جرافيك</option>
+  <option>نقل الأثاث</option>
+  <option>تكييف وتبريد</option>
+  <option>مدرس خصوصي</option>
+  <option>خدمات أخرى</option>
+</select>
             <span class="error-msg" id="err-service-type">اختار نوع الخدمة</span>
           </div>
         </div>
@@ -287,7 +298,7 @@
       <!-- STEP 3 -->
       <div class="form-card" id="step3" style="display:none">
         <div class="form-title">الموقع والثمن</div>
-        <div class="form-subtitle">وين كاتخدم وبشحال</div>
+        <div class="form-subtitle">فين كاتخدم وبشحال </div>
         <div class="field-row">
           <div class="field-group">
             <label class="field-label">المدينة <span>*</span></label>
@@ -304,7 +315,7 @@
           </div>
           <div class="field-group">
             <label class="field-label">الحي أو المنطقة</label>
-            <input class="field-input" id="district" placeholder="مثال: حي الرياض" type="text">
+            <input class="field-input" id="district" placeholder="اختياري" type="text">
           </div>
         </div>
         <div class="field-row single">
@@ -345,12 +356,26 @@
           <label class="field-label">صور الأعمال السابقة</label>
           <div class="upload-zone" id="workZone" onclick="document.getElementById('workInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'work')">
             <i class="ti ti-photo" aria-hidden="true"></i>
-            <div class="uz-title">ضيف صور أعمالك (10 صور كحد أقصى)</div>
+            <div class="uz-title">ضيف صور أعمالك (1 كحد أدنى - 3 كحد أقصى)</div>
             <div class="uz-sub">اسحب وأفلت أو اضغط للاختيار</div>
           </div>
           <input type="file" id="workInput" accept="image/*" multiple onchange="handleFile(this,'work')">
           <div class="preview-grid" id="workPreviews"></div>
+          <span class="error-msg" id="err-work">خاصك تضيف صورة وحدة على الأقل من أعمالك</span>
         </div>
+
+<div class="field-group" style="margin-bottom:1rem">
+          <label class="field-label">صورة البطاقة الوطنية (الوجه الأمامي) <span>*</span></label>
+          <div class="upload-zone" id="nationalIdZone" onclick="document.getElementById('nationalIdInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'nationalId')">
+            <i class="ti ti-id" aria-hidden="true"></i>
+            <div class="uz-title">اختار صورة البطاقة الوطنية (الوجه الأمامي)</div>
+            <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
+          </div>
+          <input type="file" id="nationalIdInput" accept="image/*" onchange="handleFile(this,'nationalId')">
+          <img class="preview-img" id="nationalIdPreviewImg" style="display:none;max-width:200px;margin-top:1rem">
+          <span class="error-msg" id="err-nationalId">صورة البطاقة الوطنية مطلوبة</span>
+        </div>
+
 
         <div class="divider"></div>
 
@@ -396,6 +421,7 @@ const totalSteps  = 4;
 let passwordVerified = false;
  
 const avatarFile = { file: null, dataUrl: null };
+const nationalIdFile = { file: null, dataUrl: null };
 const workFiles  = [];
  
 /* =========================================================
@@ -569,13 +595,25 @@ async function validateStep1() {
   const whatsapp = document.getElementById('whatsapp').value.trim();
   const password = document.getElementById('password').value;
  
-  const phoneOk = isValidMoroccanPhone(phone);
-  setError('phone', !phoneOk);
-  if (!phoneOk) valid = false;
+  const phoneFilled    = phone.length > 0;
+  const whatsappFilled = whatsapp.length > 0;
  
-  const whatsappOk = isValidMoroccanPhone(whatsapp);
-  setError('whatsapp', !whatsappOk);
-  if (!whatsappOk) valid = false;
+  // كل واحد إلا تعمر خاصو يكون صحيح (10 أرقام)
+  const phoneOk    = !phoneFilled    || isValidMoroccanPhone(phone);
+  const whatsappOk = !whatsappFilled || isValidMoroccanPhone(whatsapp);
+ 
+  setError('phone', phoneFilled && !phoneOk);
+  setError('whatsapp', whatsappFilled && !whatsappOk);
+  if (!phoneOk || !whatsappOk) valid = false;
+ 
+  // خاصك ثم واحد فيهوم على الأقل معمر
+  if (!phoneFilled && !whatsappFilled) {
+    setError('phone', true);
+    setError('whatsapp', true);
+    document.getElementById('err-phone').textContent    = 'خاصك تدخل رقم الهاتف أو واتساب على الأقل';
+    document.getElementById('err-whatsapp').textContent = 'خاصك تدخل رقم الهاتف أو واتساب على الأقل';
+    valid = false;
+  }
  
   if (!password) {
     setError('password', true);
@@ -635,9 +673,24 @@ function validateStep3() {
 }
  
 function validateStep4() {
-const ok = !!avatarFile.dataUrl || !!avatarFile.file;
-  setError('avatar', !ok);
-  return ok;
+  let valid = true;
+
+  const avatarOk = !!avatarFile.dataUrl || !!avatarFile.file;
+  setError('avatar', !avatarOk);
+  if (!avatarOk) valid = false;
+
+  const nationalIdOk = !!nationalIdFile.dataUrl || !!nationalIdFile.file;
+  setError('nationalId', !nationalIdOk);
+  if (!nationalIdOk) valid = false;
+
+  const workOk = workFiles.length >= 1;
+  setError('work', !workOk);
+  if (!workOk) {
+    document.getElementById('err-work') && (document.getElementById('err-work').textContent = 'خاصك تضيف صورة وحدة على الأقل من أعمالك');
+  }
+  if (!workOk) valid = false;
+
+  return valid;
 }
  
 function showBanner(id, msg, isError) {
@@ -673,14 +726,24 @@ async function handleFile(input, kind) {
     img.src           = avatarFile.dataUrl;
     img.style.display = 'block';
     setError('avatar', false);
+  } else if (kind === 'nationalId') {
+    const file = files[0];
+    if (file.size > 5 * 1024 * 1024) { alert('الصورة كبيرة بزاف (الحد الأقصى 5MB)'); return; }
+    nationalIdFile.file    = file;
+    nationalIdFile.dataUrl = await readFileAsDataUrl(file);
+    const img = document.getElementById('nationalIdPreviewImg');
+    img.src           = nationalIdFile.dataUrl;
+    img.style.display = 'block';
+    setError('nationalId', false);
   } else {
     for (const file of files) {
-      if (workFiles.length >= 10) break;
+      if (workFiles.length >= 3) break;
       if (file.size > 5 * 1024 * 1024) continue;
       const dataUrl = await readFileAsDataUrl(file);
       workFiles.push({ file, dataUrl });
     }
     renderWorkPreviews();
+    setError('work', workFiles.length === 0);
   }
 }
  
@@ -693,7 +756,8 @@ function renderWorkPreviews() {
 function handleDrop(e, kind) {
   e.preventDefault();
   e.currentTarget.classList.remove('drag');
-  const input = document.getElementById(kind === 'avatar' ? 'avatarInput' : 'workInput');
+  const inputMap = { avatar: 'avatarInput', nationalId: 'nationalIdInput', work: 'workInput' };
+  const input = document.getElementById(inputMap[kind]);
   input.files = e.dataTransfer.files;
   handleFile(input, kind);
 }
@@ -767,9 +831,28 @@ if (avatarFile.file) {
   // استعمل URL من البروفيل مباشرة
   avatarUrl = avatarFile.dataUrl;
 } 
- 
+
+
+
+
+// 1.5) Upload national ID image
+    let nationalIdUrl = null;
+    if (nationalIdFile.file) {
+      const path = `${currentUser.id}/national-id-${Date.now()}-${nationalIdFile.file.name}`;
+      const { error: upErr } = await supabase.storage
+        .from('provider-files')
+        .upload(path, nationalIdFile.file, { upsert: true });
+      if (upErr) throw new Error('فشل رفع صورة البطاقة الوطنية: ' + upErr.message);
+      const { data: pub } = supabase.storage.from('provider-files').getPublicUrl(path);
+      nationalIdUrl = pub.publicUrl;
+    }
+
     // 2) Upload work images
     const workUrls = [];
+
+
+
+
     for (const f of workFiles) {
       const path = `${currentUser.id}/work-${Date.now()}-${Math.random().toString(36).slice(2)}-${f.file.name}`;
       const { error: upErr } = await supabase.storage
@@ -795,6 +878,7 @@ if (avatarFile.file) {
       district:            document.getElementById('district').value,
       price:               document.getElementById('price').value,
       profile_image:       avatarUrl,
+      national_id_image:   nationalIdUrl,
       service_images:      workUrls,
       status:              'pending'
     };
