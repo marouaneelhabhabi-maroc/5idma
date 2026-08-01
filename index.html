@@ -527,6 +527,7 @@ padding: 10px 19%;
 
  .footer-brand{
   text-align: center;
+  justify-content: center;
  }
 
   .hero-badge {
@@ -1083,13 +1084,18 @@ padding: 10px 19%;
 
 
   .testimonial-author { display: flex; align-items: center; gap: 14px; }
-  .author-avatar {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue-light), var(--green-light));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800; color: var(--blue-dark);
-    border: 2px solid rgba(26,115,232,0.15);
-  }
+.author-avatar { 
+  width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-light), var(--green-light));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: var(--blue-dark);
+  border: 2px solid rgba(26,115,232,0.15);
+  overflow: hidden;              /* جديد */
+}
+
+.author-avatar img {             /* جديد */
+  width: 100%; height: 100%; object-fit: cover;
+}
   .author-name { font-size: 15px; font-weight: 800; color: var(--text); }
   .author-city { font-size: 13px; color: var(--text-muted); }
   .author-stars { margin-bottom: 2px; }
@@ -1179,9 +1185,10 @@ padding: 10px 19%;
     text-decoration: none;
   }
   .footer-desc { font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
-  .footer-social { display: flex; gap: 12px; 
-    text-align: center;
-    margin-right: 38%;
+  .footer-social { 
+   display: flex; gap: 12px; 
+   text-align: center;
+   margin-right: 15%;
   }
 
   .social-btn {
@@ -2300,8 +2307,7 @@ margin-right: 19%;
       <div class="testimonial-quote">"</div>
       <p class="testimonial-text">لقيت بلومبي ممتاز فدقائق. كان محترف وواعر وأسعاره معقولة. خدمة ممتازة وما توقعتش إيجاد حل بهاد السرعة!</p>
       <div class="testimonial-author">
-        <div class="author-avatar">س</div>
-        <div>
+<div class="author-avatar"><img src="sara.png" alt="سارة بنعلي"></div>        <div>
           <div class="author-stars"><span class="star">★★★★★</span></div>
           <div class="author-name">سارة بنعلي</div>
           <div class="author-city">📍 الرباط</div>
@@ -2313,7 +2319,7 @@ margin-right: 19%;
       <div class="testimonial-quote">"</div>
       <p class="testimonial-text">التقييمات ساعدتني نختار أحسن كهربائي. قرأت التقييمات وختار واحد بـ4.9 نجوم. الخدمة كانت ممتازة ومعقولة فالسعر.</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background: linear-gradient(135deg, var(--green-light), #C6F7E9); color: var(--green-dark);">ح</div>
+        <div class="author-avatar"><img src="hamza.png" alt="حمزة الإدريسي"></div>
         <div>
           <div class="author-stars"><span class="star">★★★★★</span></div>
           <div class="author-name">حمزة الإدريسي</div>
@@ -2326,7 +2332,7 @@ margin-right: 19%;
       <div class="testimonial-quote">"</div>
       <p class="testimonial-text">منصة سهلة وسريعة. تواصلت مع نجار فأقل من دقيقة وجدولنا موعد للغد. الشغل جاء فبالي تماماً. نوصي بيها للكل!</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background: linear-gradient(135deg, #FFF3C4, #FDE68A); color: #92400E;">م</div>
+       <div class="author-avatar"><img src="mariam.png" alt="مريم الزاهري"></div>
         <div>
           <div class="author-stars"><span class="star">★★★★★</span></div>
           <div class="author-name">مريم الزاهري</div>
