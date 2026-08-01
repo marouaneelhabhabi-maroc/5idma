@@ -341,15 +341,15 @@
         <div class="form-subtitle">ضيف صورتك وأعمالك السابقة</div>
 
         <div class="field-group" style="margin-bottom:1rem">
-          <label class="field-label">صورة شخصية <span>*</span></label>
-          <div class="upload-zone" id="avatarZone" onclick="document.getElementById('avatarInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'avatar')">
-            <i class="ti ti-user-circle" aria-hidden="true"></i>
-            <div class="uz-title">اختار صورتك الشخصية</div>
+          <label class="field-label">صورة البطاقة الوطنية (الوجه الأمامي) <span>*</span></label>
+          <div class="upload-zone" id="nationalIdZone" onclick="document.getElementById('nationalIdInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'nationalId')">
+            <i class="ti ti-id" aria-hidden="true"></i>
+            <div class="uz-title">اختار صورة البطاقة الوطنية (الوجه الأمامي)</div>
             <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
           </div>
-          <input type="file" id="avatarInput" accept="image/*" onchange="handleFile(this,'avatar')">
-          <img class="avatar-preview" id="avatarPreviewImg" style="display:none">
-          <span class="error-msg" id="err-avatar">الصورة الشخصية مطلوبة</span>
+          <input type="file" id="nationalIdInput" accept="image/*" onchange="handleFile(this,'nationalId')">
+          <img class="preview-img" id="nationalIdPreviewImg" style="display:none;max-width:200px;margin-top:1rem">
+          <span class="error-msg" id="err-nationalId">صورة البطاقة الوطنية مطلوبة</span>
         </div>
 
         <div class="field-group" style="margin-bottom:1rem">
@@ -679,9 +679,7 @@ function validateStep4() {
   setError('avatar', !avatarOk);
   if (!avatarOk) valid = false;
 
-  const nationalIdOk = !!nationalIdFile.dataUrl || !!nationalIdFile.file;
-  setError('nationalId', !nationalIdOk);
-  if (!nationalIdOk) valid = false;
+  // البطاقة الوطنية اختيارية - ماكاينش validation إجباري عليها
 
   const workOk = workFiles.length >= 1;
   setError('work', !workOk);
