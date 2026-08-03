@@ -2661,6 +2661,30 @@ margin-right: 19%;
         background:transparent;color:rgba(255,255,255,0.8);font-family:'Cairo',sans-serif;
         font-size:12px;font-weight:700;cursor:pointer">💰 الأقل سعراً</button>
     </div>
+
+
+<div style="margin-top:12px;position:relative">
+  <input type="text" id="panelSearchInput" placeholder="ابحث بالاسم أو المدينة..."
+    oninput="filterPanelList(this.value)"
+    style="width:100%;padding:10px 44px 10px 16px;border-radius:50px;
+    border:1.5px solid rgba(255,255,255,0.4);
+    background:rgba(255,255,255,0.15);color:#fff;
+    font-family:'Cairo',sans-serif;font-size:13px;
+    outline:none;box-sizing:border-box">
+
+  <button type="button" onclick="filterPanelList(document.getElementById('panelSearchInput').value)"
+    style="position:absolute;top:50%;right:6px;transform:translateY(-50%);
+    width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,0.25);display:flex;align-items:center;
+    justify-content:center;transition:background .2s"
+    onmouseover="this.style.background='rgba(255,255,255,0.4)'"
+    onmouseout="this.style.background='rgba(255,255,255,0.25)'"
+    aria-label="بحث">
+    <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+  </button>
+</div>
   </div>
 
   <!-- List -->
@@ -2685,6 +2709,15 @@ margin-right: 19%;
   display:flex;align-items:center;justify-content:center;
   font-size:20px;font-weight:800;color:var(--blue-dark);overflow:hidden;
 }
+
+
+#panelSearchInput::placeholder { color: rgba(255,255,255,0.7); }
+#panelSearchInput:focus {
+  background: rgba(255,255,255,0.25);
+  border-color: #fff;
+}
+
+
 .panel-rank {
   position:absolute;top:-4px;right:-4px;
   width:20px;height:20px;border-radius:50%;
@@ -2702,11 +2735,15 @@ margin-right: 19%;
 let panelProviders = [];
 let panelSort = 'rating';
 let currentService = '';
+let panelSearchTerm = '';
 
 async function openServicePanel(serviceName, icon) {
  console.log("clicked:", serviceName);
 
+
   currentService = serviceName;
+    panelSearchTerm = '';                              // ✅ زيد
+  document.getElementById('panelSearchInput').value = ''; // ✅ زيد
   document.getElementById('panelTitle').textContent = serviceName;
   document.getElementById('panelIcon').textContent = icon;
   document.getElementById('panelCount').textContent = 'جاري التحميل...';
@@ -2731,8 +2768,16 @@ async function openServicePanel(serviceName, icon) {
     panelProviders.length + ' مهني متاح';
 
   renderPanelList();
+   showFuzzyNotice(serviceName);
 }
 
+
+
+// ✅ زيد هاد الدالة الجديدة
+function filterPanelList(term) {
+  panelSearchTerm = term.trim().toLowerCase();
+  renderPanelList();
+}
 
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
@@ -2783,20 +2828,33 @@ function setSortPanel(type) {
 function renderPanelList() {
   const list = document.getElementById('panelList');
 
-  if (!panelProviders.length) {
+  // فلترة حسب البحث
+  let filtered = panelProviders;
+  if (panelSearchTerm) {
+    filtered = panelProviders.filter(p =>
+      (p.name || '').toLowerCase().includes(panelSearchTerm) ||
+      (p.city || '').toLowerCase().includes(panelSearchTerm) ||
+      (p.service_title || '').toLowerCase().includes(panelSearchTerm)
+    );
+  }
+
+  document.getElementById('panelCount').textContent =
+    filtered.length + ' مهني متاح';
+
+  if (!filtered.length) {
     list.innerHTML = `
       <div style="text-align:center;padding:4rem 2rem;color:#94A3B8">
         <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
         <div style="font-size:16px;font-weight:700;color:#64748B;margin-bottom:8px">
           لا يوجد مهنيون متاحون
         </div>
-        <div style="font-size:13px">ما كاين حتى مهني معتمد فهاد الخدمة دابا</div>
+        <div style="font-size:13px">${panelSearchTerm ? 'جرب كلمة بحث أخرى' : 'ما كاين حتى مهني معتمد فهاد الخدمة دابا'}</div>
       </div>`;
     return;
   }
 
-  // Sort
-  const sorted = [...panelProviders].sort((a, b) => {
+  // ✅ هنا فقط مرة وحدة
+  const sorted = [...filtered].sort((a, b) => {
     if (panelSort === 'rating')     return (b.rating || 0) - (a.rating || 0);
     if (panelSort === 'experience') return (b.experience_years || 0) - (a.experience_years || 0);
     if (panelSort === 'price') {
@@ -3171,6 +3229,9 @@ async function handleSearch() {
   const q = document.getElementById('heroSearch').value.trim();
   const city = document.querySelector('.search-field select').value;
   
+
+
+  
   if (!q && !city) return;
 
   // فتح الـ service panel مباشرة
@@ -3188,14 +3249,23 @@ async function handleSearch() {
   document.body.style.overflow = 'hidden';
 
   // جلب النتائج من Supabase
-  let query = _sb.from('providers').select('*').eq('status', 'approved');
-  if (q) query = query.ilike('service_category', '%' + q + '%');
-  if (city) query = query.eq('city', city);
+let data;
+if (q) {
+  const { data: smart } = await _sb.rpc('search_providers_smart', { search_term: q });
+  data = smart || [];
+  if (city) data = data.filter(p => p.city === city);
+} else {
+  const { data: cityOnly } = await _sb.from('providers').select('*')
+    .eq('status', 'approved').eq('city', city);
+  data = cityOnly || [];
+}
+panelProviders = data;
 
-  const { data } = await query;
+
   panelProviders = data || [];
   document.getElementById('panelCount').textContent = panelProviders.length + ' مهني متاح';
   renderPanelList();
+  showFuzzyNotice(q);
 }
  
   // Scroll reveal
@@ -3312,6 +3382,24 @@ async function loadFeatured() {
       </div>
     </div>
   `).join('');
+}
+
+
+
+
+function showFuzzyNotice(searchedFor) {
+  const list = document.getElementById('panelList');
+  const hasExactMatch = panelProviders.some(p => 
+    (p.service_category || '').includes(searchedFor) || 
+    (p.service_title || '').includes(searchedFor)
+  );
+  
+  if (!hasExactMatch && panelProviders.length > 0) {
+    const notice = document.createElement('div');
+    notice.style.cssText = 'background:#FFF9E6;border:1px solid #FDE68A;color:#92400E;padding:10px 14px;border-radius:12px;font-size:13px;margin-bottom:12px;text-align:center';
+    notice.textContent = 'ما لقيناش تطابق دقيق، هاذو أقرب النتائج المتاحة 👇';
+    list.prepend(notice);
+  }
 }
 
 
