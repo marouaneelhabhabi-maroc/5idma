@@ -1579,6 +1579,7 @@ margin-right: 19%;
     .footer-grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 600px) {
+
     .search-box { flex-direction: column;
       padding: 6px;
       gap: 6px;
@@ -1588,6 +1589,9 @@ margin-right: 19%;
   .search-field select {
     width: 100%;
   }
+
+
+
 
 
 
@@ -1675,7 +1679,67 @@ margin-right: 19%;
 }
 
 
+@media (max-width: 600px) {
+  .pros-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 
+  .pro-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .pro-card-top {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .pro-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .pro-card-name {
+    font-size: 13px;
+  }
+
+  .pro-card-city {
+    font-size: 11px;
+  }
+
+  .pro-card-stats {
+    padding: 8px 6px;
+    gap: 4px;
+  }
+
+  .pro-stat strong {
+    font-size: 11px;
+  }
+
+  .pro-stat span {
+    font-size: 9px;
+  }
+
+  .pro-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .btn-detail {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .pro-price {
+    text-align: center;
+    font-size: 11px;
+  }
+}
 
 
 #searchSuggestions {
@@ -1694,6 +1758,10 @@ margin-right: 19%;
   text-align: right;
 }
 #searchSuggestions.open { display: block; }
+
+
+
+
 
 .suggestion-item {
   display: flex;
