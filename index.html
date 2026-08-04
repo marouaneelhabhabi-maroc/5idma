@@ -2005,16 +2005,25 @@ margin-right: 19%;
     </div>
  
     <div style="margin-bottom: 8px;">
-      <span class="example-pill" onclick="fillSearch('بلومبي')">🔧 بلومبي</span>
-      <span class="example-pill" onclick="fillSearch('كهربائي')">⚡ كهربائي</span>
-      <span class="example-pill" onclick="fillSearch('نجار')">🪚 نجار</span>
-      <span class="example-pill" onclick="fillSearch('ميكانيكي')">🚗 ميكانيكي</span>
-      <span class="example-pill" onclick="fillSearch('مصور')">📷 مصور</span>
-      <span class="example-pill" onclick="fillSearch('حداد')">⚒️ حداد</span>
-<span class="example-pill" onclick="fillSearch('مصمم جرافيك')">🖌️ مصمم جرافيك</span>
-<span class="example-pill" onclick="fillSearch('نقل الأثاث')">🚚 نقل الأثاث</span>
-<span class="example-pill" onclick="fillSearch('تكييف وتبريد')">❄️ تكييف وتبريد</span>
-      <span class="example-pill" onclick="fillSearch('مطور مواقع')">💻 مطور مواقع</span>
+<div style="margin-bottom: 8px;">
+  <span class="example-pill" onclick="fillSearch('بلومبي')">🔧 بلومبي</span>
+  <span class="example-pill" onclick="fillSearch('كهربائي')">⚡ كهربائي</span>
+  <span class="example-pill" onclick="fillSearch('نجار')">🪚 نجار</span>
+  <span class="example-pill" onclick="fillSearch('ميكانيكي')">🚗 ميكانيكي</span>
+  <span class="example-pill" onclick="fillSearch('مصور')">📷 مصور</span>
+  <span class="example-pill" onclick="fillSearch('صباغ')">🎨 صباغ</span>
+  <span class="example-pill" onclick="fillSearch('حداد')">⚒️ حداد</span>
+  <span class="example-pill" onclick="fillSearch('مصمم جرافيك')">🖌️ مصمم جرافيك</span>
+  <span class="example-pill" onclick="fillSearch('نقل الأثاث')">🚚 نقل الأثاث</span>
+  <span class="example-pill" onclick="fillSearch('تكييف وتبريد')">❄️ تكييف وتبريد</span>
+    <span class="example-pill" onclick="fillSearch('بناء')">🏗️ بناء</span>
+  <span class="example-pill" onclick="fillSearch('مطور مواقع')">💻 مطور مواقع</span>
+  <span class="example-pill" onclick="fillSearch('منظف منازل')">🧹 منظف منازل</span>
+  <span class="example-pill" onclick="fillSearch('مصلح هواتف')">📱 مصلح هواتف</span>
+  <span class="example-pill" onclick="fillSearch('منسق حدائق')">🌿 منسق حدائق</span>
+  <span class="example-pill" onclick="fillSearch('ديكور')">🏠 ديكور</span>
+
+  <span class="example-pill" onclick="fillSearch('مدرس خصوصي')">🎓 مدرس خصوصي</span>
     
         <div class="hero-ctas">
       <a href="#" onclick="goToSubmit(event)" class="btn-primary">
@@ -2738,37 +2747,34 @@ let currentService = '';
 let panelSearchTerm = '';
 
 async function openServicePanel(serviceName, icon) {
- console.log("clicked:", serviceName);
-
-
   currentService = serviceName;
-    panelSearchTerm = '';                              // ✅ زيد
-  document.getElementById('panelSearchInput').value = ''; // ✅ زيد
+  panelSearchTerm = '';
+  document.getElementById('panelSearchInput').value = '';
   document.getElementById('panelTitle').textContent = serviceName;
   document.getElementById('panelIcon').textContent = icon;
   document.getElementById('panelCount').textContent = 'جاري التحميل...';
   document.getElementById('panelList').innerHTML =
     '<div style="text-align:center;padding:3rem;color:#94A3B8">⏳ جاري التحميل...</div>';
 
-  // Show panel
   document.getElementById('serviceOverlay').style.opacity = '1';
   document.getElementById('serviceOverlay').style.pointerEvents = 'all';
   document.getElementById('servicePanel').style.transform = 'translateX(0)';
   document.body.style.overflow = 'hidden';
 
-  // Fetch
-  const { data } = await _sb
+  const { data, error } = await _sb
     .from('providers')
     .select('*')
     .eq('status', 'approved')
-    .eq('service_category', serviceName);
+    .ilike('service_category', `%${serviceName.trim()}%`);
+
+  if (error) console.error('❌ openServicePanel error:', error);
 
   panelProviders = data || [];
   document.getElementById('panelCount').textContent =
     panelProviders.length + ' مهني متاح';
 
   renderPanelList();
-   showFuzzyNotice(serviceName);
+  showFuzzyNotice(serviceName);
 }
 
 
@@ -3251,12 +3257,14 @@ async function handleSearch() {
   // جلب النتائج من Supabase
 let data;
 if (q) {
-  const { data: smart } = await _sb.rpc('search_providers_smart', { search_term: q });
+  const { data: smart, error } = await _sb.rpc('search_providers_smart', { search_term: q });
+  if (error) console.error('❌ search_providers_smart error:', error);
   data = smart || [];
   if (city) data = data.filter(p => p.city === city);
 } else {
-  const { data: cityOnly } = await _sb.from('providers').select('*')
+  const { data: cityOnly, error } = await _sb.from('providers').select('*')
     .eq('status', 'approved').eq('city', city);
+  if (error) console.error('❌ city query error:', error);
   data = cityOnly || [];
 }
 panelProviders = data;
