@@ -343,17 +343,7 @@
         <div class="form-title">الصور والتحقق</div>
         <div class="form-subtitle">ضيف صورتك وأعمالك السابقة</div>
 
-        <div class="field-group" style="margin-bottom:1rem">
-          <label class="field-label">صورة البطاقة الوطنية (الوجه الأمامي) <span>*</span></label>
-          <div class="upload-zone" id="nationalIdZone" onclick="document.getElementById('nationalIdInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'nationalId')">
-            <i class="ti ti-id" aria-hidden="true"></i>
-            <div class="uz-title">اختار صورة البطاقة الوطنية (الوجه الأمامي)</div>
-            <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
-          </div>
-          <input type="file" id="nationalIdInput" accept="image/*" onchange="handleFile(this,'nationalId')">
-          <img class="preview-img" id="nationalIdPreviewImg" style="display:none;max-width:200px;margin-top:1rem">
-          <span class="error-msg" id="err-nationalId">صورة البطاقة الوطنية مطلوبة</span>
-        </div>
+
 
         <div class="field-group" style="margin-bottom:1rem">
           <label class="field-label">صور الأعمال السابقة</label>
@@ -401,7 +391,7 @@
       <div class="success-title">تم إرسال طلبك بنجاح!</div>
       <div class="status-pill"><span class="status-dot"></span> طلبك قيد المراجعة</div>
       <div class="success-text">شكراً ليك! فريقنا غادي يراجع المعلومات ديالك ويتواصل معاك فأقرب وقت ممكن عبر الهاتف أو البريد الإلكتروني.</div>
-      <button class="btn btn-primary" style="max-width:240px;margin:0 auto" onclick="location.reload()">رجوع للرئيسية</button>
+      <button class="btn btn-primary" style="max-width:240px;margin:0 auto" onclick="location.href='index.html';">رجوع للرئيسية</button>
     </div>
 
   </div>
@@ -478,17 +468,13 @@ document.getElementById('email').value =
   currentProfile.email || currentUser.email || '';
 
 // ── صورة البروفيل تلقائياً ──
+// ── صورة البروفيل تلقائياً (بلا UI ديال avatar فـ step4) ──
 const profileImg = currentProfile.profile_image || 
   currentUser.user_metadata?.avatar_url || null;
 
 if (profileImg) {
   avatarFile.dataUrl = profileImg;
-  avatarFile.file = null; // مافيهاش file، غير URL
-  const img = document.getElementById('avatarPreviewImg');
-  img.src = profileImg;
-  img.style.display = 'block';
-  // أخبي الـ upload zone
-  document.getElementById('avatarZone').style.display = 'none';
+  avatarFile.file = null;
 }
 
 
@@ -678,9 +664,7 @@ function validateStep3() {
 function validateStep4() {
   let valid = true;
 
-  const avatarOk = !!avatarFile.dataUrl || !!avatarFile.file;
-  setError('avatar', !avatarOk);
-  if (!avatarOk) valid = false;
+
 
   // البطاقة الوطنية اختيارية - ماكاينش validation إجباري عليها
 
