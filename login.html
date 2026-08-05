@@ -269,11 +269,17 @@ body {
  
 /* ── SOCIAL ── */
 .social-login {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  display: flex;
+  justify-content: center;
   animation: fadeDown .5s .45s ease both;
 }
+
+.social-login .social-btn {
+  width: 100%;
+  max-width: 100%;
+}
 .social-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 11px;
   background: var(--bg-soft);
   border: 1.5px solid var(--border);
@@ -370,7 +376,7 @@ body {
     <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="on">
       <div class="form-group">
         <label class="form-label">البريد الإلكتروني</label>
-        <div class="input-wrap">
+        <div class="input-wrap">  
           <span class="input-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
           </span>
