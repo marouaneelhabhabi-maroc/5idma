@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خدماتي | L9A5DMA</title>
+<link rel="icon" type="x-icon" href="favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --blue:#1A73E8;--blue-light:#EAF2FF;--blue-dark:#1557B0;
+    --green:#00B87A;--green-light:#E6FAF4;--green-dark:#00915F;
+    --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;
+    --gray-400:#94A3B8;--gray-600:#64748B;--gray-800:#1E293B;
+    --white:#FFFFFF;--radius:12px;--radius-sm:8px;--radius-lg:16px;
+    --red:#E53935;--red-light:#FDECEA;--red-dark:#C62828;
+    --amber:#F59E0B;--amber-light:#FFF8E1;--amber-dark:#B45309;
+  }
+  body,html{direction:rtl;font-family:'Cairo',sans-serif;background:var(--gray-50);color:var(--gray-800)}
+
+  .page{min-height:100vh;padding:0 0 4rem}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,#0F2C5E 0%,#1A73E8 50%,#0D9B6B 100%);padding:2.4rem 2rem 4.5rem;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+  .hero-back{
+    position:absolute;top:20px;right:20px;z-index:2;
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+    color:#fff;text-decoration:none;font-size:13px;font-weight:600;
+    padding:8px 16px;border-radius:100px;backdrop-filter:blur(10px);
+    transition:background .2s;
+  }
+  .hero-back:hover{background:rgba(255,255,255,0.25)}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:6px 16px;font-size:13px;color:#fff;margin-bottom:1.2rem;backdrop-filter:blur(10px)}
+  .hero-badge::before{content:'🛠️';font-size:12px}
+  .hero h1{font-size:2.4rem;font-weight:800;color:#fff;margin-bottom:.5rem;text-shadow:0 2px 20px rgba(0,0,0,0.2)}
+  .hero p{font-size:1rem;color:rgba(255,255,255,0.85);max-width:460px;margin:0 auto;line-height:1.8}
+
+  /* CONTAINER */
+  .content-container{max-width:1000px;margin:-2.5rem auto 0;padding:0 1rem;position:relative;z-index:10}
+
+  /* TOP BAR */
+  .top-bar{
+    background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);
+    padding:1.25rem 1.5rem;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.06);
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    animation:slideIn .4s ease
+  }
+  @keyframes slideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .top-bar-title{font-size:1.05rem;font-weight:700;color:var(--gray-800)}
+  .top-bar-sub{font-size:12.5px;color:var(--gray-600);margin-top:2px}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,115,232,0.3)}
+  .btn-outline{background:var(--white);color:var(--gray-600);border:1.5px solid var(--gray-200)}
+  .btn-outline:hover{background:var(--gray-100)}
+  .btn-danger{background:var(--red);color:#fff}
+  .btn-danger:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(229,57,53,0.3)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .btn-loading{position:relative;pointer-events:none;color:transparent!important}
+  .btn-loading::after{content:'';position:absolute;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;left:50%;top:50%;margin:-8px 0 0 -8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* LOADER */
+  .page-loader{min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:var(--gray-600);font-size:14px}
+  .page-loader .spinner{width:34px;height:34px;border:3px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+
+  /* EMPTY STATE */
+  .empty-state{
+    background:var(--white);border-radius:var(--radius-lg);border:1.5px dashed var(--gray-200);
+    padding:3.5rem 2rem;text-align:center;animation:slideIn .4s ease
+  }
+  .empty-state .es-icon{font-size:3rem;margin-bottom:1rem}
+  .empty-state h3{font-size:1.1rem;font-weight:700;color:var(--gray-800);margin-bottom:.4rem}
+  .empty-state p{font-size:13.5px;color:var(--gray-600);margin-bottom:1.5rem}
+
+  /* SERVICES GRID */
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
+
+  .service-card{
+    background:var(--white);border-radius:var(--radius-lg);border:1.5px solid var(--gray-200);
+    padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.05);transition:all .25s;
+    animation:slideIn .4s ease;position:relative;overflow:hidden
+  }
+  .service-card:hover{box-shadow:0 8px 32px rgba(26,115,232,0.1);border-color:rgba(26,115,232,0.25)}
+
+  .sc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:1rem}
+  .sc-icon{width:48px;height:48px;border-radius:14px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .sc-title-wrap{flex:1;min-width:0}
+  .sc-title{font-size:15.5px;font-weight:700;color:var(--gray-800);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sc-category{font-size:12.5px;color:var(--blue);font-weight:600}
+
+  .status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;flex-shrink:0}
+  .status-badge.pending{background:var(--amber-light);color:var(--amber-dark)}
+  .status-badge.approved{background:var(--green-light);color:var(--green-dark)}
+  .status-badge.rejected{background:var(--red-light);color:var(--red-dark)}
+  .status-badge.pending_deletion{background:var(--gray-100);color:var(--gray-600)}
+
+  .sc-desc{font-size:13px;color:var(--gray-600);line-height:1.7;margin-bottom:1rem;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  .sc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.1rem}
+  .sc-meta-item{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;background:var(--gray-50);border:1px solid var(--gray-200);color:var(--gray-600);padding:4px 10px;border-radius:100px}
+  .sc-meta-item.price{background:var(--blue-light);border-color:rgba(26,115,232,0.2);color:var(--blue-dark);font-weight:700}
+  .sc-meta-item.rating{background:var(--amber-light);border-color:#FDE68A;color:var(--amber-dark);font-weight:700}
+
+  .sc-footer{display:flex;gap:8px;padding-top:1rem;border-top:1px solid var(--gray-100)}
+  .sc-footer .btn{flex:1;justify-content:center;padding:9px 14px;font-size:13px}
+
+  .rejection-note{background:var(--red-light);border:1px solid #F5C6CB;border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;color:var(--red-dark);margin-bottom:1rem}
+  .deletion-note{background:var(--gray-100);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;color:var(--gray-600);margin-bottom:1rem}
+
+  .banner{display:none;align-items:center;gap:10px;background:#FFF3E0;color:#E65100;border:1px solid #FFE0B2;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:1rem}
+  .banner.show{display:flex}
+  .banner.error{background:var(--red-light);color:var(--red-dark);border-color:#F5C6CB}
+  .banner.success{background:var(--green-light);color:var(--green-dark);border-color:#6EE7B7}
+
+  /* DELETE MODAL */
+  .modal-overlay-danger{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+  .modal-overlay-danger.open{opacity:1;pointer-events:all}
+  .modal-danger{background:#fff;border-radius:var(--radius-lg);width:100%;max-width:400px;padding:1.75rem;transform:translateY(16px);transition:transform .25s;border:1.5px solid rgba(229,57,53,0.2);text-align:center}
+  .modal-overlay-danger.open .modal-danger{transform:translateY(0)}
+  .modal-danger-icon{width:52px;height:52px;border-radius:50%;background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 1rem}
+  .modal-danger h3{font-size:1.05rem;font-weight:700;color:var(--gray-800);margin-bottom:.5rem}
+  .modal-danger p{font-size:13px;color:var(--gray-600);line-height:1.7;margin-bottom:1.25rem}
+  .modal-danger .btn-row{display:flex;gap:10px}
+  .modal-danger .btn{flex:1;justify-content:center}
+
+  @media(max-width:540px){
+    .hero h1{font-size:1.7rem}
+    .hero-back{top:14px;right:14px;font-size:12px;padding:6px 12px}
+    .services-grid{grid-template-columns:1fr}
+    .top-bar{flex-direction:column;align-items:stretch}
+    .top-bar .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="app">
+  <div class="hero">
+    <a href="index.html" class="hero-back">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      الرئيسية
+    </a>
+    <div class="hero-badge">لوحة التحكم ديالك</div>
+    <h1>خدماتي 🛠️</h1>
+    <p>دير على الخدمات اللي قدمتيها وتتبع حالتها فمكان واحد.</p>
+  </div>
+
+  <div class="content-container">
+
+    <!-- LOADER -->
+    <div class="page-loader" id="initialLoader">
+      <div class="spinner"></div>
+      <span>كنجيبو الخدمات ديالك...</span>
+    </div>
+
+    <div id="appContent" style="display:none">
+
+      <div class="banner" id="pageBanner"></div>
+
+      <div class="top-bar">
+        <div>
+          <div class="top-bar-title">الخدمات المسجلة</div>
+          <div class="top-bar-sub" id="servicesCount">0 خدمة</div>
+        </div>
+        <a href="submit.html" class="btn btn-primary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+          أضف خدمة جديدة
+        </a>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div class="es-icon">🧰</div>
+        <h3>ماعندكش خدمات مسجلة بعد</h3>
+        <p>قدم أول خدمة ديالك وبدا وصل لزبناء جدد فمدينتك.</p>
+        <a href="submit.html" class="btn btn-primary" style="display:inline-flex">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+          قدم خدمتك الآن
+        </a>
+      </div>
+
+      <!-- SERVICES GRID -->
+      <div class="services-grid" id="servicesGrid"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay-danger" id="deleteModal">
+  <div class="modal-danger">
+    <div class="modal-danger-icon">🗑️</div>
+    <h3>حذف الخدمة</h3>
+    <p>واش متأكد بغيتي تحذف <strong id="deleteServiceName"></strong>؟ هاد الإجراء نهائي وما يمكنش نرجعوه.</p>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">إلغاء</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDeleteService()">حذف نهائياً</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* =========================================================
+   SUPABASE INIT
+   ========================================================= */
+const SUPABASE_URL = "https://kacutivlrarulhbrzsil.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthY3V0aXZscmFydWxoYnJ6c2lsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDYyNTQsImV4cCI6MjA5NjA4MjI1NH0.U39OH4ysCEpQGGkJabKRw_u22SVLv8J7elUzESdxjTY";
+
+const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let myServices = [];
+let serviceToDelete = null;
+
+/* أيقونات ديال الخدمات (نفس القائمة اللي فـ index.html) */
+const knownServices = [
+  { name: 'بلومبي', icon: '🔧' },
+  { name: 'كهربائي', icon: '⚡' },
+  { name: 'نجار', icon: '🪚' },
+  { name: 'صباغ', icon: '🎨' },
+  { name: 'ميكانيكي', icon: '🚗' },
+  { name: 'مصور', icon: '📷' },
+  { name: 'بناء', icon: '🏗️' },
+  { name: 'مطور مواقع', icon: '💻' },
+  { name: 'منظف منازل', icon: '🧹' },
+  { name: 'ديكور', icon: '🏠' },
+  { name: 'منسق حدائق', icon: '🌿' },
+  { name: 'مصلح هواتف', icon: '📱' },
+  { name: 'حداد', icon: '⚒️' },
+  { name: 'مصمم جرافيك', icon: '🖌️' },
+  { name: 'نقل الأثاث', icon: '🚚' },
+  { name: 'تكييف وتبريد', icon: '❄️' },
+  { name: 'مدرس خصوصي', icon: '🎓' },
+];
+
+function getServiceIcon(serviceName) {
+  if (!serviceName) return '🛠️';
+  const match = knownServices.find(s => serviceName.includes(s.name) || s.name.includes(serviceName));
+  return match ? match.icon : '🛠️';
+}
+
+const statusLabels = {
+  pending: '⏳ قيد المراجعة',
+  approved: '✅ مفعّلة',
+  rejected: '❌ مرفوضة',
+  pending_deletion: '🗑️ فطور الحذف'
+};
+
+function showBanner(msg, type) {
+  const el = document.getElementById('pageBanner');
+  if (!msg) { el.classList.remove('show', 'error', 'success'); return; }
+  el.textContent = msg;
+  el.className = 'banner show ' + (type || '');
+}
+
+/* =========================================================
+   BOOTSTRAP
+   ========================================================= */
+async function init() {
+  try {
+    const { data: { session }, error: sessionError } = await _sb.auth.getSession();
+
+    if (sessionError || !session || !session.user) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    currentUser = session.user;
+    await loadMyServices();
+
+    document.getElementById('initialLoader').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+
+  } catch (err) {
+    console.error('init() crashed:', err);
+    document.getElementById('initialLoader').innerHTML =
+      `<div style="text-align:center">
+         <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+         <div style="color:#C62828;font-weight:600">صرا خطأ غير متوقع، عاود حاول</div>
+       </div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+
+/* =========================================================
+   LOAD SERVICES
+   ========================================================= */
+async function loadMyServices() {
+  const { data, error } = await _sb
+    .from('providers')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('loadMyServices error:', error);
+    showBanner('صرا خطأ فجلب الخدمات: ' + error.message, 'error');
+    return;
+  }
+
+  myServices = data || [];
+  renderServices();
+}
+
+function renderServices() {
+  const grid = document.getElementById('servicesGrid');
+  const emptyState = document.getElementById('emptyState');
+  const count = document.getElementById('servicesCount');
+
+  count.textContent = myServices.length + (myServices.length === 1 ? ' خدمة' : ' خدمات');
+
+  if (!myServices.length) {
+    grid.style.display = 'none';
+    emptyState.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  emptyState.style.display = 'none';
+
+  grid.innerHTML = myServices.map(s => {
+    const status = s.status || 'pending';
+    const statusClass = ['pending', 'approved', 'rejected', 'pending_deletion'].includes(status) ? status : 'pending';
+    const rating = parseFloat(s.rating) || 0;
+
+    let noteHtml = '';
+    if (status === 'rejected') {
+      noteHtml = `<div class="rejection-note">⚠️ هاد الخدمة تم رفضها. تواصل معنا إلا بغيتي تعرف السبب.</div>`;
+    } else if (status === 'pending_deletion') {
+      noteHtml = `<div class="deletion-note">🗑️ هاد الخدمة فطور الحذف مع الحساب ديالك.</div>`;
+    }
+
+    return `
+    <div class="service-card" data-id="${s.id}">
+      <div class="sc-top">
+        <div class="sc-icon">${getServiceIcon(s.service_category)}</div>
+        <div class="sc-title-wrap">
+          <div class="sc-title" title="${escapeHtml(s.service_title || '')}">${escapeHtml(s.service_title) || '—'}</div>
+          <div class="sc-category">${escapeHtml(s.service_category) || '—'}</div>
+        </div>
+        <span class="status-badge ${statusClass}">${statusLabels[status] || status}</span>
+      </div>
+
+      ${noteHtml}
+
+      <div class="sc-desc">${escapeHtml(s.service_description) || 'ماكاينش وصف مضاف.'}</div>
+
+      <div class="sc-meta">
+        <span class="sc-meta-item">📍 ${escapeHtml(s.city) || '—'}</span>
+        <span class="sc-meta-item">🏆 ${s.experience_years || '—'} سنة</span>
+        <span class="sc-meta-item price">💰 ${escapeHtml(s.price) || '—'}</span>
+        ${rating > 0 ? `<span class="sc-meta-item rating">⭐ ${rating.toFixed(1)} (${s.reviews_count || 0})</span>` : ''}
+        ${s.featured ? `<span class="sc-meta-item" style="background:#FFF9E6;border-color:#FDE68A;color:#92400E">مميزة ⭐</span>` : ''}
+      </div>
+
+      <div class="sc-footer">
+        <a href="profile.html?id=${s.id}" class="btn btn-outline">👤 عرض الملف</a>
+        <button class="btn btn-danger" onclick='openDeleteModal(${JSON.stringify(s.id)}, ${JSON.stringify(s.service_title || "هاد الخدمة")})'>
+          🗑️ حذف
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
+/* =========================================================
+   DELETE SERVICE
+   ========================================================= */
+function openDeleteModal(id, title) {
+  serviceToDelete = id;
+  document.getElementById('deleteServiceName').textContent = title;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  serviceToDelete = null;
+}
+
+async function confirmDeleteService() {
+  if (!serviceToDelete) return;
+
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  try {
+    const { error } = await _sb
+      .from('providers')
+      .delete()
+      .eq('id', serviceToDelete)
+      .eq('user_id', currentUser.id); // تأمين إضافي: يمسح غير خدماته هو
+
+    if (error) {
+      showBanner('فشل حذف الخدمة: ' + error.message, 'error');
+      closeDeleteModal();
+      return;
+    }
+
+    myServices = myServices.filter(s => s.id !== serviceToDelete);
+    renderServices();
+    showBanner('تم حذف الخدمة بنجاح ✅', 'success');
+    closeDeleteModal();
+
+  } catch (err) {
+    console.error('confirmDeleteService error:', err);
+    showBanner('صرا خطأ غير متوقع، حاول مرة أخرى', 'error');
+  } finally {
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDeleteModal();
+});
+</script>
+</body>
+</html>
