@@ -654,6 +654,10 @@
     let currentProvider = null;
     let selectedRating = 0;
 
+
+let currentReviewMode = null;      // 'provider' أو 'profile'
+let currentReviewTargetId = null;
+
     // أيقونات ديال الخدمات (نفس القائمة اللي فـ index.html)
     const knownServices = [
       { name: 'بلومبي', icon: '🔧' }, { name: 'كهربائي', icon: '⚡' },
@@ -816,12 +820,17 @@
           const merged = { ...provider, profile_image: profile?.profile_image || provider.profile_image };
           currentProvider = merged;
 
-          const isVerified = !!provider.national_id_image;
-          renderProfile(merged, isVerified);
-          renderGallerySingleService(provider);
-          await loadReviews(viewingId);
+// تحديد نوع التقييم
+currentReviewMode = 'provider';
+currentReviewTargetId = viewingId;
 
-          if (!session) {
+const isVerified = !!provider.national_id_image;
+renderProfile(merged, isVerified);
+renderGallerySingleService(provider);
+
+await loadReviews(viewingId, 'provider');
+
+if (!session) {
             const reviewForm = $('reviewForm');
             if (reviewForm) reviewForm.style.display = 'none';
           }
@@ -901,7 +910,11 @@
             </div>`;
         }
 
-        await loadReviews(session.user.id);
+   // تحديد نوع التقييم
+currentReviewMode = 'profile';
+currentReviewTargetId = session.user.id;
+
+await loadReviews(session.user.id, 'profile');
 
         loadingState.style.display = 'none';
         profileContent.style.display = 'block';
@@ -1037,14 +1050,62 @@
     }
  
     // ─── Load Reviews ─────────────────────────────────────────────
-async function loadReviews(profileId) {
+// ─── Load Reviews ─────────────────────────────────────────────
+async function loadReviews(targetId, mode) {
+
+  const table = mode === 'provider'
+    ? 'provider_reviews'
+    : 'profile_reviews';
+
+  const column = mode === 'provider'
+    ? 'provider_id'
+    : 'profile_id';
+
+  // جلب التقييمات
   const { data, error } = await sb
-    .from('profile_reviews')
+    .from(table)
     .select('*')
-    .eq('profile_id', profileId)
+    .eq(column, targetId)
     .order('created_at', { ascending: false });
 
-  if (error) { console.error('reviews error:', error); return; }
+  if (error) {
+    console.error('reviews error:', error);
+    renderReviews([]);
+    return;
+  }
+
+  // إذا كاينين تقييمات، جيب أسماء وصور أصحابها
+  if (data && data.length > 0) {
+
+    const ids = [
+      ...new Set(
+        data
+          .map(r => r.user_id || r.reviewer_id)
+          .filter(Boolean)
+      )
+    ];
+
+    const { data: users, error: usersError } = await sb
+      .from('profiles')
+      .select('id, full_name, profile_image')
+      .in('id', ids);
+
+    if (usersError) {
+      console.error('profiles error:', usersError);
+    } else {
+
+      const usersMap = new Map(
+        users.map(user => [user.id, user])
+      );
+
+      data.forEach(review => {
+        const reviewerId = review.user_id || review.reviewer_id;
+        review.profile = usersMap.get(reviewerId) || null;
+      });
+
+    }
+  }
+
   renderReviews(data || []);
 }
  
@@ -1083,12 +1144,26 @@ async function loadReviews(profileId) {
  
       list.innerHTML = reviews.map(r => {
         const formatted = new Date(r.created_at).toLocaleDateString('ar-MA');
-        const initial = (r.reviewer_name || r.user_id || '?')[0].toUpperCase();
-        const reviewerName = r.reviewer_name || `مستخدم ${(r.user_id || '').slice(0, 6)}`;
+       
+        const reviewerName =
+    r.profile?.full_name ||
+    r.reviewer_name ||
+    `مستخدم ${((r.user_id || r.reviewer_id || '')).slice(0,6)}`;
+
+const initial = reviewerName.charAt(0).toUpperCase();
+
+const avatar = r.profile?.profile_image || null;
+   
         return `
           <div class="review-item">
             <div class="review-header">
-              <div class="review-avatar">${initial}</div>
+              <div class="review-avatar">
+  ${
+    avatar
+      ? `<img src="${avatar}" alt="${reviewerName}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`
+      : initial
+  }
+</div>
               <div>
                 <div class="review-name">${reviewerName}</div>
                 <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
@@ -1101,31 +1176,41 @@ async function loadReviews(profileId) {
     }
  
     // ─── Submit Review ────────────────────────────────────────────
-    async function submitReview() {
+  async function submitReview() {
   if (!currentUser) { alert('يرجى تسجيل الدخول لإضافة تقييم'); return; }
   if (selectedRating === 0) { alert('يرجى اختيار عدد النجوم'); return; }
-  if (currentProvider.id === currentUser.id) { 
-    alert('لا يمكنك تقييم نفسك'); return; 
+  if (currentReviewTargetId === currentUser.id) {
+    alert('لا يمكنك تقييم نفسك'); return;
   }
 
   const btn = $('submitReviewBtn');
   btn.disabled = true;
   btn.textContent = 'جاري الإرسال...';
 
-  // جيب اسم المستخدم من profiles
-  const { data: myProfile } = await sb
-    .from('profiles')
-    .select('full_name')
-    .eq('id', currentUser.id)
-    .single();
+  let error;
 
-  const { error } = await sb.from('profile_reviews').insert({
-    profile_id: currentProvider.id,  // ← id ديال الشخص المقيَّم
-    reviewer_id: currentUser.id,
-    reviewer_name: myProfile?.full_name || null,
-    rating: selectedRating,
-    comment: $('reviewComment').value.trim() || null
-  });
+  if (currentReviewMode === 'provider') {
+    ({ error } = await sb.from('provider_reviews').insert({
+      provider_id: currentReviewTargetId,
+      user_id: currentUser.id,
+      rating: selectedRating,
+      comment: $('reviewComment').value.trim() || null
+    }));
+  } else {
+    const { data: myProfile } = await sb
+      .from('profiles')
+      .select('full_name')
+      .eq('id', currentUser.id)
+      .single();
+
+    ({ error } = await sb.from('profile_reviews').insert({
+      profile_id: currentReviewTargetId,
+      reviewer_id: currentUser.id,
+      reviewer_name: myProfile?.full_name || null,
+      rating: selectedRating,
+      comment: $('reviewComment').value.trim() || null
+    }));
+  }
 
   if (error) {
     alert('حدث خطأ: ' + error.message);
@@ -1134,7 +1219,6 @@ async function loadReviews(profileId) {
     return;
   }
 
-  // reset
   selectedRating = 0;
   $('reviewComment').value = '';
   document.querySelectorAll('#starsInput span').forEach(s => {
@@ -1143,9 +1227,10 @@ async function loadReviews(profileId) {
   btn.disabled = false;
   btn.textContent = 'إرسال التقييم';
 
-  await loadReviews(currentProvider.id);
+  await loadReviews(currentReviewTargetId, currentReviewMode);
   alert('✅ تم إرسال تقييمك بنجاح!');
 }
+
  
     // ─── Stars Input ──────────────────────────────────────────────
     function initStars() {
