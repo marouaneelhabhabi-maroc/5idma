@@ -102,6 +102,44 @@
     .field-row{grid-template-columns:1fr}
     .hero-back{top:14px;right:14px;font-size:12px;padding:6px 12px}
   }
+
+  /* ═══════════ DANGER ZONE ═══════════ */
+  :root{
+    --red:#E53935;--red-light:#FDECEA;--red-dark:#C62828;
+    --amber:#F59E0B;--amber-light:#FFF8E1;--amber-dark:#B45309;
+  }
+  .danger-card{border-color:rgba(229,57,53,0.25)}
+  .danger-card .form-card-icon{background:var(--red-light);color:var(--red)}
+
+  .danger-warning-box{background:var(--amber-light);border:1.5px solid #FDE68A;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:1.25rem}
+  .danger-warning-box .dw-title{font-size:13px;font-weight:700;color:var(--amber-dark);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .danger-warning-box ul{margin:0;padding-right:18px;display:flex;flex-direction:column;gap:4px}
+  .danger-warning-box li{font-size:12.5px;color:#7C5A0B;line-height:1.6}
+
+  .grace-notice{background:var(--blue-light);border:1.5px solid rgba(26,115,232,0.2);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:10px}
+  .grace-notice .gn-title{font-size:13.5px;font-weight:700;color:var(--blue-dark);display:flex;align-items:center;gap:6px}
+  .grace-notice .gn-text{font-size:12.5px;color:var(--gray-600);line-height:1.7}
+  .grace-notice .gn-countdown{font-size:13px;font-weight:700;color:var(--blue-dark)}
+
+  .confirm-checkbox-row{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--gray-50);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:1rem}
+  .confirm-checkbox-row input{width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:var(--red);flex-shrink:0}
+  .confirm-checkbox-row label{font-size:13px;color:var(--gray-800);cursor:pointer;line-height:1.6}
+
+  .btn-danger{background:var(--red);color:#fff}
+  .btn-danger:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(229,57,53,0.3)}
+  .btn-danger:disabled{background:var(--gray-200);color:var(--gray-400);transform:none;box-shadow:none}
+
+  .btn-cancel-deletion{background:var(--green);color:#fff}
+  .btn-cancel-deletion:hover{background:var(--green-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,184,122,0.3)}
+
+  /* confirm modal */
+  .modal-overlay-danger{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+  .modal-overlay-danger.open{opacity:1;pointer-events:all}
+  .modal-danger{background:#fff;border-radius:var(--radius-lg);width:100%;max-width:420px;padding:1.75rem;transform:translateY(16px);transition:transform .25s;border:1.5px solid rgba(229,57,53,0.2)}
+  .modal-overlay-danger.open .modal-danger{transform:translateY(0)}
+  .modal-danger-icon{width:52px;height:52px;border-radius:50%;background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 1rem}
+  .modal-danger h3{text-align:center;font-size:1.05rem;font-weight:700;color:var(--gray-800);margin-bottom:.5rem}
+  .modal-danger p{text-align:center;font-size:13px;color:var(--gray-600);line-height:1.7;margin-bottom:1.25rem}
 </style>
 </head>
 <body>
@@ -205,6 +243,79 @@
         </div>
       </div>
 
+      <!-- DANGER ZONE: DELETE ACCOUNT -->
+      <div class="form-card danger-card" id="dangerCard">
+        <div class="form-card-header">
+          <div class="form-card-icon">⚠️</div>
+          <div>
+            <div class="form-title">حذف الحساب</div>
+            <div class="form-subtitle">هاد الإجراء غادي يمسح الحساب ديالك نهائياً</div>
+          </div>
+        </div>
+
+        <div class="banner" id="deleteBanner"></div>
+
+        <!-- Grace period notice (shown only if deletion already requested) -->
+        <div class="grace-notice" id="graceNotice" style="display:none">
+          <div class="gn-title">⏳ الحساب ديالك مبرمج للحذف</div>
+          <div class="gn-text">طلبتي حذف الحساب. غادي يتحذف بشكل نهائي ومايمكنش نرجعو من بعد <span class="gn-countdown" id="graceCountdown"></span>. إلا بغيتي تلغي هاد الطلب، دوز على الزر تحت.</div>
+          <div class="btn-row" style="margin-top:0">
+            <button class="btn btn-cancel-deletion" id="cancelDeletionBtn" onclick="cancelAccountDeletion()">
+              إلغاء طلب الحذف ✅
+            </button>
+          </div>
+        </div>
+
+        <!-- Normal delete flow (hidden if deletion already requested) -->
+        <div id="deleteFlowWrap">
+          <div class="danger-warning-box">
+            <div class="dw-title">🛑 قبل ما تكمل، عارف بلي:</div>
+            <ul>
+              <li>غادي تتحيد من الوصول لحسابك وكل الخدمات ديالك مباشرة بعد التأكيد.</li>
+              <li>خدماتك، صورك، والتقييمات ديالك غادي يتحذفو نهائياً بعد فترة السماح.</li>
+              <li>عندك 30 يوم باش تلغي الطلب إلا بدلتي رأيك (عبر تسجيل الدخول وإلغاء الطلب).</li>
+              <li>بعد 30 يوم، الحذف نهائي وما يمكنش نرجعو المعلومات ديالك.</li>
+            </ul>
+          </div>
+
+          <label class="confirm-checkbox-row">
+            <input type="checkbox" id="confirmUnderstand" onchange="updateDeleteBtnState()">
+            <label for="confirmUnderstand">فهمت أن هاد الإجراء نهائي وأن حسابي وبياناتي غادي يتحذفو بعد 30 يوم.</label>
+          </label>
+
+          <div class="btn-row">
+            <button class="btn btn-danger" id="openDeleteModalBtn" disabled onclick="openDeleteModal()">
+              حذف الحساب نهائياً 🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-overlay-danger" id="deleteModal">
+  <div class="modal-danger">
+    <div class="modal-danger-icon">🗑️</div>
+    <h3>أكد حذف الحساب</h3>
+    <p>هاد الإجراء غادي يبدا عملية حذف نهائية بعد 30 يوم. دخل كلمة السر ديالك وكتب <strong>"حذف"</strong> باش تأكد.</p>
+
+    <div class="banner error" id="modalDeleteBanner"></div>
+
+    <div class="field-group">
+      <label class="field-label">كلمة السر <span>*</span></label>
+      <input class="field-input" id="deleteConfirmPass" type="password" placeholder="دخل كلمة السر ديالك" autocomplete="current-password">
+    </div>
+    <div class="field-group">
+      <label class="field-label">كتب "حذف" للتأكيد <span>*</span></label>
+      <input class="field-input" id="deleteConfirmText" type="text" placeholder="حذف">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">إلغاء</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmAccountDeletion()">تأكيد الحذف</button>
     </div>
   </div>
 </div>
@@ -238,17 +349,20 @@ async function init() {
 
     const { data: profile, error: profileError } = await _sb
       .from('profiles')
-      .select('id, full_name, email')
+      .select('id, full_name, email, deletion_requested_at')
       .eq('id', currentUser.id)
       .single();
 
     currentProfile = !profileError && profile ? profile : {
       full_name: currentUser.user_metadata?.full_name || '',
-      email: currentUser.email
+      email: currentUser.email,
+      deletion_requested_at: null
     };
 
     document.getElementById('accFullname').value = currentProfile.full_name || '—';
     document.getElementById('accEmail').value = currentProfile.email || currentUser.email || '—';
+
+    renderDeletionState();
 
     document.getElementById('initialLoader').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
@@ -371,6 +485,155 @@ async function updatePassword() {
   } catch (err) {
     console.error('updatePassword error:', err);
     showBanner('pwBanner', 'صرا خطأ غير متوقع، حاول مرة أخرى', 'error');
+  } finally {
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  }
+}
+
+/* =========================================================
+   ACCOUNT DELETION (soft-delete + 30 day grace period)
+   ========================================================= */
+function daysLeft(requestedAtIso) {
+  const requested = new Date(requestedAtIso);
+  const deadline = new Date(requested.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const msLeft = deadline.getTime() - Date.now();
+  return Math.max(0, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+}
+
+function renderDeletionState() {
+  const graceNotice = document.getElementById('graceNotice');
+  const deleteFlowWrap = document.getElementById('deleteFlowWrap');
+
+  if (currentProfile.deletion_requested_at) {
+    const left = daysLeft(currentProfile.deletion_requested_at);
+    document.getElementById('graceCountdown').textContent =
+      left > 0 ? `(باقي ${left} يوم)` : '(اليوم)';
+    graceNotice.style.display = 'flex';
+    deleteFlowWrap.style.display = 'none';
+  } else {
+    graceNotice.style.display = 'none';
+    deleteFlowWrap.style.display = 'block';
+  }
+}
+
+function updateDeleteBtnState() {
+  const checked = document.getElementById('confirmUnderstand').checked;
+  document.getElementById('openDeleteModalBtn').disabled = !checked;
+}
+
+function openDeleteModal() {
+  document.getElementById('deleteConfirmPass').value = '';
+  document.getElementById('deleteConfirmText').value = '';
+  showBanner('modalDeleteBanner', '', '');
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+}
+
+async function confirmAccountDeletion() {
+  const pass = document.getElementById('deleteConfirmPass').value;
+  const text = document.getElementById('deleteConfirmText').value.trim();
+
+  showBanner('modalDeleteBanner', '', '');
+
+  if (!pass) {
+    showBanner('modalDeleteBanner', 'دخل كلمة السر ديالك', 'error');
+    return;
+  }
+  if (text !== 'حذف') {
+    showBanner('modalDeleteBanner', 'خاصك تكتب "حذف" بالضبط للتأكيد', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  try {
+    // 1) تأكد من كلمة السر
+    const email = currentProfile.email || currentUser.email;
+    const { error: verifyErr } = await _sb.auth.signInWithPassword({ email, password: pass });
+
+    if (verifyErr) {
+      showBanner('modalDeleteBanner', 'كلمة السر غير صحيحة', 'error');
+      return;
+    }
+
+    // 2) سجل وقت طلب الحذف فـ profiles (soft-delete)
+    const nowIso = new Date().toISOString();
+    const { error: updateErr } = await _sb
+      .from('profiles')
+      .update({ deletion_requested_at: nowIso })
+      .eq('id', currentUser.id);
+
+    if (updateErr) {
+      showBanner('modalDeleteBanner', 'صرا خطأ، حاول مرة أخرى: ' + updateErr.message, 'error');
+      return;
+    }
+
+    // 3) (اختياري) بدل status ديال الخدمة إلى 'pending_deletion' إلا كان عندو خدمة
+    await _sb
+      .from('providers')
+      .update({ status: 'pending_deletion' })
+      .eq('user_id', currentUser.id);
+
+    closeDeleteModal();
+
+    // 4) خرجو من الحساب
+    await _sb.auth.signOut();
+
+    document.getElementById('appContent').innerHTML = `
+      <div class="form-card" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">✅</div>
+        <div class="form-title" style="margin-bottom:.5rem">تم استلام طلب الحذف</div>
+        <div class="form-subtitle" style="margin-bottom:1.5rem">
+          حسابك غادي يتحذف نهائياً بعد 30 يوم. إلا بغيتي تلغي الطلب، عاود سجل الدخول قبل ما تسالي المدة.
+        </div>
+        <a href="index.html" class="btn btn-primary" style="display:inline-flex;text-decoration:none">رجوع للرئيسية</a>
+      </div>`;
+
+  } catch (err) {
+    console.error('confirmAccountDeletion error:', err);
+    showBanner('modalDeleteBanner', 'صرا خطأ غير متوقع، حاول مرة أخرى', 'error');
+  } finally {
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  }
+}
+
+async function cancelAccountDeletion() {
+  const btn = document.getElementById('cancelDeletionBtn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  try {
+    const { error } = await _sb
+      .from('profiles')
+      .update({ deletion_requested_at: null })
+      .eq('id', currentUser.id);
+
+    if (error) {
+      showBanner('deleteBanner', 'صرا خطأ، حاول مرة أخرى: ' + error.message, 'error');
+      return;
+    }
+
+    // رجع status ديال الخدمة لـ pending (مراجعة) إلا كانت متعلمة pending_deletion
+    await _sb
+      .from('providers')
+      .update({ status: 'pending' })
+      .eq('user_id', currentUser.id)
+      .eq('status', 'pending_deletion');
+
+    currentProfile.deletion_requested_at = null;
+    renderDeletionState();
+    showBanner('deleteBanner', 'تم إلغاء طلب الحذف بنجاح ✅', 'success');
+
+  } catch (err) {
+    console.error('cancelAccountDeletion error:', err);
+    showBanner('deleteBanner', 'صرا خطأ غير متوقع', 'error');
   } finally {
     btn.classList.remove('btn-loading');
     btn.disabled = false;
