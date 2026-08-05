@@ -800,13 +800,13 @@ async function handleForgotPassword(e) {
 async function handleGoogle() {
   await _sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/index.html' }
+    options: { redirectTo: 'https://marouaneelhabhabi-maroc.github.io/5idma/index.html' }
   });
 }
 async function handleFacebook() {
   await _sb.auth.signInWithOAuth({
     provider: 'facebook',
-    options: { redirectTo: window.location.origin + '/index.html' }
+    options: { redirectTo: 'https://marouaneelhabhabi-maroc.github.io/5idma/index.html' }
   });
 }
 </script>
