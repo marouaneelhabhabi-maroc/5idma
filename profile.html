@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الملف الشخصي | 5IDMA</title>
+  <title>الملف الشخصي | L9A5DMA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@
       background: linear-gradient(135deg, var(--primary), var(--success));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .logo-khidma { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; }
+    .logo-khidma { width: 50px; height: 5Opx; object-fit: contain; border-radius: 8px; }
  
     .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
     .nav-links a { color: var(--text-muted); font-size: 15px; font-weight: 600; transition: color var(--transition); }
@@ -231,6 +231,13 @@
       padding: 2px 10px; border-radius: 50px; font-size: 12px; font-weight: 700;
     }
     .verified-badge svg { width: 14px; height: 14px; }
+
+    .unverified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #F1F5F9; color: var(--text-muted);
+      padding: 2px 10px; border-radius: 50px; font-size: 12px; font-weight: 700;
+      border: 1px dashed var(--border);
+    }
  
     .profile-profession { font-size: 15px; color: var(--text-muted); margin-top: 2px; }
  
@@ -297,6 +304,21 @@
     .badge-tag.yellow { background: #FEF3C7; color: #D97706; border-color: rgba(245,158,11,0.2); }
  
     /* ── GALLERY ── */
+    .gallery-service-group { margin-bottom: 22px; }
+    .gallery-service-group:last-child { margin-bottom: 0; }
+    .gallery-service-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    }
+    .gallery-service-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: var(--primary-light); color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .gallery-service-title { font-size: 15px; font-weight: 700; color: var(--text); }
+    .gallery-service-sub { font-size: 12px; color: var(--text-muted); }
+    .gallery-service-divider { height: 1px; background: var(--border); margin: 18px 0; }
+
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -452,8 +474,8 @@
       <span></span><span></span><span></span>
     </div>
     <div class="nav-brand">
-      <a href="index.html" class="nav-logo">5IDMA</a>
-      <img src="logo-khidma.png" class="logo-khidma" alt="5IDMA">
+      <a href="index.html" class="nav-logo">L9A5DMA</a>
+      <img src="favicon.ico" class="logo-khidma" alt="L9A5DMA">
     </div>
     <ul class="nav-links">
       <li><a href="index.html#services">الخدمات</a></li>
@@ -470,6 +492,9 @@
       </a>
       <a href="my-services.html" class="dropdown-item">
         <span>🛠️</span><span>خدماتي</span>
+      </a>
+      <a href="account-settings.html" class="dropdown-item">
+        <span>🔒</span><span>الخصوصية</span>
       </a>
       <div class="dropdown-divider"></div>
       <div class="dropdown-item dropdown-logout" onclick="handleLogout(event)">
@@ -515,9 +540,12 @@
           <div class="profile-name-section">
             <div class="profile-name-row">
               <h1 class="profile-name" id="profileName">—</h1>
-              <span class="verified-badge">
+              <span class="verified-badge" id="verifiedBadge" style="display:none">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                 موثق
+              </span>
+              <span class="unverified-badge" id="unverifiedBadge" style="display:none">
+                ⏳ غير موثق بعد
               </span>
             </div>
             <div class="profile-profession" id="profileProfession">—</div>
@@ -527,7 +555,7 @@
             <span class="profile-meta-item">⭐ <strong id="profileRating">—</strong></span>
             <span class="profile-meta-item">📝 <strong id="profileReviewsCount">0</strong> تقييم</span>
             <span class="profile-meta-item">📍 <strong id="profileCity">—</strong></span>
-            <span class="profile-meta-item">🛡️ موثق</span>
+            <span class="profile-meta-item" id="profileTrustMeta">🛡️ —</span>
           </div>
  
           <div class="badge-online">
@@ -570,7 +598,7 @@
       <!-- Gallery -->
       <div class="section-card">
         <div class="section-title">🖼️ معرض <span class="accent">الأعمال</span></div>
-        <div class="gallery-grid" id="galleryGrid"></div>
+        <div id="galleryWrap"></div>
       </div>
  
       <!-- Reviews -->
@@ -625,6 +653,24 @@
     let currentUser = null;
     let currentProvider = null;
     let selectedRating = 0;
+
+    // أيقونات ديال الخدمات (نفس القائمة اللي فـ index.html)
+    const knownServices = [
+      { name: 'بلومبي', icon: '🔧' }, { name: 'كهربائي', icon: '⚡' },
+      { name: 'نجار', icon: '🪚' }, { name: 'صباغ', icon: '🎨' },
+      { name: 'ميكانيكي', icon: '🚗' }, { name: 'مصور', icon: '📷' },
+      { name: 'بناء', icon: '🏗️' }, { name: 'مطور مواقع', icon: '💻' },
+      { name: 'منظف منازل', icon: '🧹' }, { name: 'ديكور', icon: '🏠' },
+      { name: 'منسق حدائق', icon: '🌿' }, { name: 'مصلح هواتف', icon: '📱' },
+      { name: 'حداد', icon: '⚒️' }, { name: 'مصمم جرافيك', icon: '🖌️' },
+      { name: 'نقل الأثاث', icon: '🚚' }, { name: 'تكييف وتبريد', icon: '❄️' },
+      { name: 'مدرس خصوصي', icon: '🎓' },
+    ];
+    function getServiceIcon(serviceName) {
+      if (!serviceName) return '🛠️';
+      const match = knownServices.find(s => serviceName.includes(s.name) || s.name.includes(serviceName));
+      return match ? match.icon : '🛠️';
+    }
  
     // ─── Helper ───────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
@@ -683,6 +729,7 @@
             </div>
             <a href="profile.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text);font-weight:600;font-size:14px">👤 الملف الشخصي</a>
             <a href="my-services.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text);font-weight:600;font-size:14px">🛠️ خدماتي</a>
+            <a href="account-settings.html" style="text-decoration:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--text);font-weight:600;font-size:14px">🔒 الخصوصية</a>
             <div onclick="handleLogout(event)" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#EF4444;font-weight:700;font-size:14px;cursor:pointer">🚪 تسجيل الخروج</div>
           </div>`;
  
@@ -741,68 +788,64 @@
  
     // ─── Load Profile ─────────────────────────────────────────────
     async function loadProfile() {
-      
- 
 
+      const { data: { session } } = await sb.auth.getSession();
 
-  const { data: { session } } = await sb.auth.getSession();
-  
-  // ── شوف واش كاين id في الـ URL ──
-  const urlParams = new URLSearchParams(window.location.search);
-  const viewingId = urlParams.get('id');
+      // ── شوف واش كاين id في الـ URL (صفحة خدمة معينة) ──
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewingId = urlParams.get('id');
 
-  // ── إذا كاين id في URL، بان ملف مهني آخر ──
-  if (viewingId) {
-    try {
-      const { data: provider } = await sb
-        .from('providers')
-        .select('*')
-        .eq('id', viewingId)
-        .single();
+      // ── إذا كاين id في URL، بان خدمة واحدة معينة ──
+      if (viewingId) {
+        try {
+          const { data: provider } = await sb
+            .from('providers')
+            .select('*')
+            .eq('id', viewingId)
+            .single();
 
-      if (!provider) throw new Error('المهني غير موجود');
+          if (!provider) throw new Error('المهني غير موجود');
 
-      // جيب profile_image من profiles
-      const { data: profile } = await sb
-        .from('profiles')
-        .select('profile_image, full_name')
-        .eq('id', provider.user_id)
-        .maybeSingle();
+          // جيب profile_image من profiles
+          const { data: profile } = await sb
+            .from('profiles')
+            .select('profile_image, full_name')
+            .eq('id', provider.user_id)
+            .maybeSingle();
 
-      const merged = { ...provider, profile_image: profile?.profile_image || provider.profile_image };
-      currentProvider = merged;
+          const merged = { ...provider, profile_image: profile?.profile_image || provider.profile_image };
+          currentProvider = merged;
 
-      renderProfile(merged);
-await loadReviews(viewingId);
+          const isVerified = !!provider.national_id_image;
+          renderProfile(merged, isVerified);
+          renderGallerySingleService(provider);
+          await loadReviews(viewingId);
 
-      // إخفاء فورم التقييم إذا ماشي مسجل
-      if (!session) {
-        const reviewForm = $('reviewForm');
-        if (reviewForm) reviewForm.style.display = 'none';
+          if (!session) {
+            const reviewForm = $('reviewForm');
+            if (reviewForm) reviewForm.style.display = 'none';
+          }
+
+          loadingState.style.display = 'none';
+          profileContent.style.display = 'block';
+          return;
+
+        } catch (err) {
+          loadingState.innerHTML = `<div style="font-size:48px">⚠️</div><h3>${err.message}</h3>`;
+          return;
+        }
       }
 
-      loadingState.style.display = 'none';
-      profileContent.style.display = 'block';
-      return;
+      // ── إذا ماشي كاين id، بان ملف المستخدم المسجل (بكل خدماته) ──
+      if (!session) {
+        loadingState.innerHTML = `
+          <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+          <h3 style="color:var(--text-muted);font-size:17px;">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
+          <a href="login.html" class="btn-primary" style="display:inline-flex;margin-top:20px;text-decoration:none;">🔑 تسجيل الدخول</a>
+        `;
+        return;
+      }
 
-    } catch (err) {
-      loadingState.innerHTML = `<div style="font-size:48px">⚠️</div><h3>${err.message}</h3>`;
-      return;
-    }
-  }
-
-  // ── إذا ماشي كاين id، بان ملف المستخدم المسجل ──
-  if (!session) {
-    loadingState.innerHTML = `
-      <div style="font-size:48px;margin-bottom:16px;">🔒</div>
-      <h3 style="color:var(--text-muted);font-size:17px;">يرجى تسجيل الدخول لعرض ملفك الشخصي</h3>
-      <a href="login.html" class="btn-primary" style="display:inline-flex;margin-top:20px;text-decoration:none;">🔑 تسجيل الدخول</a>
-    `;
-    return;
-  }
-
-
- 
       try {
         // 1. جيب من profiles
         const { data: profile, error: profileError } = await sb
@@ -810,38 +853,59 @@ await loadReviews(viewingId);
           .select('*')
           .eq('id', session.user.id)
           .single();
- 
+
         if (profileError) throw profileError;
- 
-        // 2. جيب من providers (اختياري)
-        const { data: provider } = await sb
+
+        // 2. جيب *كل* الخدمات ديالو من providers
+        const { data: services } = await sb
           .from('providers')
           .select('*')
           .eq('user_id', session.user.id)
-          .maybeSingle();
- 
-        // 3. دمج البيانات
-        const merged = { ...profile, ...(provider || {}) };
+          .order('created_at', { ascending: false });
+
+        const myServices = services || [];
+
+        // 3. دمج البيانات للعرض العلوي (نستعمل أول خدمة كمرجع احتياطي)
+        const firstService = myServices[0] || {};
+        const merged = { ...profile, ...firstService, full_name: profile.full_name };
+
+        // 4. أحسب الإحصائيات المجمعة عبر كل الخدمات
+        const totalReviews = myServices.reduce((sum, s) => sum + (s.reviews_count || 0), 0);
+        const ratedServices = myServices.filter(s => s.rating && s.rating > 0);
+        const avgRating = ratedServices.length
+          ? ratedServices.reduce((sum, s) => sum + parseFloat(s.rating), 0) / ratedServices.length
+          : 0;
+
+        merged.reviews_count = totalReviews;
+        merged.rating = avgRating || null;
+        merged.experience_years = profile.experience_years
+          || Math.max(0, ...myServices.map(s => s.experience_years || 0));
+        merged.city = profile.city || firstService.city;
+        merged.service_description = profile.service_description || firstService.service_description;
+
         currentProvider = merged;
- 
-        renderProfile(merged);
- 
-        if (provider) {
-          await loadGallery(provider.id);
-        await loadReviews(session.user.id);// هو نفسو profile_id
+
+        // 5. موثوق إلا كانت عندو خدمة وحدة على الأقل فيها صورة البطاقة الوطنية
+        const isVerified = myServices.some(s => !!s.national_id_image);
+
+        renderProfile(merged, isVerified);
+
+        if (myServices.length) {
+          renderGalleryGrouped(myServices);
         } else {
-          $('galleryGrid').innerHTML = `
+          $('galleryWrap').innerHTML = `
             <div class="empty-state">
               <div class="empty-icon">🛠️</div>
               <h3>أنت مسجل كزبون</h3>
               <p>سجل كحرفي لتظهر في المنصة</p>
             </div>`;
-          renderReviews([]);
         }
- 
+
+        await loadReviews(session.user.id);
+
         loadingState.style.display = 'none';
         profileContent.style.display = 'block';
- 
+
       } catch (err) {
         console.error('loadProfile error:', err);
         loadingState.innerHTML = `
@@ -852,7 +916,7 @@ await loadReviews(viewingId);
     }
  
     // ─── Render Profile ───────────────────────────────────────────
-    function renderProfile(p) {
+    function renderProfile(p, isVerified) {
       const avatar = $('profileAvatar');
       const displayName = p.full_name || p.name || 'مستخدم';
  
@@ -863,16 +927,28 @@ await loadReviews(viewingId);
       }
  
       $('profileName').textContent = displayName;
-     // بعد
-$('profileProfession').textContent = p.service_category || (p.role === 'pro' ? 'مهني / حرفي' : p.role === 'client' ? 'زبون' : p.role) || '—';
-      $('profileRating').textContent = p.rating ? p.rating.toFixed(1) : '—';
+      $('profileProfession').textContent = p.service_category || (p.role === 'pro' ? 'مهني / حرفي' : p.role === 'client' ? 'زبون' : p.role) || '—';
+      $('profileRating').textContent = p.rating ? Number(p.rating).toFixed(1) : '—';
       $('profileReviewsCount').textContent = p.reviews_count || 0;
       $('profileCity').textContent = p.city || '—';
       $('statCompleted').textContent = p.reviews_count || 0;
-      $('statRating').textContent = p.rating ? p.rating.toFixed(1) : '—';
-// بعد  
-$('statExperience').textContent = p.experience_years ? `${p.experience_years} سنوات` : '—';
+      $('statRating').textContent = p.rating ? Number(p.rating).toFixed(1) : '—';
+      $('statExperience').textContent = p.experience_years ? `${p.experience_years} سنوات` : '—';
       $('aboutText').textContent = p.service_description || 'لا يوجد وصف مضاف بعد.';
+
+      // ── علامة الموثوقية: تبان غير عند اللي عندو صورة البطاقة الوطنية ──
+      const verifiedBadge = $('verifiedBadge');
+      const unverifiedBadge = $('unverifiedBadge');
+      const trustMeta = $('profileTrustMeta');
+      if (isVerified) {
+        verifiedBadge.style.display = 'inline-flex';
+        unverifiedBadge.style.display = 'none';
+        trustMeta.textContent = '🛡️ هوية موثقة';
+      } else {
+        verifiedBadge.style.display = 'none';
+        unverifiedBadge.style.display = 'inline-flex';
+        trustMeta.textContent = '🛡️ الهوية غير موثقة بعد';
+      }
  
       const phone = p.phone || '';
       const waRaw = p.whatsapp || phone;
@@ -880,31 +956,68 @@ $('statExperience').textContent = p.experience_years ? `${p.experience_years} س
       $('callBtn').href = phone ? `tel:${phone}` : '#';
       $('whatsappBtn').href = waNumber ? `https://wa.me/${waNumber}` : '#';
     }
- 
-    // ─── Load Gallery ─────────────────────────────────────────────
-    async function loadGallery(providerId) {
-      const { data, error } = await sb
-        .from('provider_gallery')
-        .select('*')
-        .eq('provider_id', providerId)
-        .order('order', { ascending: true });
- 
-      const grid = $('galleryGrid');
- 
-      if (error || !data || data.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">🖼️</div>
-            <h3>لا توجد صور في المعرض</h3>
-            <p>أضف صوراً لأعمالك لتبرز مهاراتك</p>
+
+    // ─── Gallery: خدمة واحدة (صفحة profile.html?id=X) ──────────────
+    function renderGallerySingleService(provider) {
+      const images = Array.isArray(provider.service_images) ? provider.service_images : [];
+      const wrap = $('galleryWrap');
+
+      if (!images.length) {
+        wrap.innerHTML = `
+          <div class="gallery-grid">
+            <div class="empty-state">
+              <div class="empty-icon">🖼️</div>
+              <h3>لا توجد صور في المعرض</h3>
+              <p>ماضافش هاد المهني صور لهاد الخدمة بعد</p>
+            </div>
           </div>`;
         return;
       }
- 
-      grid.innerHTML = data.map(img => `
-        <div class="gallery-item" onclick="openImageModal('${img.image_url}')">
-          <img src="${img.image_url}" alt="${img.title || 'صورة العمل'}" loading="lazy">
-          <div class="overlay">🔍</div>
+
+      wrap.innerHTML = `
+        <div class="gallery-grid">
+          ${images.map(url => `
+            <div class="gallery-item" onclick="openImageModal('${url}')">
+              <img src="${url}" alt="صورة عمل" loading="lazy">
+              <div class="overlay">🔍</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // ─── Gallery: كل الخدمات ديال المستخدم، مقسمة حسب كل خدمة ──────
+    function renderGalleryGrouped(services) {
+      const wrap = $('galleryWrap');
+      const withImages = services.filter(s => Array.isArray(s.service_images) && s.service_images.length);
+
+      if (!withImages.length) {
+        wrap.innerHTML = `
+          <div class="gallery-grid">
+            <div class="empty-state">
+              <div class="empty-icon">🖼️</div>
+              <h3>لا توجد صور في المعرض</h3>
+              <p>أضف صوراً لأعمالك من صفحة "قدم خدمتك" لتبرز مهاراتك</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      wrap.innerHTML = withImages.map((s, i) => `
+        ${i > 0 ? '<div class="gallery-service-divider"></div>' : ''}
+        <div class="gallery-service-group">
+          <div class="gallery-service-header">
+            <div class="gallery-service-icon">${getServiceIcon(s.service_category)}</div>
+            <div>
+              <div class="gallery-service-title">${s.service_title || s.service_category || 'خدمة'}</div>
+              <div class="gallery-service-sub">${s.service_category || ''} ${s.city ? '· ' + s.city : ''}</div>
+            </div>
+          </div>
+          <div class="gallery-grid">
+            ${s.service_images.map(url => `
+              <div class="gallery-item" onclick="openImageModal('${url}')">
+                <img src="${url}" alt="${s.service_title || 'صورة عمل'}" loading="lazy">
+                <div class="overlay">🔍</div>
+              </div>`).join('')}
+          </div>
         </div>
       `).join('');
     }
@@ -1082,10 +1195,3 @@ async function loadReviews(profileId) {
   </script>
 </body>
 </html>
- 
-
-
-
-
-
-
