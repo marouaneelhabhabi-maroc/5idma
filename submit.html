@@ -195,7 +195,7 @@
       <!-- STEP 1 -->
       <div class="form-card" id="step1">
         <div class="form-title">المعلومات الشخصية</div>
-        <div class="form-subtitle">المعلومات مستخرجة من حسابك. المرجو تأكيد كلمة السر للمتابعة✅</div>
+        <div class="form-subtitle">المعلومات مستخرجة من حسابك. تأكد منها وتابع للخطوة التالية✅</div>
 
         <div class="banner" id="profileBanner"></div>
 
@@ -225,15 +225,9 @@
           </div>
         </div>
 
-        <div class="divider"></div>
+     
 
-        <div class="field-row single">
-          <div class="field-group">
-            <label class="field-label">أكد كلمة السر ديال حسابك <span>*</span></label>
-            <input class="field-input" id="password" placeholder="دخل كلمة السر ديالك للتحقق" type="password" autocomplete="current-password">
-            <span class="error-msg" id="err-password">كلمة السر غير صحيحة</span>
-          </div>
-        </div>
+
 
         <div class="btn-row">
           <button class="btn btn-primary" id="step1NextBtn" onclick="nextStep(1)">التالي <i class="ti ti-arrow-left"></i></button>
@@ -408,7 +402,7 @@ let currentUser   = null;
 let currentProfile = null;
 let currentStep   = 1;
 const totalSteps  = 4;
-let passwordVerified = false;
+let passwordVerified = true; // ماكاين بلا تحقق كلمة السر
  
 const avatarFile = { file: null, dataUrl: null };
 const nationalIdFile = { file: null, dataUrl: null };
@@ -576,23 +570,20 @@ async function validateStep(step) {
  
 async function validateStep1() {
   let valid = true;
- 
+
   const phone    = document.getElementById('phone').value.trim();
   const whatsapp = document.getElementById('whatsapp').value.trim();
-  const password = document.getElementById('password').value;
- 
+
   const phoneFilled    = phone.length > 0;
   const whatsappFilled = whatsapp.length > 0;
- 
-  // كل واحد إلا تعمر خاصو يكون صحيح (10 أرقام)
+
   const phoneOk    = !phoneFilled    || isValidMoroccanPhone(phone);
   const whatsappOk = !whatsappFilled || isValidMoroccanPhone(whatsapp);
- 
+
   setError('phone', phoneFilled && !phoneOk);
   setError('whatsapp', whatsappFilled && !whatsappOk);
   if (!phoneOk || !whatsappOk) valid = false;
- 
-  // خاصك ثم واحد فيهوم على الأقل معمر
+
   if (!phoneFilled && !whatsappFilled) {
     setError('phone', true);
     setError('whatsapp', true);
@@ -600,36 +591,10 @@ async function validateStep1() {
     document.getElementById('err-whatsapp').textContent = 'خاصك تدخل رقم الهاتف أو واتساب على الأقل';
     valid = false;
   }
- 
-  if (!password) {
-    setError('password', true);
-    document.getElementById('err-password').textContent = 'دخل كلمة السر ديالك';
-    valid = false;
-  }
- 
-  if (!valid) return false;
- 
-  const btn = document.getElementById('step1NextBtn');
-  btn.classList.add('btn-loading');
-  btn.disabled = true;
-  showBanner('profileBanner', '', false);
- 
-  const email = currentProfile.email || currentUser.email;
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
- 
-  btn.classList.remove('btn-loading');
-  btn.disabled = false;
- 
-  if (error) {
-    setError('password', true);
-    document.getElementById('err-password').textContent = 'كلمة السر غير صحيحة، عاود حاول';
-    return false;
-  }
- 
-  passwordVerified = true;
-  setError('password', false);
-  return true;
+
+  return valid;
 }
+
  
 function validateStep2() {
   let valid = true;
@@ -785,11 +750,7 @@ function renderReview() {
            + أسماء الأعمدة الصحيحة حسب schema ديالك
    ========================================================= */
 async function submitApplication() {
-  if (!passwordVerified) {
-    showBanner('submitBanner', 'خاصك تأكد كلمة السر ديالك فالخطوة 1 قبل الإرسال.', true);
-    goToStep(1);
-    return;
-  }
+
   if (!validateStep4()) return;
  
   const btn = document.getElementById('submitBtn');
