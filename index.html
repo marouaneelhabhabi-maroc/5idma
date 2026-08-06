@@ -2318,7 +2318,7 @@ margin-right: 19%;
   </div>
 
   <div style="text-align: center; margin-top: 7px;">
-    <a href="#" class="btn-secondary">شوف جميع المهنيين</a>
+   <a href="#" onclick="openAllProsPanel(event)" class="btn-secondary">شوف جميع المهنيين</a>
   </div>
 </section>
  
@@ -2871,11 +2871,12 @@ function renderPanelList() {
   // فلترة حسب البحث
   let filtered = panelProviders;
   if (panelSearchTerm) {
-    filtered = panelProviders.filter(p =>
-      (p.name || '').toLowerCase().includes(panelSearchTerm) ||
-      (p.city || '').toLowerCase().includes(panelSearchTerm) ||
-      (p.service_title || '').toLowerCase().includes(panelSearchTerm)
-    );
+filtered = panelProviders.filter(p =>
+  (p.name || '').toLowerCase().includes(panelSearchTerm) ||
+  (p.city || '').toLowerCase().includes(panelSearchTerm) ||
+  (p.service_title || '').toLowerCase().includes(panelSearchTerm) ||
+  (p.service_category || '').toLowerCase().includes(panelSearchTerm)
+);
   }
 
   document.getElementById('panelCount').textContent =
@@ -3471,6 +3472,38 @@ function getServiceIcon(serviceName) {
 }
 
 
+
+async function openAllProsPanel(event) {
+  if (event) event.preventDefault();
+
+  currentService = ''; // بلا فلترة بخدمة معينة
+  panelSearchTerm = '';
+  document.getElementById('panelSearchInput').value = '';
+  document.getElementById('panelTitle').textContent = 'جميع المهنيين';
+  document.getElementById('panelIcon').textContent = '👥';
+  document.getElementById('panelCount').textContent = 'جاري التحميل...';
+  document.getElementById('panelList').innerHTML =
+    '<div style="text-align:center;padding:3rem;color:#94A3B8">⏳ جاري التحميل...</div>';
+
+  document.getElementById('serviceOverlay').style.opacity = '1';
+  document.getElementById('serviceOverlay').style.pointerEvents = 'all';
+  document.getElementById('servicePanel').style.transform = 'translateX(0)';
+  document.body.style.overflow = 'hidden';
+
+  const { data, error } = await _sb
+    .from('providers')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (error) console.error('❌ openAllProsPanel error:', error);
+
+  panelProviders = data || [];
+  document.getElementById('panelCount').textContent =
+    panelProviders.length + ' مهني متاح';
+
+  renderPanelList();
+}
 
 function openProModal(id) {
   const p = featuredData.find(x => x.id === id);
