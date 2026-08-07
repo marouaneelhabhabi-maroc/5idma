@@ -250,6 +250,8 @@
   <option>ميكانيكي</option>
   <option>مصور</option>
   <option>بناء</option>
+  <option>زليجي</option>
+<option>جباس</option>
   <option>مطور مواقع</option>
   <option>منظف منازل</option>
   <option>ديكور</option>
@@ -348,17 +350,7 @@
           <span class="error-msg" id="err-work">خاصك تضيف صورة وحدة على الأقل من أعمالك</span>
         </div>
 
-<div class="field-group" style="margin-bottom:1rem">
-          <label class="field-label">صورة البطاقة الوطنية (الوجه الأمامي) <span>*</span></label>
-          <div class="upload-zone" id="nationalIdZone" onclick="document.getElementById('nationalIdInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'nationalId')">
-            <i class="ti ti-id" aria-hidden="true"></i>
-            <div class="uz-title">اختار صورة البطاقة الوطنية (الوجه الأمامي)</div>
-            <div class="uz-sub">PNG, JPG – حجم أقصاه 5MB</div>
-          </div>
-          <input type="file" id="nationalIdInput" accept="image/*" onchange="handleFile(this,'nationalId')">
-          <img class="preview-img" id="nationalIdPreviewImg" style="display:none;max-width:200px;margin-top:1rem">
-          <span class="error-msg" id="err-nationalId">صورة البطاقة الوطنية مطلوبة</span>
-        </div>
+
 
 
         <div class="divider"></div>
@@ -405,7 +397,6 @@ const totalSteps  = 4;
 let passwordVerified = true; // ماكاين بلا تحقق كلمة السر
  
 const avatarFile = { file: null, dataUrl: null };
-const nationalIdFile = { file: null, dataUrl: null };
 const workFiles  = [];
  
 /* =========================================================
@@ -778,17 +769,7 @@ if (avatarFile.file) {
 
 
 
-// 1.5) Upload national ID image
-    let nationalIdUrl = null;
-    if (nationalIdFile.file) {
-      const path = `${currentUser.id}/national-id-${Date.now()}-${nationalIdFile.file.name}`;
-      const { error: upErr } = await supabase.storage
-        .from('provider-files')
-        .upload(path, nationalIdFile.file, { upsert: true });
-      if (upErr) throw new Error('فشل رفع صورة البطاقة الوطنية: ' + upErr.message);
-      const { data: pub } = supabase.storage.from('provider-files').getPublicUrl(path);
-      nationalIdUrl = pub.publicUrl;
-    }
+
 
     // 2) Upload work images
     const workUrls = [];
@@ -821,7 +802,7 @@ if (avatarFile.file) {
       district:            document.getElementById('district').value,
       price:               document.getElementById('price').value,
       profile_image:       avatarUrl,
-      national_id_image:   nationalIdUrl,
+      
       service_images:      workUrls,
       status:              'pending'
     };
