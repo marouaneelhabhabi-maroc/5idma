@@ -212,6 +212,29 @@
             <input class="field-input locked" id="email" type="email" disabled>
           </div>
         </div>
+
+        <!-- صورة البروفايل: تبان محظورة (locked) ملي تكون كاينة، أو upload zone ملي ماكانتش -->
+        <div class="field-row single" id="avatarExistingSection" style="display:none">
+          <div class="field-group">
+            <label class="field-label">صورة البروفايل</label>
+            <img id="avatarExistingImg" class="avatar-preview" alt="صورة البروفايل">
+          </div>
+        </div>
+
+        <div class="field-row single" id="avatarUploadSection" style="display:none">
+          <div class="field-group">
+            <label class="field-label">صورة البروفايل <span>*</span></label>
+            <div class="upload-zone" id="avatarZone" onclick="document.getElementById('avatarInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'avatar')">
+              <i class="ti ti-user-circle" aria-hidden="true"></i>
+              <div class="uz-title">ضيف صورة البروفايل ديالك</div>
+              <div class="uz-sub">اسحب وأفلت أو اضغط للاختيار</div>
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" onchange="handleFile(this,'avatar')">
+            <img id="avatarPreviewImg" class="avatar-preview" style="display:none" alt="معاينة صورة البروفايل">
+            <span class="error-msg" id="err-avatar">خاصك تضيف صورة البروفايل باش تكمل</span>
+          </div>
+        </div>
+
         <div class="field-row">
           <div class="field-group">
             <label class="field-label">رقم الهاتف <span>*</span></label>
@@ -395,6 +418,7 @@ let currentProfile = null;
 let currentStep   = 1;
 const totalSteps  = 4;
 let passwordVerified = true; // ماكاين بلا تحقق كلمة السر
+let hasExistingAvatar = false; // true إلا كان عندو صورة بروفايل مسجلة من قبل
  
 const avatarFile = { file: null, dataUrl: null };
 const workFiles  = [];
@@ -449,14 +473,23 @@ document.getElementById('fullname').value =
 document.getElementById('email').value = 
   currentProfile.email || currentUser.email || '';
 
-// ── صورة البروفيل تلقائياً ──
-// ── صورة البروفيل تلقائياً (بلا UI ديال avatar فـ step4) ──
+// ── صورة البروفيل: تبان محظورة إلا كانت كاينة، أو upload zone إلا ماكانتش ──
 const profileImg = currentProfile.profile_image || 
   currentUser.user_metadata?.avatar_url || null;
 
 if (profileImg) {
+  // عندو صورة من قبل → نعرضوها locked وما نطلبوش تانية
+  hasExistingAvatar = true;
   avatarFile.dataUrl = profileImg;
   avatarFile.file = null;
+  document.getElementById('avatarExistingImg').src = profileImg;
+  document.getElementById('avatarExistingSection').style.display = 'block';
+  document.getElementById('avatarUploadSection').style.display = 'none';
+} else {
+  // ماعندوش صورة (دخل كزبون مثلاً) → خاصو يزيدها دابا
+  hasExistingAvatar = false;
+  document.getElementById('avatarExistingSection').style.display = 'none';
+  document.getElementById('avatarUploadSection').style.display = 'block';
 }
 
 
@@ -581,6 +614,13 @@ async function validateStep1() {
     document.getElementById('err-phone').textContent    = 'خاصك تدخل رقم الهاتف أو واتساب على الأقل';
     document.getElementById('err-whatsapp').textContent = 'خاصك تدخل رقم الهاتف أو واتساب على الأقل';
     valid = false;
+  }
+
+  // إلا ماكانتش عندو صورة بروفايل مسجلة من قبل، خاصو يزيد وحدة دابا
+  if (!hasExistingAvatar) {
+    const avatarOk = !!avatarFile.file;
+    setError('avatar', !avatarOk);
+    if (!avatarOk) valid = false;
   }
 
   return valid;
@@ -753,7 +793,7 @@ async function submitApplication() {
     // 1) Upload avatar → provider-photos bucket
     let avatarUrl = null;
 if (avatarFile.file) {
-  // رفع صورة جديدة
+  // رفع صورة جديدة (زايدة دابا من طرف المستخدم)
   const path = `${currentUser.id}/avatar-${Date.now()}-${avatarFile.file.name}`;
   const { error: upErr } = await supabase.storage
     .from('provider-files')
@@ -762,7 +802,7 @@ if (avatarFile.file) {
   const { data: pub } = supabase.storage.from('provider-files').getPublicUrl(path);
   avatarUrl = pub.publicUrl;
 } else if (avatarFile.dataUrl) {
-  // استعمل URL من البروفيل مباشرة
+  // استعمل URL من البروفيل مباشرة (كانت كاينة من قبل)
   avatarUrl = avatarFile.dataUrl;
 } 
 
@@ -811,6 +851,11 @@ if (avatarFile.file) {
  
     const { error: insertErr } = await supabase.from('providers').insert(payload);
     if (insertErr) throw new Error('فشل حفظ الطلب: ' + insertErr.message);
+
+    // 4) حدث profile_image فـ جدول profiles تاني إلا كانت صورة جديدة
+    if (avatarFile.file && avatarUrl) {
+      await supabase.from('profiles').update({ profile_image: avatarUrl }).eq('id', currentUser.id);
+    }
  
     // ✅ نجح
     document.getElementById('appContent').style.display = 'none';
